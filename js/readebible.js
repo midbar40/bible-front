@@ -14,9 +14,9 @@ let pageNum = 1
 
 
 //  서버 데이터 가져오는 함수수
-async function getBibleData(){
+async function getBibleData(clickedBook){
     try{
-    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/')
+    const data = await fetch(`https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/read?query=${clickedBook}`)
     const bibleData = await data.json()
     serverData.push(bibleData)
     console.log(serverData[0])
@@ -35,8 +35,9 @@ function deleteTitle(){
 }
     e.stopPropagation()
     chapter = []
-    await getBibleData()
-    
+    const clickedBook = e.target.innerText.replace(/\([A-Za-z\s]*\)/g, '') // 클릭한 성경책 이름
+    await getBibleData(clickedBook)
+    console.log(e.target.innerText.replace(/\([A-Za-z\s]*\)/g, ''), '클릭')
     if(e.target.className == 'book'){   // 빈공간 클릭시 작동하지 않도록 설정  
 // 출처 표시 : 대한성서공회, 개역한글
 function diplaySource(){
@@ -61,20 +62,21 @@ function diplaySource(){
 // 첫 화면은 1장을 가져오도록 설정 
     function createfirstPage(firstPage, i){
         { 
-        if( e.target.id == serverData[0]?.bibles[i]?.book
-            && serverData[0].bibles[i].chapter == firstPage) { 
+        if( e.target.id == serverData[0]?.bible[i]?.book
+            && serverData[0].bible[i].chapter == firstPage) { 
                 displayVerse(i)
             }
         }
         }
 // 챕터 수 대로 하단 페이지 넘버 부여            
 async function createdPageNum(i){
-    if(e.target.id == serverData[0]?.bibles[i]?.book &&
-    !chapter.includes(serverData[0]?.bibles[i]?.chapter)){ // 중복되는 값들은 push를 안해주게 설정
-    chapter.push(serverData[0].bibles[i].chapter)
+    if(e.target.id == serverData[0]?.bible[i]?.book &&
+    !chapter.includes(serverData[0]?.bible[i]?.chapter)){ // 중복되는 값들은 push를 안해주게 설정
+    chapter.push(serverData[0].bible[i].chapter)
 }
 }
-       for(let i=0; i<serverData[0].bibles.length; i++){
+
+       for(let i=0; i<serverData[0].bible.length; i++){
             scriptureList.style.display = 'none'
             createdPageNum(i)       
             createfirstPage(1 ,i)    
@@ -112,7 +114,7 @@ function plusPage(e, bookId, pages, firstPage){  // 이곳에 매개변수로 �
     deleteTitle()
     createTitle(firstPage)
 
-    for(let i=0; i<serverData[0].bibles.length; i++){ // 데이터를 찾아서 실행해줘야하는데 이 for문이 없어서 
+    for(let i=0; i<serverData[0].bible.length; i++){ // 데이터를 찾아서 실행해줘야하는데 이 for문이 없어서 
         scriptureList.style.display = 'none'
         createfirstPage(firstPage ,i)    // 이 함수가 실행되지 않았던 것임
       }
@@ -132,7 +134,7 @@ function minusPage(e, bookId, pages, firstPage){
      deleteTitle()
      createTitle(firstPage)
      console.log(firstPage)
-     for(let i=0; i<serverData[0].bibles.length; i++){
+     for(let i=0; i<serverData[0].bible.length; i++){
         scriptureList.style.display = 'none'
         createfirstPage(firstPage ,i)    
       }
@@ -168,9 +170,9 @@ function minusPage(e, bookId, pages, firstPage){
 
 
 // Chapter에 해당하는 Verse만 마운트하기 (Chapter는 하단 페이지 넘버와 동일)
-                    for(let i=0; i<serverData[0].bibles.length; i++){
-                        if( bookId == serverData[0].bibles[i].book
-                            && this.innerText == serverData[0].bibles[i].chapter
+                    for(let i=0; i<serverData[0].bible.length; i++){
+                        if( bookId == serverData[0].bible[i].book
+                            && this.innerText == serverData[0].bible[i].chapter
                             && this.className == 'button active'
                             ){
                              displayVerse(i)
@@ -192,7 +194,7 @@ scriptureList?.addEventListener('click', showClikedBook) // 성경의 각 책이
 // Verse 표시하기
 function displayVerse(parameter){ 
     const bibleContents = document.createElement('div')
-    bibleContents.innerHTML = `${serverData[0].bibles[parameter].verse}&nbsp${serverData[0].bibles[parameter].content}`
+    bibleContents.innerHTML = `${serverData[0].bible[parameter].verse}&nbsp${serverData[0].bible[parameter].content}`
     bibleContents.className = 'bible-contents'
     displayBible.appendChild(bibleContents)
 }

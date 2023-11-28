@@ -16,22 +16,22 @@ const mobileBackground = document.querySelector('.mobile-background')
 let serverData = []
 let updateResults = []
 
-// 성경 서버데이터 가져오기
-async function getBibleData(){
+// 성경 서버데이터 가져오기 -> 개선필요, 업로드가 너무 느림 -> 23.11.28 서버에서 랜덤으로 가져오도록 변경함 
+async function getBibleRandomData(){
     try{
-    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/')
+    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/random')
     const bibleData = await data.json()
     serverData.push(bibleData)
-    console.log(serverData[0])
+    console.log('랜덤bibletest', serverData[0].bibles[0])
 }catch(error){
     console.log(error)
 }
 } 
 
-// 랜덤 이미지 배경데이터 가져오기
+// 랜덤 이미지 배경데이터 가져오기 -> 개선필요, 업로드가 너무 느림
 async function getImageData(){
     try{
-    const data = await fetch(`https://api.unsplash.com/search/photos?query=background img&page=${Math.floor(Math.random()*334)}&per_page=35&client_id=NNmNL2OOluBZlE9VpvVPQKXW7p0vm0dCkz2n8dFIAUA&;`) // page랜덤설정 총페이지수 334페이지
+    const data = await fetch(`https://api.unsplash.com/search/photos?query=background img&page=${Math.floor(Math.random()*150)}&per_page=35&client_id=NNmNL2OOluBZlE9VpvVPQKXW7p0vm0dCkz2n8dFIAUA&;`) // page랜덤설정 총페이지수 334페이지 -> 150으로 축소
     const imgData = await data.json()
 
     for(let i = 0; i < imgData.results.length; i++){
@@ -42,14 +42,13 @@ async function getImageData(){
 }
 }
 
-// 성경 랜덤 구절 
+// 성경 랜덤 구절 렌더링
 // 배경이미지는 pixabay나 unsplash에서 랜덤으로 떙겨오자, 특정 키워드의 이미지만 떙겨오도록 설정
 async function createRandomVerse(){
-    await getBibleData()
+    await getBibleRandomData()
     await getImageData()
     const h3 = document.createElement('h3')
-    const randomNum = Math.floor(Math.random() * 31102)
-    h3.innerHTML = `${serverData[0].bibles[randomNum].content}<br><p>${serverData[0].bibles[randomNum].title}&nbsp${serverData[0].bibles[randomNum].chapter}장 ${serverData[0].bibles[randomNum].verse}절</p>`
+    h3.innerHTML = `${serverData[0].bibles[0].content}<br><p>${serverData[0].bibles[0].title}&nbsp${serverData[0].bibles[0].chapter}장 ${serverData[0].bibles[0].verse}절</p>`
 
     ramdomPargraph.appendChild(h3)
     }
