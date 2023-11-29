@@ -10,9 +10,9 @@ const mobileBackground = document.querySelector('.mobile-background')
 let serverData = []
 
 // 서버데이터 가져오기
-async function getBibleData(){
+async function getBibleData(searchWord){
     try{
-    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/')
+    const data = await fetch(`https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/search?query=${searchWord}`)
     const bibleData = await data.json()
     serverData.push(bibleData)
     console.log(serverData[0])
@@ -47,7 +47,7 @@ async function displayContent(updateResults, searchWord){
 // 검색결과 가져오기
 async function showSearchBible(){
     displayLoadingImg() // 로딩화면 보여주기
-    await getBibleData() // 서버데이터 가져오기
+    await getBibleData(searchWord) // 서버데이터 가져오기
 // 로딩화면 가리고 리스트 보여주기 (데이터 다 가져왔으니)
     const loadingPhrases = document.querySelector('.loading-Phrases') 
     loadingPhrases.remove()
@@ -59,10 +59,10 @@ async function showSearchBible(){
       })
 // 로딩화면 문구 만드는 함수      
         function displayLoadingImg(){
-           const logding = document.createElement('h2')
-           logding.innerText ='검색결과를 가져오고 있습니다'
-           logding.className = 'loading-Phrases'
-           contents.appendChild(logding) 
+           const loading = document.createElement('h2')
+           loading.innerText ='검색결과를 가져오고 있습니다'
+           loading.className = 'loading-Phrases'
+           contents.appendChild(loading) 
         }
         
     displayContent(updateResults, searchWord)   
