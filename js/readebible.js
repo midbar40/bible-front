@@ -14,12 +14,12 @@ let pageNum = 1
 
 
 //  서버 데이터 가져오는 함수수
-async function getBibleData(clickedBook){
+async function getBibleData(clickedBookId){
     try{
-    const data = await fetch(`https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/read?query=${clickedBook}`)
+    const data = await fetch(`https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/read?query=${clickedBookId}`)
     const bibleData = await data.json()
     serverData.push(bibleData)
-    console.log(serverData[0])
+    return bibleData
 }catch(error){
     console.log(error)
 }
@@ -35,10 +35,12 @@ function deleteTitle(){
 }
     e.stopPropagation()
     chapter = []
-    const clickedBook = e.target.innerText.replace(/\([A-Za-z\s]*\)/g, '') // 클릭한 성경책 이름
-    await getBibleData(clickedBook)
-    console.log(e.target.innerText.replace(/\([A-Za-z\s]*\)/g, ''), '클릭')
+
     if(e.target.className == 'book'){   // 빈공간 클릭시 작동하지 않도록 설정  
+        const clickedBookId = e.target.id
+        await getBibleData(clickedBookId)
+
+       if(serverData[0].bible.length > 0){  // 서버데이터가 있을때만 작동하도록 설정
 // 출처 표시 : 대한성서공회, 개역한글
 function diplaySource(){
     const source = document.createElement('h4')
@@ -94,13 +96,13 @@ buttons.insertAdjacentElement('beforebegin', prevButton)
 buttons.insertAdjacentElement('afterend', nextButton)
 nextButton.addEventListener('click', () => plusPage(e, e.target.id))
 prevButton.addEventListener('click', () => minusPage(e, e.target.id))
+        }
 }
 
 // 하단 페이지 이동하기 기능
 let num = 0
 let plusNum = 10
 let pages = chapter.slice(num, num + plusNum)
-let firstPage = []
 
 function plusPage(e, bookId, pages, firstPage){  // 이곳에 매개변수로 사용하면 배열push가 안되고 외부에서 호출시 undefined된다
     if(chapter.length - plusNum > num){ // 왜 이조건하나 생각을 못했을까
@@ -206,14 +208,13 @@ function displayVerse(parameter){
 
 window.onpopstate  = function(event) {
     event.stopPropagation()
+    serverData =[] // 뒤로가기 했을때 데이터 중복되는 것 방지
     // console.log(event)
 if(!(event && window.location.href.includes('#'))){    
     scriptureList.style.display = 'flex' // 뒤로가기 했을때 목차 다시나오기
-    // pushstate('', '', 'readbible')
     const bibleContents = document.querySelectorAll('.bible-contents') // 뒤로가기 했을때 성경본문 삭제
     bibleContents.forEach((content)=> {
         content.remove()
-
     })    
 
     const pageButton = document.querySelectorAll('button') // 뒤로가기 했을때 하단 페이지네이션 삭제
