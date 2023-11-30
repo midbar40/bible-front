@@ -1,6 +1,5 @@
 const userName = document.querySelector('.name input')
 const userEmail = document.querySelector('.email input')
-const userId = document.querySelector('.userId input')
 const userPw = document.querySelector('.userPw input')
 
 
@@ -12,8 +11,8 @@ async function getUserData(){
         alert('이름을 입력해주세요')
         return
     } 
-    else if (userName.value.length < 2){
-        alert('이름은 2글자 이상 입력해주세요')
+    else if (userName.value.length < 2 || userName.value.length > 20){
+        alert('이름은 2글자 이상 20자 미만으로 입력해주세요')
         return
     }
     else if(userEmail.value === ''){
@@ -24,19 +23,11 @@ async function getUserData(){
         alert('이메일 형식이 올바르지 않습니다.')
         return
     } 
-    else if(userId.value === ''){
-       alert('아이디를 입력해주세요')
-       return
-    }  
-    else if(userId.value.length < 6 || userId.value.length > 12){
-        alert('아이디는 6자리 이상 12자리 미만으로 설정해주세요')
-        return
-     } 
     else if(userPw.value === ''){
        alert('비밀번호를 입력해주세요')
        return
     } else if (userPw.value.length < 6 || userPw.value.length > 12){
-        alert('비밀번호는 6자리 이상 12자리 미만으로 설정해주세요')
+        alert('비밀번호는 6자리 이상 12자리 미만, 특수문자와 숫자가 1글자 이상 포함되어야 합니다.')
         return
     }  
     else {
@@ -50,11 +41,11 @@ async function getUserData(){
         body:JSON.stringify({
             name: userName.value,
             email: userEmail.value,
-            userId: userId.value,
             password: userPw.value
         })
     })
     const userData = await data.json()    
+    console.log(userData)
     }
 catch(error){
     console.log('회원가입 실패 :', error)
