@@ -23,7 +23,7 @@ async function getUserData(){
         method: 'POST',
         credentials: 'include', // 브라우저 쿠키탭에 토큰이 저장되기 위해서는 credentials: 'include' 옵션을 추가해줘야 한다.
         headers: {
-            "Content-Type": "application/json",           
+            "Content-Type": "application/json",   
         },
         body:JSON.stringify({
             email: userEmail.value,
@@ -40,7 +40,7 @@ async function getUserData(){
         alert('로그인이 완료되었습니다, 메인 페이지로 이동합니다.')
         getCookie()
         console.log('쿠키', document.cookie)
-        window.location.href = '/index.html'
+        window.location.href = '/bible-front/index.html'
     }
 }catch(error){
     console.log(error)
