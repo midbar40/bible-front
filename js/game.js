@@ -98,7 +98,9 @@ async function getBibleText(){
     main.appendChild(loading)
     } 
    await getBibleData()
+   if(serverData.length > 0){
    loading.remove()
+   }
 //    console.log(serverData)
 // 반환함수 호출
     const { 

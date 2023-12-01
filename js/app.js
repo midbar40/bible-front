@@ -1,3 +1,5 @@
+
+
 // 전역변수
 
 const inputWindow = document.getElementById('serachbible')
