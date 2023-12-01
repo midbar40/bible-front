@@ -40,7 +40,7 @@ async function getUserData(){
         alert('로그인이 완료되었습니다, 메인 페이지로 이동합니다.')
         getCookie()
         console.log('쿠키', document.cookie)
-        window.location.href = '/bible-front/index.html'
+        window.location.href = 'https://midbar40.github.io/bible-front/index.html'
     }
 }catch(error){
     console.log(error)
