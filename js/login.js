@@ -36,9 +36,11 @@ async function getUserData(){
         alert(userData.message)
     }
     else if(userData.code === 200){
-        alert('로그인이 완료되었습니다, 메인 페이지로 이동합니다.')
-        checkIsLogined()
+        // alert('로그인이 완료되었습니다, 메인 페이지로 이동합니다.')
+        const isLogined = await checkIsLogined()
+        if(isLogined || isLogined !== undefined || isLogined !== null){
         window.location.href = 'https://midbar40.github.io/bible-front/index.html'
+        }
     }
 }catch(error){
     console.log(error)
@@ -57,6 +59,7 @@ const checkIsLogined = async() => {
     .then(res => res.json())
     .then(data => {
         console.log('로그인상태data :', data)
+        alert(data)
     })
 }
 
