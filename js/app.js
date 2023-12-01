@@ -48,10 +48,15 @@ async function getImageData(){
     try{
     const data = await fetch(`https://api.unsplash.com/search/photos?query=background img&page=${Math.floor(Math.random()*150)}&per_page=35&client_id=NNmNL2OOluBZlE9VpvVPQKXW7p0vm0dCkz2n8dFIAUA&;`) // page랜덤설정 총페이지수 334페이지 -> 150으로 축소
     const imgData = await data.json()
+    if(imgData.results.length == 0){ // 이미지 없을때 문구 띄워주기
+        ramdomPargraph.style.backgroundColor = 'white'
+        ramdomPargraph.innerHTML = `<h3>랜덤 성경 구절을 가져오고 있습니다</h3>`
+    } else {
+        for(let i = 0; i < imgData.results.length; i++){
+        ramdomPargraph.style.backgroundImage = `url(${imgData.results[Math.floor(Math.random() * i)]?.urls.regular})`
+    }
 
-    for(let i = 0; i < imgData.results.length; i++){
-    ramdomPargraph.style.backgroundImage = `url(${imgData.results[Math.floor(Math.random() * i)]?.urls.regular})`
-}
+    }   
 }catch(error){
     console.log(error)
 }
@@ -60,8 +65,8 @@ async function getImageData(){
 // 성경 랜덤 구절 렌더링
 // 배경이미지는 pixabay나 unsplash에서 랜덤으로 떙겨오자, 특정 키워드의 이미지만 떙겨오도록 설정
 async function createRandomVerse(){
-    await getBibleRandomData()
-    await getImageData()
+        await getBibleRandomData()
+        await getImageData()
     const h3 = document.createElement('h3')
     h3.innerHTML = `${randomData[0].bibles[0].content}<br><p>${randomData[0].bibles[0].title}&nbsp${randomData[0].bibles[0].chapter}장 ${randomData[0].bibles[0].verse}절</p>`
 

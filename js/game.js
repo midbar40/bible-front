@@ -80,12 +80,9 @@ function createTextField(){
     }
 }
 
-// 시편본문가져오기
-async function getBibleText(){
-    // 로딩화면
+const addLoading = () => {
     const loading = document.createElement('div')
     
-    if(serverData.length === 0){
     loading.className = 'loading'
     loading.style.position = 'absolute'
     loading.style.top = '50%'
@@ -96,10 +93,23 @@ async function getBibleText(){
     `<div class="loading-text"><img src='../asssets/imgs/loading.gif' width=30%/><h4>LOADING...</h4></div>`
 
     main.appendChild(loading)
-    } 
+    
+}
+const removeLoading = () => {
+    const loading = document.querySelector('.loading')
+    loading.remove()
+}
+
+// 시편본문가져오기
+async function getBibleText(){
+    // 로딩화면
+    if(serverData.length == 0){
+    addLoading()
    await getBibleData()
+
+    }
    if(serverData.length > 0){
-   loading.remove()
+    removeLoading()
    }
 //    console.log(serverData)
 // 반환함수 호출
