@@ -82,7 +82,23 @@ function createTextField(){
 
 // 시편본문가져오기
 async function getBibleText(){
+    // 로딩화면
+    const loading = document.createElement('div')
+    
+    if(serverData.length === 0){
+    loading.className = 'loading'
+    loading.style.position = 'absolute'
+    loading.style.top = '50%'
+    loading.style.left = '50%'
+    loading.style.transform = 'translate(-50%, -50%)'
+    loading.style.textAlign = 'center'
+    loading.innerHTML = 
+    `<div class="loading-text"><img src='../asssets/imgs/loading.gif' width=30%/><h4>LOADING...</h4></div>`
+
+    main.appendChild(loading)
+    } 
    await getBibleData()
+   loading.remove()
 //    console.log(serverData)
 // 반환함수 호출
     const { 
