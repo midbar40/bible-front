@@ -27,12 +27,13 @@ async function getUserData(){
        alert('비밀번호를 입력해주세요')
        return
     } else if (userPw.value.length < 6 || userPw.value.length > 12){
-        alert('비밀번호는 6자리 이상 12자리 미만, 특수문자와 숫자가 1글자 이상 포함되어야 합니다.')
+        alert('비밀번호는 6자리 이상 12이하 미만으로 설정해주세요')
         return
     }  
     else {
     try{
-    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/register', 
+    // const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/register', 
+    const data = await fetch('http://127.0.0.1:3300/api/users/register', 
     {
         method: 'POST',
         headers: {
@@ -45,7 +46,14 @@ async function getUserData(){
         })
     })
     const userData = await data.json()    
-    console.log(userData)
+    console.log('userData :', userData)
+    if(userData.code === 200){
+        alert('회원가입이 완료되었습니다, 로그인 페이지로 이동합니다.')
+        window.location.href = '/html/login.html'
+    }
+    else if(userData.code === 400){
+        alert(...userData.error)
+    }
     }
 catch(error){
     console.log('회원가입 실패 :', error)
@@ -54,3 +62,11 @@ catch(error){
 }
 
 registerButton.addEventListener('click',getUserData)
+
+// 예시: 페이지 로드 시 전환 효과 주기
+document.body.style.display = 'none'; // 페이지를 숨김
+
+window.addEventListener('load', () => {
+  document.body.style.display = 'block'; // 페이지를 보여줌
+  // 다른 전환 효과 적용 가능
+});

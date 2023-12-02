@@ -8,6 +8,7 @@ let charIndex = 0
 let index = 1
 let serverData = []
 let newArr = [] 
+let loadingStatus = true
 
 // 성경 서버데이터 가져오기
 async function getBibleData(){
@@ -15,7 +16,11 @@ async function getBibleData(){
     const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/psalms?title=시편')
     const bibleData = await data.json()
     console.log(bibleData)
-    serverData.push(bibleData)
+     // 중복데이터 push방지
+        if(serverData[0]?.psalms[0].chapter !== bibleData.psalms[0].chapter){
+        serverData.push(bibleData)
+        }
+        loadingStatus = false
     return bibleData
 }catch(error){
     console.log(error)
@@ -80,10 +85,34 @@ function createTextField(){
     }
 }
 
+const addLoading = () => {
+    const loading = document.createElement('div')
+    
+    loading.className = 'loading'
+    loading.style.position = 'absolute'
+    loading.style.top = '50%'
+    loading.style.left = '50%'
+    loading.style.transform = 'translate(-50%, -50%)'
+    loading.style.textAlign = 'center'
+    loading.innerHTML = 
+    `<div class="loading-text"><img src='../asssets/imgs/loading.gif' width=30%/><h4>LOADING...</h4></div>`
+
+    main.appendChild(loading)
+    
+}
+const removeLoading = () => {
+    const loading = document.querySelector('.loading')
+    loading.remove()
+}
+
 // 시편본문가져오기
 async function getBibleText(){
-   await getBibleData()
-//    console.log(serverData)
+    // 로딩화면
+    if(loadingStatus){
+        addLoading()
+        await getBibleData()
+    } 
+     if(!loadingStatus) removeLoading()   
 // 반환함수 호출
     const { 
         typingContent,
@@ -160,6 +189,7 @@ bibleText.addEventListener('click',(e)=>{
  // 다음버튼
  nextButton.addEventListener('click', async (e)=> {
     e.preventDefault()
+    loadingStatus = true
     if(index < serverData[0].psalms.length - 1)  {
         index++
         main.replaceChildren()
@@ -172,6 +202,7 @@ bibleText.addEventListener('click',(e)=>{
  // 이전버튼
 prevButton.addEventListener('click', (e)=>{
     e.preventDefault()
+    loadingStatus = true
     if(index > 1)  {
     index--
     main.replaceChildren()
@@ -182,6 +213,7 @@ prevButton.addEventListener('click', (e)=>{
  // 다시버튼
 retryButton.addEventListener('click',(e)=>{
     e.preventDefault()
+    loadingStatus = true
 // 작성한 내용만 지우기, 커서를 원위치 하는 것을 구현해야함 
     // inputDiv.innerText =''
     // textSpan.forEach(span => span.classList.remove('incorrect'))
@@ -223,3 +255,5 @@ burgerButton.addEventListener('click',(e) => {
     navButtons.classList.toggle('show')
     mobileBackground.classList.toggle('show')
 })
+
+

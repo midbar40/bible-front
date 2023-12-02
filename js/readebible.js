@@ -236,3 +236,4 @@ burgerButton.addEventListener('click',(e) => {
     navButtons.classList.toggle('show')
     mobileBackground.classList.toggle('show')
 })
+
