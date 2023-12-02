@@ -12,6 +12,15 @@ let serverData = []
 let chapter = []
 let pageNum = 1
 
+// 헤더 모듈 가져오기
+function checkIsLogined(){
+    {
+        const isLoggedIn = localStorage.getItem('로그인상태')
+        console.log(isLoggedIn)
+         document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
+    }
+}
+document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 //  서버 데이터 가져오는 함수수
 async function getBibleData(clickedBookId){
@@ -229,11 +238,12 @@ if(!(event && window.location.href.includes('#'))){
 
 }
    
-
 // 모바일 버거버튼 클릭시
-burgerButton.addEventListener('click',(e) => {
-    console.log(e.target, '버튼')
-    navButtons.classList.toggle('show')
-    mobileBackground.classList.toggle('show')
+document.body.addEventListener('click', function(e){
+    if(e.target.className == 'material-symbols-outlined'){
+        const navButtons = document.querySelector('.nav-btns')
+        const mobileBackground = document.querySelector('.mobile-background')
+        navButtons.classList.toggle('show')
+        mobileBackground.classList.toggle('show')
+    }
 })
-

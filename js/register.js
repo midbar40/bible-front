@@ -1,10 +1,19 @@
 const userName = document.querySelector('.name input')
 const userEmail = document.querySelector('.email input')
 const userPw = document.querySelector('.userPw input')
-
-
 const registerButton = document.querySelector('.register-btn')
-console.log(registerButton)
+
+// 헤더 모듈 가져오기
+function checkIsLogined(){
+    {
+        const isLoggedIn = localStorage.getItem('로그인상태')
+        console.log(isLoggedIn)
+         document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
+    }
+}
+document.addEventListener('DOMContentLoaded', checkIsLogined)
+
+// 성경 서버데이터 가져오기
 async function getUserData(){
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     if(userName.value === ''){
@@ -63,10 +72,12 @@ catch(error){
 
 registerButton.addEventListener('click',getUserData)
 
-// 예시: 페이지 로드 시 전환 효과 주기
-document.body.style.display = 'none'; // 페이지를 숨김
-
-window.addEventListener('load', () => {
-  document.body.style.display = 'block'; // 페이지를 보여줌
-  // 다른 전환 효과 적용 가능
-});
+// 모바일 버거버튼 클릭시
+document.body.addEventListener('click', function(e){
+    if(e.target.className == 'material-symbols-outlined'){
+        const navButtons = document.querySelector('.nav-btns')
+        const mobileBackground = document.querySelector('.mobile-background')
+        navButtons.classList.toggle('show')
+        mobileBackground.classList.toggle('show')
+    }
+})
