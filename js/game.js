@@ -250,6 +250,7 @@ select.append(option)
 }
 
 select.addEventListener('change',(e)=>{
+    loadingStatus = true
     index = e.target.value
     console.log(e.target.childNodes)
     main.replaceChildren()
