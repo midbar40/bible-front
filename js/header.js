@@ -49,7 +49,8 @@ export function headerModule(isLoggedIn) {
         header.appendChild(nav)
         if(document.querySelector('.login-btn')){
             document.querySelector('.login-btn').addEventListener('click', ()=> {
-                window.location.href = 'http://127.0.0.1:5500/bible-front/html/login.html'
+                // window.location.href = 'http://127.0.0.1:5500/bible-front/html/login.html'
+                window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })   
         }
     }
@@ -58,7 +59,9 @@ export function headerModule(isLoggedIn) {
 
 export async function logout(e){
     if(e.target.innerText == '로그아웃'){
-        await fetch('http://127.0.0.1:3300/api/users/logout', {
+        // await fetch('http://127.0.0.1:3300/api/users/logout', {
+        await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/logout', {
+
             method: 'POST',
             credentials : 'include',
             headers: {

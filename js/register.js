@@ -41,8 +41,8 @@ async function getUserData(){
     }  
     else {
     try{
-    // const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/register', 
-    const data = await fetch('http://127.0.0.1:3300/api/users/register', 
+    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/register', 
+    // const data = await fetch('http://127.0.0.1:3300/api/users/register', 
     {
         method: 'POST',
         headers: {

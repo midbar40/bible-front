@@ -112,17 +112,20 @@ const addLoading = () => {
 }
 const removeLoading = () => {
     const loading = document.querySelector('.loading')
-    loading.remove()
+    if(loading) loading.remove()
 }
 
 // 시편본문가져오기
 async function getBibleText(){
+    
     // 로딩화면
     if(loadingStatus){
+        console.log('여기가 실행되는건가?')
         addLoading()
         await getBibleData()
     } 
-     if(!loadingStatus) removeLoading()   
+     if(!loadingStatus) removeLoading()  
+    
 // 반환함수 호출
     const { 
         typingContent,
@@ -249,11 +252,13 @@ option.text = chapters[i]
 select.append(option)
 }
 
-select.addEventListener('change',(e)=>{
+select.addEventListener('change', async (e)=>{
+    console.log('여기들어오는지 체크')
+    loadingStatus = true
     index = e.target.value
     console.log(e.target.childNodes)
     main.replaceChildren()
-    getBibleText()
+    await getBibleText() // 현재 loadingStatus가 false인데 loading이 없어서 null값의 remove를 할 수 없다는 오류가 나온다.
 })
 }
 (async () => await getBibleText())()
