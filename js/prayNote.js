@@ -1,11 +1,10 @@
 
-
 // 헤더 모듈 가져오기
 function checkIsLogined(){
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
-         document.body.insertAdjacentElement('afterbegin',indexHeaderModule(isLoggedIn))
+        console.log(isLoggedIn)         
+        document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
     }
 }
 document.addEventListener('DOMContentLoaded', checkIsLogined)
