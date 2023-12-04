@@ -86,7 +86,6 @@ async function createRandomVerse(){
 
 inputWindow.addEventListener('change', async(e) => {
     const searchWord= e.target.value.trim()
-    console.log(searchWord)
     localStorage.setItem("inputWord", searchWord) // 검색어를 로컬스토리지에 저장
     
     if(searchWord == '') // || !searchWord || !inputWindow.onfocus 이 조건문들은 왜 안되는거지? / 아무것도 입력안하고 클릭시 폼타입이 제출되어버린다, 일단 html requierd로 막는다..

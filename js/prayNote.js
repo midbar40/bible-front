@@ -65,16 +65,16 @@ document.body.addEventListener('click', function(e){
         const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
         const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
     
-       document.querySelectorAll('input[type="checkbox"]').forEach(check => check.addEventListener('change', 
+       document.querySelectorAll('input[type="checkbox"]').forEach(check => 
+        check.addEventListener('change', 
        function(e){ // 2번째 기도내용부터는 이 함수가 추가되지 않는다, how? : querySelectorAll로 해결, 코파일럿 주석이 알려줬네..
         if(e.target.checked){
             let getCheckedTime = formattedDate // 현재 시간을 밀리초로 얻기
             e.target.closest('tr').querySelector('.checkedDate').innerText = getCheckedTime
              // 몽고DB에 저장하는 코드 작성
 
-     }else {
-        const completeDate = document.querySelector('.checkedDate')
-        completeDate.innerText = ''
+     }else if(!e.target.checked){
+        e.target.closest('tr').querySelector('.checkedDate').innerText = ''
          // 몽고DB에 저장하는 코드 작성
          
      }
