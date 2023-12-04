@@ -10,7 +10,6 @@ function checkIsLogined(){
 document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 
-
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function(e){
     if(e.target.className == 'material-symbols-outlined'){
