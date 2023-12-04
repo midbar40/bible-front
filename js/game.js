@@ -120,7 +120,6 @@ async function getBibleText(){
     
     // 로딩화면
     if(loadingStatus){
-        console.log('여기가 실행되는건가?')
         addLoading()
         await getBibleData()
     } 
@@ -203,11 +202,12 @@ bibleText.addEventListener('click',(e)=>{
  nextButton.addEventListener('click', async (e)=> {
     e.preventDefault()
     loadingStatus = true
-    if(index < serverData[0].psalms.length - 1)  {
+    const psalmsLastIndex = 150
+    if(index < psalmsLastIndex)  {
         index++
         main.replaceChildren()
         await getBibleText()       
-    }else if(index == serverData[0].psalms.length - 1){
+    }else if(index == psalmsLastIndex){
         alert('마지막 장입니다.')
     }
 })
@@ -255,7 +255,7 @@ select.append(option)
 select.addEventListener('change',async(e)=>{
     loadingStatus = true
     index = e.target.value
-    console.log(e.target.childNodes)
+    // console.log(e.target.childNodes)
     main.replaceChildren()
     await getBibleText() // 현재 loadingStatus가 false인데 loading이 없어서 null값의 remove를 할 수 없다는 오류가 나온다.
 })
