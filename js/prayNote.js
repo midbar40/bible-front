@@ -1,3 +1,5 @@
+let prayBucketIndex = 1
+
 
 // 헤더 모듈 가져오기
 function checkIsLogined(){
@@ -17,5 +19,66 @@ document.body.addEventListener('click', function(e){
         const mobileBackground = document.querySelector('.mobile-background')
         navButtons.classList.toggle('show')
         mobileBackground.classList.toggle('show')
+    }
+})
+
+
+// PrayBucketList 작업
+const prayBucketlistForm = document.querySelector('.prayBucketList-input form')
+prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
+
+// PrayBucketList 추가
+function addPrayBucketlist(event) {
+    event.preventDefault()
+    const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
+    const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
+    const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
+
+    console.log(formattedDate); // 출력: "2023/12/04"
+
+    const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
+    const prayBucketlistInput = document.querySelector('.prayBucketList-input input')
+    const prayBucketlist = prayBucketlistInput.value
+    const prayBucketlistList = document.createElement('tr')
+    prayBucketlistList.className = `prayBucketlist-List ${prayBucketIndex}`
+    prayBucketlistList.innerHTML = 
+    `
+            <td><input type="checkbox" class='complete-checkbox'></td>
+            <td>${prayBucketIndex}</td>
+            <td>${prayBucketlist}</td>
+            <td>${formattedDate}</td>
+            <td class='checkedDate'></td>
+    `
+   
+    
+    prayBucketListTbody.appendChild(prayBucketlistList)
+    prayBucketIndex ++ 
+    prayBucketlistInput.value = ''
+
+    // 몽고DB에 저장하는 코드 작성
+}
+
+// PrayBuckelist checkbox 클릭시 체크당시 날짜 출력
+document.body.addEventListener('click', function(e){
+    if(e.target.className == 'complete-checkbox'){
+        const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
+        const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
+        const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
+    
+       document.querySelectorAll('input[type="checkbox"]').forEach(check => check.addEventListener('change', 
+       function(e){ // 2번째 기도내용부터는 이 함수가 추가되지 않는다, how? : querySelectorAll로 해결, 코파일럿 주석이 알려줬네..
+        if(e.target.checked){
+            let getCheckedTime = formattedDate // 현재 시간을 밀리초로 얻기
+            e.target.closest('tr').querySelector('.checkedDate').innerText = getCheckedTime
+             // 몽고DB에 저장하는 코드 작성
+
+     }else {
+        const completeDate = document.querySelector('.checkedDate')
+        completeDate.innerText = ''
+         // 몽고DB에 저장하는 코드 작성
+         
+     }
+}))
+
     }
 })

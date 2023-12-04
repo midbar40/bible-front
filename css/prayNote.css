@@ -49,7 +49,7 @@ main .pray-wrapper {
     padding-left: 1rem;
     border-bottom: 1px solid black;
 }
-.prayBucketList-body table tr:nth-child(1){
+.prayBucketList-body table thead tr{
     background-color: rgb(199, 199, 199);
     font-weight: bold;
 }
