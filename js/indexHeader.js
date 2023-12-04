@@ -14,7 +14,7 @@ export function indexHeaderModule(isLoggedIn) {
           <div class="menu-btn">
             <a href="/bible-front/html/readbible.html">성경읽기</a>
             <a href="/bible-front/html/game.html">시편필사</a>
-            <a href="#">기도노트</a>
+            <a href="/bible-front/html/prayNote.html">기도노트</a>
           </div>
           <div class="login-btn">
             <a id='logout-link' href="#">로그아웃</a>
@@ -35,10 +35,9 @@ export function indexHeaderModule(isLoggedIn) {
           <h1><a href="./index.html">Sola Scriptura</a></h1>
           <div class="nav-btns">
             <div class="menu-btn">
-              <a href="./html/readbible.html">성경읽기</a>
-              <!-- 나중에 라우터로 변경 -->
-              <a href="./html/game.html">시편필사</a>
-              <a href="#">기도노트</a>
+              <a href="/bible-front/html/readbible.html">성경읽기</a>
+              <a href="/bible-front/html/game.html">시편필사</a>
+              <a href="/bible-front/html/prayNote.html">기도노트</a>
             </div>
             <div class="login-btn">
               <a href="./html/login.html">로그인</a>

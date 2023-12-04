@@ -14,7 +14,7 @@ export function headerModule(isLoggedIn) {
           <div class="menu-btn">
             <a href="./readbible.html">성경읽기</a>
             <a href="./game.html">시편필사</a>
-            <a href="#">기도노트</a>
+            <a href="./prayNote.html">기도노트</a>
           </div>
           <div class="login-btn">
             <a id='logout-link' href="#">로그아웃</a>
