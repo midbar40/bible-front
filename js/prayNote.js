@@ -55,6 +55,7 @@ async function showPrayBucketlist(){
         prayBucketListTbody.appendChild(prayBucketlistList)
         prayBucketIndex ++
         prayBucketlistList.addEventListener('contextmenu', function(e){
+            const rightClickList = e.target._id
             e.preventDefault()
             const rightClickMenu = document.querySelector('.right-click-menu')
             rightClickMenu.innerHTML = `
@@ -74,18 +75,22 @@ async function showPrayBucketlist(){
             const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
             rightClickMenuEdit.style='cursor:pointer'
             rightClickMenuDelete.style='cursor:pointer'
-            rightClickMenuDelete.addEventListener('click', function(e){
+            rightClickMenuDelete.addEventListener('click', function(rightClickList){
+                console.log('rightClickList :', rightClickList)
                 fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/',
                 {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body : JSON.stringify({
+                    _id: rightClickList
+                })
                 }
                 )
             })
         })
-        prayBucketlistList.addEventListener('click', function(e){
+        document.body.addEventListener('click', function(e){
             const rightClickMenu = document.querySelector('.right-click-menu')
             if(rightClickMenu){
                 rightClickMenu.style.display = 'none'
