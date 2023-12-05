@@ -48,12 +48,13 @@ async function showPrayBucketlist(){
         prayBucketlistList.innerHTML = 
         `
                 <td><input type="checkbox" class='complete-checkbox'></td>
-                <td>${element.number}</td>
+                <td>${prayBucketIndex}</td>
                 <td>${element.detail}</td>
                 <td>${formattedDate}</td>
                 <td class='checkedDate'></td>
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
+        prayBucketIndex ++
     });
 }
 
