@@ -40,7 +40,7 @@ async function showPrayBucketlist(){
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.result.forEach(element => {
         const prayBucketlistList = document.createElement('tr')
-        prayBucketlistList.className = `prayBucketlist-List ${element.number}`
+        prayBucketlistList.className = `prayBucketlist-List ${element._id}`
         const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
         const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
     
@@ -62,10 +62,28 @@ async function showPrayBucketlist(){
             <div class='right-click-menu-delete'>삭제</div>
             `
             document.body.appendChild(rightClickMenu)
+            rightClickMenu.style.width = '100px'
+            rightClickMenu.style.height = '100px'
+            rightClickMenu.style.backgroundColor = 'white'
             rightClickMenu.style.top = `${e.clientY}px`
             rightClickMenu.style.left = `${e.clientX}px`
             rightClickMenu.style.display = 'block'
             rightClickMenu.style.position = 'absolute'
+
+            const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
+            const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
+            rightClickMenuEdit.style='cursor:pointer'
+            rightClickMenuDelete.style='cursor:pointer'
+            rightClickMenuDelete.addEventListener('click', function(e){
+                fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/',
+                {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                }
+                )
+            })
         })
         prayBucketlistList.addEventListener('click', function(e){
             const rightClickMenu = document.querySelector('.right-click-menu')
