@@ -33,8 +33,29 @@ async function getPrayBucketlist(){
         console.log('기도버킷리스트 로딩 실패 :', error)
     }
 }
+// 버킷리스트 화면에 뿌려주는 함수
+async function showPrayBucketlist(){
+    const prayBucketlistData = await getPrayBucketlist()
+    const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
+    prayBucketlistData.forEach(element => {
+        const prayBucketlistList = document.createElement('tr')
+        prayBucketlistList.className = `prayBucketlist-List ${element.number}`
+        const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
+        const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
+    
+        prayBucketlistList.innerHTML = 
+        `
+                <td><input type="checkbox" class='complete-checkbox'></td>
+                <td>${element.number}</td>
+                <td>${element.detail}</td>
+                <td>${formattedDate}</td>
+                <td class='checkedDate'></td>
+        `
+        prayBucketListTbody.appendChild(prayBucketlistList)
+    });
+}
 
-document.addEventListener('DOMContentLoaded', getPrayBucketlist)
+document.addEventListener('DOMContentLoaded', showPrayBucketlist)
 
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function(e){
