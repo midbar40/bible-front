@@ -56,8 +56,7 @@ async function showPrayBucketlist(){
         prayBucketIndex ++
         prayBucketlistList.addEventListener('contextmenu', function(e){
             e.preventDefault()
-            const rightClickMenu = document.createElement('div')
-            rightClickMenu.className = 'right-click-menu'
+            const rightClickMenu = document.querySelector('.right-click-menu')
             rightClickMenu.innerHTML = `
             <div class='right-click-menu-edit'>수정</div>
             <div class='right-click-menu-delete'>삭제</div>
@@ -66,6 +65,7 @@ async function showPrayBucketlist(){
             rightClickMenu.style.top = `${e.clientY}px`
             rightClickMenu.style.left = `${e.clientX}px`
             rightClickMenu.style.display = 'block'
+            rightClickMenu.style.position = 'absolute'
         })
         prayBucketlistList.addEventListener('click', function(e){
             const rightClickMenu = document.querySelector('.right-click-menu')
