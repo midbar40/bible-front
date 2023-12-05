@@ -76,6 +76,7 @@ function addPrayBucketlist(event) {
         console.log('기도버킷리스트 등록오류 :', err)
     }
 }
+saveServer()
   }
     
 
