@@ -56,7 +56,28 @@ function addPrayBucketlist(event) {
     prayBucketlistInput.value = ''
 
     // 몽고DB에 저장하는 코드 작성
+  const saveServer = async() => {
+    try{
+    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                number : prayBucketIndex,
+                content : prayBucketlist,
+                createdAt : formattedDate
+            })
+        })
+      const result = await response.json()  
+       console.log('기도버킷리스트 등록결과 :', result)
+    }
+    catch(err){
+        console.log('기도버킷리스트 등록오류 :', err)
+    }
 }
+  }
+    
 
 // PrayBuckelist checkbox 클릭시 체크당시 날짜 출력
 document.body.addEventListener('click', function(e){
