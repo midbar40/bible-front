@@ -97,11 +97,8 @@ function addPrayBucketlist(event) {
    
     
     prayBucketListTbody.appendChild(prayBucketlistList)
-    saveServer(prayBucketIndex, prayBucketlist) // 서버에 저장하는 함수
-    prayBucketIndex ++ 
     prayBucketlistInput.value = ''
-
-    // 몽고DB에 저장하는 코드 작성
+        // 몽고DB에 저장하는 코드 작성
   const saveServer = async(number, detail) => {
     try{
     const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/saveBucket', {
@@ -122,6 +119,10 @@ function addPrayBucketlist(event) {
         console.log('기도버킷리스트 등록오류 :', err)
     }
 }
+
+    saveServer(prayBucketIndex, prayBucketlist) // 서버에 저장하는 함수
+    prayBucketIndex ++ 
+
 
   }
     
