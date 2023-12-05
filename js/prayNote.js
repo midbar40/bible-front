@@ -33,9 +33,6 @@ function addPrayBucketlist(event) {
     const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
     const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
     const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
-
-    console.log(formattedDate); // 출력: "2023/12/04"
-
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     const prayBucketlistInput = document.querySelector('.prayBucketList-input input')
     const prayBucketlist = prayBucketlistInput.value
@@ -65,8 +62,7 @@ function addPrayBucketlist(event) {
             },
             body: JSON.stringify({
                 number : prayBucketIndex,
-                content : prayBucketlist,
-                createdAt : formattedDate
+                detail : prayBucketlist,
             })
         })
       const result = await response.json()  
@@ -76,7 +72,7 @@ function addPrayBucketlist(event) {
         console.log('기도버킷리스트 등록오류 :', err)
     }
 }
-saveServer()
+saveServer() 
   }
     
 
