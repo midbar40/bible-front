@@ -27,7 +27,6 @@ async function getPrayBucketlist(){
 
     )
     const prayBucketlistData = await data.json()
-    console.log('prayBucketlistData :', prayBucketlistData)
     return prayBucketlistData
     }catch(error){
         console.log('기도버킷리스트 로딩 실패 :', error)
@@ -35,9 +34,9 @@ async function getPrayBucketlist(){
 }
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(){
-    console.log('showPrayBucketlist 실행됨')
+    console.log('showPrayBucketlist ', prayBucketIndex)
     const prayBucketlistData = await getPrayBucketlist()
-    console.log('showPrayBucketlist, prayBucketlistData :', prayBucketlistData)
+    console.log(' prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.result.forEach(element => {
         const prayBucketlistList = document.createElement('tr')
@@ -77,6 +76,7 @@ prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
 
 // PrayBucketList 추가
 function addPrayBucketlist(event) {
+    console.log('addPrayBucketlist ', prayBucketIndex)
     event.preventDefault()
     const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
     const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
@@ -119,11 +119,8 @@ function addPrayBucketlist(event) {
         console.log('기도버킷리스트 등록오류 :', err)
     }
 }
-
     saveServer(prayBucketIndex, prayBucketlist) // 서버에 저장하는 함수
     prayBucketIndex ++ 
-
-
   }
     
 
