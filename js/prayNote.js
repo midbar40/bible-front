@@ -27,6 +27,7 @@ async function getPrayBucketlist(){
 
     )
     const prayBucketlistData = await data.json()
+    console.log('prayBucketlistData :', prayBucketlistData)
     return prayBucketlistData
     }catch(error){
         console.log('기도버킷리스트 로딩 실패 :', error)
