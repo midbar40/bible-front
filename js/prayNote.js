@@ -63,7 +63,7 @@ function addPrayBucketlist(event) {
             body: JSON.stringify({
                 number : prayBucketIndex,
                 detail : prayBucketlist,
-                author: localStorage.getItem('유저이름'),
+                email: localStorage.getItem('유저이름'),
             })
         })
       const result = await response.json()  
