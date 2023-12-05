@@ -56,7 +56,7 @@ async function showPrayBucketlist(){
         prayBucketIndex ++
         prayBucketlistList.addEventListener('contextmenu', function(e){
             const rightClickList = e.target._id
-            console.log('e.target :', e.target)
+            console.log('e.target :', e.target.parentNode.className.split(' '))
             e.preventDefault()
             const rightClickMenu = document.querySelector('.right-click-menu')
             rightClickMenu.innerHTML = `
