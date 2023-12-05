@@ -1,5 +1,5 @@
 let prayBucketIndex = 1
-
+let prayBucketDbId = null
 
 // 헤더 모듈 가져오기
 function checkIsLogined(){
@@ -32,6 +32,77 @@ async function getPrayBucketlist(){
         console.log('기도버킷리스트 로딩 실패 :', error)
     }
 }
+   // 마우스 우클릭해서 삭제하기
+   const deletePrayBucketlist = (prayBucketlistList) => {
+    prayBucketlistList.addEventListener('contextmenu', function(e){
+        // 마우스 우클릭 시 클릭된 곳 색깔 입히기
+        const rightClickeActive = e.target.parentNode.classList.add('active')
+        const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
+        // 기존에 active 클래스가 있으면 삭제하고 새로운 active 클래스 추가하기
+        prayBucketlistList.forEach((element => {
+            if(element.classList.contains('active')){
+                element.classList.remove('active')
+                e.currentTarget.classList.add('active')    
+         } 
+        }))
+
+        const rightClickList = e.target.parentNode.className.split(' ')[1]
+        console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
+        e.preventDefault()
+        const rightClickMenu = document.querySelector('.right-click-menu')
+        rightClickMenu.innerHTML = `
+        <div class='right-click-menu-edit'>수정</div>
+        <div class='right-click-menu-delete'>삭제</div>
+        `
+        document.body.appendChild(rightClickMenu)
+
+        rightClickMenu.style.top = `${e.clientY}px`
+        rightClickMenu.style.left = `${e.clientX}px`
+        rightClickMenu.style.display = 'block'
+    
+        const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
+        const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
+        rightClickMenuEdit.style='cursor:pointer'
+        rightClickMenuDelete.style='cursor:pointer'
+        rightClickMenuDelete.addEventListener('click', function(e){
+            console.log('rightClickList :', rightClickList)
+            fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/',
+            {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body : JSON.stringify({
+                _id: rightClickList
+            })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('data :', data)
+                if(data.code == 200){
+                    alert('삭제되었습니다.')
+                    location.reload()
+                }
+            })
+        })
+    })
+    document.body.addEventListener('click', function(e){
+        const rightClickMenu = document.querySelector('.right-click-menu')
+        const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
+        if(rightClickMenu){
+            rightClickMenu.style.display = 'none'
+            rightClickMenu.style.top = null
+            rightClickMenu.style.left = null
+            if(prayBucketlistList){
+                prayBucketlistList.forEach(element => {
+                    element.classList.remove('active')
+                })
+            }
+        }
+    })
+   }
+   
+
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(){
     console.log('showPrayBucketlist ', prayBucketIndex)
@@ -54,51 +125,7 @@ async function showPrayBucketlist(){
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
         prayBucketIndex ++
-        prayBucketlistList.addEventListener('contextmenu', function(e){
-            const rightClickList = e.target._id
-            console.log('e.target :', e.target.parentNode.className.split(' '))
-            e.preventDefault()
-            const rightClickMenu = document.querySelector('.right-click-menu')
-            rightClickMenu.innerHTML = `
-            <div class='right-click-menu-edit'>수정</div>
-            <div class='right-click-menu-delete'>삭제</div>
-            `
-            document.body.appendChild(rightClickMenu)
-            rightClickMenu.style.width = '100px'
-            rightClickMenu.style.height = '100px'
-            rightClickMenu.style.backgroundColor = 'white'
-            rightClickMenu.style.top = `${e.clientY}px`
-            rightClickMenu.style.left = `${e.clientX}px`
-            rightClickMenu.style.display = 'block'
-            rightClickMenu.style.position = 'absolute'
-
-            const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
-            const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
-            rightClickMenuEdit.style='cursor:pointer'
-            rightClickMenuDelete.style='cursor:pointer'
-            rightClickMenuDelete.addEventListener('click', function(rightClickList){
-                console.log('rightClickList :', rightClickList)
-                fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/',
-                {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body : JSON.stringify({
-                    _id: rightClickList
-                })
-                }
-                )
-            })
-        })
-        document.body.addEventListener('click', function(e){
-            const rightClickMenu = document.querySelector('.right-click-menu')
-            if(rightClickMenu){
-                rightClickMenu.style.display = 'none'
-                rightClickMenu.style.top = null
-                rightClickMenu.style.left = null
-            }
-        })
+        deletePrayBucketlist(prayBucketlistList)
     });
 }
 
@@ -120,7 +147,7 @@ const prayBucketlistForm = document.querySelector('.prayBucketList-input form')
 prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
 
 // PrayBucketList 추가
-function addPrayBucketlist(event) {
+ async function addPrayBucketlist(event) {
     console.log('addPrayBucketlist ', prayBucketIndex)
     event.preventDefault()
     const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
@@ -130,19 +157,7 @@ function addPrayBucketlist(event) {
     const prayBucketlistInput = document.querySelector('.prayBucketList-input input')
     const prayBucketlist = prayBucketlistInput.value
     const prayBucketlistList = document.createElement('tr')
-    prayBucketlistList.className = `prayBucketlist-List ${prayBucketIndex}`
-    prayBucketlistList.innerHTML = 
-    `
-            <td><input type="checkbox" class='complete-checkbox'></td>
-            <td>${prayBucketIndex}</td>
-            <td>${prayBucketlist}</td>
-            <td>${formattedDate}</td>
-            <td class='checkedDate'></td>
-    `
-   
-    
-    prayBucketListTbody.appendChild(prayBucketlistList)
-    prayBucketlistInput.value = ''
+        
         // 몽고DB에 저장하는 코드 작성
   const saveServer = async(number, detail) => {
     try{
@@ -158,14 +173,34 @@ function addPrayBucketlist(event) {
             })
         })
       const result = await response.json()  
-       console.log('기도버킷리스트 등록결과 :', result)
+      console.log('기도버킷리스트 등록결과 :', result)
+      prayBucketDbId = result.result._id // 몽고DB에 저장된 기도버킷리스트의 아이디를 전역변수에 저장
+      return prayBucketDbId
     }
     catch(err){
         console.log('기도버킷리스트 등록오류 :', err)
     }
 }
-    saveServer(prayBucketIndex, prayBucketlist) // 서버에 저장하는 함수
+    await saveServer(prayBucketIndex, prayBucketlist) // 서버에 저장하는 함수
+       
+    prayBucketlistList.className = `prayBucketlist-List ${prayBucketDbId}` 
+    prayBucketlistList.innerHTML = 
+    `
+            <td><input type="checkbox" class='complete-checkbox'></td>
+            <td>${prayBucketIndex}</td>
+            <td>${prayBucketlist}</td>
+            <td>${formattedDate}</td>
+            <td class='checkedDate'></td>
+    `
+
+
+    prayBucketListTbody.appendChild(prayBucketlistList)
+    prayBucketlistInput.value = ''
+
     prayBucketIndex ++ 
+    deletePrayBucketlist(prayBucketlistList)
+   
+
   }
     
 

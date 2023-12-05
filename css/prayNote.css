@@ -300,3 +300,15 @@ main .pray-wrapper {
     background-color: rgb(153, 153, 153);
     color: rgb(255,255,255);
 }
+
+/* 동작에 따른 디자인 */
+.right-click-menu{
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    position: absolute;
+}
+.active{
+    background-color: rgb(126, 49, 214);
+    color: rgb(255,255,255);
+}
