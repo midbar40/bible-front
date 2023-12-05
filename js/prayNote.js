@@ -5,7 +5,7 @@ let prayBucketDbId = null
 function checkIsLogined(){
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)         
+        console.log('로그인상태 :', isLoggedIn)         
         document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
     }
 }
@@ -58,7 +58,7 @@ async function getPrayBucketlist(){
 
         rightClickMenu.style.top = `${e.clientY}px`
         rightClickMenu.style.left = `${e.clientX}px`
-        rightClickMenu.style.display = 'block'
+        rightClickMenu.style.display = 'flex'
     
         const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
         const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
@@ -105,7 +105,6 @@ async function getPrayBucketlist(){
 
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(){
-    console.log('showPrayBucketlist ', prayBucketIndex)
     const prayBucketlistData = await getPrayBucketlist()
     console.log(' prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
@@ -205,26 +204,56 @@ prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
     
 
 // PrayBuckelist checkbox 클릭시 체크당시 날짜 출력
-document.body.addEventListener('click', function(e){
-    if(e.target.className == 'complete-checkbox'){
-        const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
-        const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
-        const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
-    
-       document.querySelectorAll('input[type="checkbox"]').forEach(check => 
-        check.addEventListener('change', 
-       function(e){ // 2번째 기도내용부터는 이 함수가 추가되지 않는다, how? : querySelectorAll로 해결, 코파일럿 주석이 알려줬네..
-        if(e.target.checked){
-            let getCheckedTime = formattedDate // 현재 시간을 밀리초로 얻기
-            e.target.closest('tr').querySelector('.checkedDate').innerText = getCheckedTime
-             // 몽고DB에 저장하는 코드 작성
+function handleCheckboxChange(e) {
+    if (e.target.className === 'complete-checkbox') {
+        const currentTime = Date.now();
+        const currentDate = new Date(currentTime);
+        const formattedDate = `${currentDate.getFullYear().toString().slice(2, 4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
 
-     }else if(!e.target.checked){
-        e.target.closest('tr').querySelector('.checkedDate').innerText = ''
-         // 몽고DB에 저장하는 코드 작성
-         
-     }
-}))
+        if (e.target.checked) {
+            let getCheckedTime = formattedDate;
+            e.target.closest('tr').querySelector('.checkedDate').innerText = getCheckedTime;
 
+            const clickedDataDbId = e.target.closest('tr').className.split(' ')[1];
+            const updatedCheckedDate = async () => {
+                const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/checked', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        _id: clickedDataDbId,
+                        isDone: true,
+                        finishedAt: Date.now()
+                    })
+                });
+                const result = await response.json();
+                console.log('체크박스클릭 :', result);
+            };
+            updatedCheckedDate();
+        } else {
+            e.target.closest('tr').querySelector('.checkedDate').innerText = '';
+
+            const clickedDataDbId = e.target.closest('tr').className.split(' ')[1];
+            const updatedUnCheckedDate = async () => {
+                const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/checked', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        _id: clickedDataDbId,
+                        isDone: false,
+                        finishedAt: null
+                    })
+                });
+                const result = await response.json();
+                console.log('체크박스해제 :', result);
+            };
+            updatedUnCheckedDate();
+        }
     }
-})
+}
+
+document.body.removeEventListener('click', handleCheckboxChange);
+document.body.addEventListener('click', handleCheckboxChange);

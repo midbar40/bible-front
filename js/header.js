@@ -4,7 +4,6 @@ export function headerModule(isLoggedIn) {
    
     const header = document.createElement('header');
     const nav = document.createElement('nav');
-    console.log('headermodule7줄 :', isLoggedIn)
     if(isLoggedIn){
 
         nav.innerHTML = 
