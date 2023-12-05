@@ -54,6 +54,27 @@ async function showPrayBucketlist(){
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
         prayBucketIndex ++
+        prayBucketlistList.addEventListener('contextmenu', function(e){
+            e.preventDefault()
+            const rightClickMenu = document.createElement('div')
+            rightClickMenu.className = 'right-click-menu'
+            rightClickMenu.innerHTML = `
+            <div class='right-click-menu-edit'>수정</div>
+            <div class='right-click-menu-delete'>삭제</div>
+            `
+            document.body.appendChild(rightClickMenu)
+            rightClickMenu.style.top = `${e.clientY}px`
+            rightClickMenu.style.left = `${e.clientX}px`
+            rightClickMenu.style.display = 'block'
+        })
+        prayBucketlistList.addEventListener('click', function(e){
+            const rightClickMenu = document.querySelector('.right-click-menu')
+            if(rightClickMenu){
+                rightClickMenu.style.display = 'none'
+                rightClickMenu.style.top = null
+                rightClickMenu.style.left = null
+            }
+        })
     });
 }
 
