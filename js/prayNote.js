@@ -37,6 +37,7 @@ async function getPrayBucketlist(){
 async function showPrayBucketlist(){
     console.log('showPrayBucketlist 실행됨')
     const prayBucketlistData = await getPrayBucketlist()
+    console.log('showPrayBucketlist, prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.result.forEach(element => {
         const prayBucketlistList = document.createElement('tr')
