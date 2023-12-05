@@ -35,6 +35,7 @@ async function getPrayBucketlist(){
 }
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(){
+    console.log('showPrayBucketlist 실행됨')
     const prayBucketlistData = await getPrayBucketlist()
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.forEach(element => {
