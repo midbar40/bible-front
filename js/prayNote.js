@@ -11,6 +11,29 @@ function checkIsLogined(){
 }
 document.addEventListener('DOMContentLoaded', checkIsLogined)
 
+// 서버 데이터 가져오는 함수
+async function getPrayBucketlist(){
+    try{
+    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/getBucket',
+    {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body : JSON.stringify({
+        email: localStorage.getItem('유저이름')
+    })
+    }
+
+    )
+    const prayBucketlistData = await data.json()
+    return prayBucketlistData
+    }catch(error){
+        console.log('기도버킷리스트 로딩 실패 :', error)
+    }
+}
+
+document.addEventListener('DOMContentLoaded', getPrayBucketlist)
 
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function(e){
@@ -55,7 +78,7 @@ function addPrayBucketlist(event) {
     // 몽고DB에 저장하는 코드 작성
   const saveServer = async() => {
     try{
-    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist', {
+    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/saveBucket', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

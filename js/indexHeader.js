@@ -73,6 +73,7 @@ export async function logout(e){
             console.log(data)
             if(!data.token){
                 localStorage.removeItem('로그인상태')
+                localStorage.removeItem('유저이름')
                 window.location.reload()
             }
         })
