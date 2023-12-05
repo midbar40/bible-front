@@ -38,7 +38,7 @@ async function showPrayBucketlist(){
     console.log('showPrayBucketlist 실행됨')
     const prayBucketlistData = await getPrayBucketlist()
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
-    prayBucketlistData.forEach(element => {
+    prayBucketlistData.result.forEach(element => {
         const prayBucketlistList = document.createElement('tr')
         prayBucketlistList.className = `prayBucketlist-List ${element.number}`
         const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
