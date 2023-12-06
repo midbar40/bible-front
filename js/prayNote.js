@@ -8,10 +8,7 @@ function checkIsLogined(){
         const isLoggedIn = localStorage.getItem('로그인상태')
         console.log('로그인상태 :', isLoggedIn)         
         document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
-        if(isLoggedIn == null){
-            alert('로그인 후 이용이 가능합니다.')
-            location.href = './login.html'
-        }
+
     }
 }
 document.addEventListener('DOMContentLoaded', checkIsLogined)
@@ -140,7 +137,7 @@ async function getPrayBucketlist(){
     const rightClickMenu = document.querySelector('.right-click-menu')
     const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
     const editDetail = document.querySelector('#edit-detail')
-    console.log('e.target :', e.target.id) // 여러번클릭됨, 문제해결필요
+    // console.log('e.target :', e.target.id) // 여러번클릭됨, 문제해결필요
     if(rightClickMenu){
         rightClickMenu.style.display = 'none'
         rightClickMenu.style.top = null
@@ -156,6 +153,8 @@ async function getPrayBucketlist(){
     && e.target.className !== 'right-click-menu-edit' && e.target.className !== 'right-click-menu-delete' ){
         editDetail.parentNode.innerHTML = rightClickNearestTdInnerText // 리로드 안되고 innerText만 바뀌게 하고 싶은데 이전 innerText로 돌아가는 문제가 있음
       }
+
+
   })
 
 // 버킷리스트 화면에 뿌려주는 함수

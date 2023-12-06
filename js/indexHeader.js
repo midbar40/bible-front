@@ -37,7 +37,7 @@ export function indexHeaderModule(isLoggedIn) {
             <div class="menu-btn">
               <a href="/bible-front/html/readbible.html">성경읽기</a>
               <a href="/bible-front/html/game.html">시편필사</a>
-              <a href="/bible-front/html/prayNote.html">기도노트</a>
+              <a href="/bible-front/html/login.html">기도노트</a>
             </div>
             <div class="login-btn">
               <a href="./html/login.html">로그인</a>
@@ -54,6 +54,12 @@ export function indexHeaderModule(isLoggedIn) {
             })   
         }
     }
+
+    document.addEventListener('click', function(e){
+        if(e.target.innerText === '기도노트'){
+            alert('로그인이 필요한 서비스입니다.')
+        }
+    })
     return header
 }
 

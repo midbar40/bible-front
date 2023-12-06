@@ -1,4 +1,5 @@
 
+let logoutAdded = false
 
 export function headerModule(isLoggedIn) {
    
@@ -23,11 +24,16 @@ export function headerModule(isLoggedIn) {
         <span class="material-symbols-outlined"> menu </span>
         `
         header.appendChild(nav)
+        if(!logoutAdded){
         document.addEventListener('click', function(e){
+            e.stopPropagation()
+            console.log('이게실행이되나 로그아웃')
             if(e.target.id === 'logout-link'){
                 logout(e)
             }
         })
+    }
+    logoutAdded = true
     } else if(isLoggedIn === null || isLoggedIn === undefined) {
         nav.innerHTML = 
         `
@@ -36,7 +42,7 @@ export function headerModule(isLoggedIn) {
           <div class="menu-btn">
             <a href="./readbible.html">성경읽기</a>
             <a href="./game.html">시편필사</a>
-            <a href="#">기도노트</a>
+            <a href="./login.html">기도노트</a>
           </div>
           <div class="login-btn">
             <a href="./login.html">로그인</a>
@@ -52,6 +58,11 @@ export function headerModule(isLoggedIn) {
                 window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })   
         }
+        document.addEventListener('click', function(e){
+            if(e.target.innerText === '기도노트'){
+                alert('로그인이 필요한 서비스입니다.')
+            }
+        })
     }
     return header
 }
