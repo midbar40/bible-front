@@ -1,5 +1,6 @@
 let prayBucketIndex = 1
 let prayBucketDbId = null
+let rightClickNearestTdInnerText
 
 // 헤더 모듈 가져오기
 function checkIsLogined(){
@@ -7,6 +8,10 @@ function checkIsLogined(){
         const isLoggedIn = localStorage.getItem('로그인상태')
         console.log('로그인상태 :', isLoggedIn)         
         document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
+        if(isLoggedIn == null){
+            alert('로그인 후 이용이 가능합니다.')
+            location.href = './login.html'
+        }
     }
 }
 document.addEventListener('DOMContentLoaded', checkIsLogined)
@@ -32,8 +37,8 @@ async function getPrayBucketlist(){
         console.log('기도버킷리스트 로딩 실패 :', error)
     }
 }
-   // 마우스 우클릭해서 삭제하기
-   const deletePrayBucketlist = (prayBucketlistList) => {
+   // 마우스 우클릭해서 기능 (수정, 삭제) 추가하기
+   const deleteAndEditPrayBucketlist = (prayBucketlistList) => {
     prayBucketlistList.addEventListener('contextmenu', function(e){
         // 마우스 우클릭 시 클릭된 곳 색깔 입히기
         const rightClickeActive = e.target.parentNode.classList.add('active')
@@ -45,9 +50,15 @@ async function getPrayBucketlist(){
                 e.currentTarget.classList.add('active')    
          } 
         }))
+        // 마우스 우클릭시 기존에 열려있던 input 수정창 사라지게 하기
+        const editDetail = document.querySelector('#edit-detail')
+        if(editDetail) editDetail.parentNode.innerHTML = rightClickNearestTdInnerText
 
         const rightClickList = e.target.parentNode.className.split(' ')[1]
+        const rightClickNearestTd = e.target
+         rightClickNearestTdInnerText = e.target.innerText
         console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
+        console.log('rightClickNearestTdInnerText :', rightClickNearestTdInnerText)
         e.preventDefault()
         const rightClickMenu = document.querySelector('.right-click-menu')
         rightClickMenu.innerHTML = `
@@ -64,6 +75,7 @@ async function getPrayBucketlist(){
         const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
         rightClickMenuEdit.style='cursor:pointer'
         rightClickMenuDelete.style='cursor:pointer'
+        // 삭제하기
         rightClickMenuDelete.addEventListener('click', function(e){
             console.log('rightClickList :', rightClickList)
             fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/',
@@ -85,23 +97,66 @@ async function getPrayBucketlist(){
                 }
             })
         })
+
+        // 수정하기
+        rightClickMenuEdit.addEventListener('click', function(e){
+            rightClickNearestTd.innerHTML = `
+            <input id='edit-detail' type='text' placeholder ='수정할 내용을 입력하세요'/>
+            `
+            const editDetail = document.querySelector('#edit-detail')
+            editDetail.style.width = '100%'
+            editDetail.addEventListener('keydown', function(e){
+                if(e.key === 'Enter'){
+                    fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/edit',
+                    {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body : JSON.stringify({
+                        _id: rightClickList,
+                        detail: editDetail.value,
+                        lastModifiedAt: new Date()
+                    })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('글수정하기 :', data)
+                        if(data.code == 200){
+                            alert('수정되었습니다.')
+                            location.reload()
+                        }
+                    })
+                }
+            })
     })
-    document.body.addEventListener('click', function(e){
-        const rightClickMenu = document.querySelector('.right-click-menu')
-        const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
-        if(rightClickMenu){
-            rightClickMenu.style.display = 'none'
-            rightClickMenu.style.top = null
-            rightClickMenu.style.left = null
-            if(prayBucketlistList){
-                prayBucketlistList.forEach(element => {
-                    element.classList.remove('active')
-                })
-            }
-        }
+
     })
    }
-   
+
+   // 우클릭 메뉴가 떠있는 상태에서 다른 곳을 클릭하면 우클릭 메뉴가 사라지게 하기
+   document.body.addEventListener('click', function(e){
+    e.stopPropagation()
+    const rightClickMenu = document.querySelector('.right-click-menu')
+    const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
+    const editDetail = document.querySelector('#edit-detail')
+    console.log('e.target :', e.target.id) // 여러번클릭됨, 문제해결필요
+    if(rightClickMenu){
+        rightClickMenu.style.display = 'none'
+        rightClickMenu.style.top = null
+        rightClickMenu.style.left = null
+        if(prayBucketlistList){
+            prayBucketlistList.forEach(element => {
+                element.classList.remove('active')
+            })
+        }
+    }
+    // 수정버튼 눌러서 생긴 input창을 제외한 다른 곳을 클릭하면 input창이 사라지게 하기 && 수정창 1개만 열리게해야함
+    if(editDetail && e.target.id !== 'edit-detail' && e.target.className !== 'right-click-menu' 
+    && e.target.className !== 'right-click-menu-edit' && e.target.className !== 'right-click-menu-delete' ){
+        editDetail.parentNode.innerHTML = rightClickNearestTdInnerText // 리로드 안되고 innerText만 바뀌게 하고 싶은데 이전 innerText로 돌아가는 문제가 있음
+      }
+  })
 
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(){
@@ -124,7 +179,7 @@ async function showPrayBucketlist(){
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
         prayBucketIndex ++
-        deletePrayBucketlist(prayBucketlistList)
+        deleteAndEditPrayBucketlist(prayBucketlistList)
     });
 }
 
@@ -197,7 +252,7 @@ prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
     prayBucketlistInput.value = ''
 
     prayBucketIndex ++ 
-    deletePrayBucketlist(prayBucketlistList)
+    deleteAndEditPrayBucketlist(prayBucketlistList)
    
 
   }
