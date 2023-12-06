@@ -1,6 +1,4 @@
 
-let logoutAdded = false
-
 export function headerModule(isLoggedIn) {
    
     const header = document.createElement('header');
@@ -24,16 +22,14 @@ export function headerModule(isLoggedIn) {
         <span class="material-symbols-outlined"> menu </span>
         `
         header.appendChild(nav)
-        if(!logoutAdded){
-        document.addEventListener('click', function(e){
+        document.body.addEventListener('click', function(e){
             e.stopPropagation()
             console.log('이게실행이되나 로그아웃')
             if(e.target.id === 'logout-link'){
                 logout(e)
+                window.location.href = 'https://midbar40.github.io/bible-front/index.html'
             }
         })
-    }
-    logoutAdded = true
     } else if(isLoggedIn === null || isLoggedIn === undefined) {
         nav.innerHTML = 
         `
