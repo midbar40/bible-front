@@ -53,13 +53,12 @@ export function indexHeaderModule(isLoggedIn) {
                 window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })   
         }
+        document.addEventListener('click', function(e){
+            if(e.target.innerText === '기도노트'){
+                alert('로그인이 필요한 서비스입니다.')
+            }
+        })
     }
-
-    document.addEventListener('click', function(e){
-        if(e.target.innerText === '기도노트'){
-            alert('로그인이 필요한 서비스입니다.')
-        }
-    })
     return header
 }
 
