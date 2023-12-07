@@ -8,23 +8,20 @@ function checkIsLogined(){
         const isLoggedIn = localStorage.getItem('로그인상태')
         console.log('로그인상태 :', isLoggedIn)         
         document.body.insertAdjacentElement('afterbegin',headerModule(isLoggedIn))
-
     }
 }
 document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 // 한번에 여러개의 서버 데이터 가져오기
 async function getPrayNoteServerData(){
-    Promise.all([showPrayBucketlist(), showGraceList()])
-    .then((data) => {
-        console.log('Praynote 서버데이터 :', data)
-    })
-    .catch((error) => {
-        console.log('error :', error)
-    })
+    const reponses = await Promise.all([getPrayBucketlist(), getGrace()])
+    const prayBucketlistData = reponses[0]
+    const graceList = reponses[1]
+    showPrayBucketlist(prayBucketlistData)
+    showGraceList(graceList)
 }
 
-// 서버 데이터 가져오는 함수
+// PrayBucketlist 서버 데이터 가져오는 함수
 async function getPrayBucketlist(){
     try{
     const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/getBucket',
@@ -149,7 +146,7 @@ async function getPrayBucketlist(){
     const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
     const graceList = document.querySelectorAll('.Prayer-of-thanksList')
     const editDetail = document.querySelector('#edit-detail')
-    // console.log('e.target :', e.target.id) // 여러번클릭됨, 문제해결필요
+
     if(rightClickMenu){
         rightClickMenu.style.display = 'none'
         rightClickMenu.style.top = null
@@ -159,7 +156,7 @@ async function getPrayBucketlist(){
                 element.classList.remove('active')
             })
         }
-        else if(graceList){
+        if(graceList){
             graceList.forEach(element => {
                 element.classList.remove('active')
             })
@@ -173,8 +170,7 @@ async function getPrayBucketlist(){
   })
 
 // 버킷리스트 화면에 뿌려주는 함수
-async function showPrayBucketlist(){
-    const prayBucketlistData = await getPrayBucketlist()
+async function showPrayBucketlist(prayBucketlistData){
     console.log(' prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.result.forEach(element => {
@@ -344,6 +340,7 @@ async function getGrace(){
         })
         const result = await reponse.json()
         console.log('감사기도 조회:', result)
+        return result
         } catch (error) {
         console.log('감사기도 조회 실패:', error)
     }
@@ -351,10 +348,8 @@ async function getGrace(){
 
 // 감사기도 작성하기
 
-async function showGraceList() {
-    const graceList = await getGrace()
-    console.log(' graceList :', graceList)
-    const PrayerOfThanksBody = document.querySelector('.Prayer-of-thanks-body')
+async function showGraceList(graceList) {
+    const PrayerOfThanksBody = document.querySelector('.Prayer-of-thanks-body tbody')
     graceList.result.forEach(element => {
         const PrayerOfThanksList = document.createElement('tr')
         PrayerOfThanksList.className = `Prayer-of-thanksList ${element._id}`
@@ -392,6 +387,7 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
         if(editDetail) editDetail.parentNode.innerHTML = rightClickNearestTdInnerText
 
         const rightClickList = e.target.parentNode.className.split(' ')[1]
+        console.log('rightClickList :', rightClickList)
         const rightClickNearestTd = e.target
          rightClickNearestTdInnerText = e.target.innerText
         console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
@@ -513,7 +509,7 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
 }
     await saveServer(graceIndex, graceList) // 서버에 저장하는 함수
        
-    graceListList.className = `Prayer-of-thanksList ${prayBucketDbId}` 
+    graceListList.className = `Prayer-of-thanksList ${graceDbId}` 
     graceListList.innerHTML = 
     `
             <td>${graceIndex}</td>
