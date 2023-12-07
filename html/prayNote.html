@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>기도노트</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,114 +18,127 @@
     <link rel="stylesheet" href="../css/prayNote.css" />
     <script type="module" src="../js/header.js" defer></script>
     <script type="module" src="../js/prayNote.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <!-- 헤더 -->
     <!-- 모듈로 가져옴 -->
     <div class="background"></div>
 
     <!-- 메인 -->
     <main>
-        <!-- Wrapper -->
-       <div class="pray-wrapper">
-            <!-- prayBucketList -->
-            <div class="prayBucketList">
-                <div class="prayBucketList-header">
-                    <h4 class="prayBucketList-title">기도 버킷리스트</h4>
-                </div>
-                <div class="prayBucketList-body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>응답</td>
-                                <td>순번</td>
-                                <td>내용</td>
-                                <td>기도</td>
-                                <td>응답</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           
-                        </tbody>
-                    </table>
-                    <div class="right-click-menu"></div>
-                </div>
-                <div class="prayBucketList-input">
-                    <form>
-                        <input type="text" placeholder="기도 버킷리스트를 입력하세요" >
-                    </form>
-                </div>
-            </div>
-            <!-- Prayer of thanks -->
-            <div class="Prayer-of-thanks">
-                <div class="Prayer-of-thanks-header">
-                    <h4 class="Prayer-of-thanks-title">한줄 감사기도</h4>
-                </div>
-                <div class="Prayer-of-thanks-body">
-                    <table>
-                        <tr>
-                            <td>순번</td>
-                            <td>내용</td>
-                            <td>일자</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>기도 버킷리스트</td>
-                            <td>23/12/04</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="Prayer-of-thanks-input">
-                    <form>
-                        <input type="text" placeholder="감사한 일을 기억해보세요" >
-                    </form>
-                </div>
-
-            </div>
-            <!-- scripture & prayDiary -->
-        <div class="prayDiary">
-            <div class="scripture-board">
-                <div class="scripture">
-                    <div class="scripture-1">
-                        <p>만민들아 우리 하나님을 송축하며 그의 찬양 소리를 들리게 할지어다</p>
-                        <h5>시편 66:8</h5>
-                    </div>
-                    <div class="scripture-2">
-                        <p>만민들아 우리 하나님을 송축하며 그의 찬양 소리를 들리게 할지어다</p>
-                        <h5>시편 66:8</h5>
-                    </div>
-                </div>
-                <div class="prayDiary-output">
-                   
-                    <div class="prayDiary-output-body">
-                        <table>
-                            <tr>
-                                <td>일자</td>
-                                <td>제목</td>
-                            </tr>
-                            <tr>
-                                <td>23/12/04</td>
-                                <td>기도일기title</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="prayDiary-input">
-                <div class="prayDiary-header">
-                    <h4 class="prayDiary-title">기도일기</h4>
-                    </div>
-                <form>
-                    <input type="text" name="prayDiary-title" id="prayDiary-title" placeholder="오늘의 기도일기 제목적기">
-                    <textarea name="prayDiary-content" id="prayDiary-content" cols="30" rows="10" placeholder="오늘의 기도일기를 적어보세요"></textarea>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-outline save">저장</button>
-                        <button type="button" class="btn btn-outline cancel">취소</button>
-                    </div>
-                </form>
-            </div>
+      <!-- Wrapper -->
+      <div class="pray-wrapper">
+        <!-- prayBucketList -->
+        <div class="prayBucketList">
+          <div class="prayBucketList-header">
+            <h4 class="prayBucketList-title">기도 버킷리스트</h4>
+          </div>
+          <div class="prayBucketList-body">
+            <table>
+              <thead>
+                <tr>
+                  <td>응답</td>
+                  <td>순번</td>
+                  <td>내용</td>
+                  <td>기도</td>
+                  <td>응답</td>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="right-click-menu"></div>
+          </div>
+          <div class="prayBucketList-input">
+            <form>
+              <input type="text" placeholder="기도 버킷리스트를 입력하세요" />
+            </form>
+          </div>
         </div>
-       </div>
+        <!-- Prayer of thanks -->
+        <div class="Prayer-of-thanks">
+          <div class="Prayer-of-thanks-header">
+            <h4 class="Prayer-of-thanks-title">한줄 감사기도</h4>
+          </div>
+          <div class="Prayer-of-thanks-body">
+            <table>
+              <thead>
+                <tr>
+                  <td>순번</td>
+                  <td>내용</td>
+                  <td>일자</td>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="Prayer-of-thanks-input">
+            <form>
+              <input type="text" placeholder="감사한 일을 기억해보세요" />
+            </form>
+          </div>
+        </div>
+        <!-- scripture & prayDiary -->
+        <div class="prayDiary">
+          <div class="scripture-board">
+            <div class="scripture">
+              <div class="scripture-1">
+                <p>
+                  만민들아 우리 하나님을 송축하며 그의 찬양 소리를 들리게
+                  할지어다
+                </p>
+                <h5>시편 66:8</h5>
+              </div>
+              <div class="scripture-2">
+                <p>
+                  만민들아 우리 하나님을 송축하며 그의 찬양 소리를 들리게
+                  할지어다
+                </p>
+                <h5>시편 66:8</h5>
+              </div>
+            </div>
+            <div class="prayDiary-output">
+              <div class="prayDiary-output-body">
+                <table>
+                  <tr>
+                    <td>일자</td>
+                    <td>제목</td>
+                  </tr>
+                  <tr>
+                    <td>23/12/04</td>
+                    <td>기도일기title</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="prayDiary-input">
+            <div class="prayDiary-header">
+              <h4 class="prayDiary-title">기도일기</h4>
+            </div>
+            <form>
+              <input
+                type="text"
+                name="prayDiary-title"
+                id="prayDiary-title"
+                placeholder="오늘의 기도일기 제목적기"
+              />
+              <textarea
+                name="prayDiary-content"
+                id="prayDiary-content"
+                cols="30"
+                rows="10"
+                placeholder="오늘의 기도일기를 적어보세요"
+              ></textarea>
+              <div class="btn-group">
+                <button type="button" class="btn btn-outline save">저장</button>
+                <button type="button" class="btn btn-outline cancel">
+                  취소
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </main>
-</body>
+  </body>
 </html>

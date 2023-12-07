@@ -24,7 +24,6 @@ export function headerModule(isLoggedIn) {
         header.appendChild(nav)
         document.body.addEventListener('click', function(e){
             e.stopPropagation()
-            console.log('이게실행이되나 로그아웃')
             if(e.target.id === 'logout-link'){
                 logout(e)
                 // window.location.href = 'https://midbar40.github.io/bible-front/index.html'
