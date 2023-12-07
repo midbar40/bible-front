@@ -108,7 +108,7 @@ main .pray-wrapper {
 .Prayer-of-thanks-body table {
   width: 100%;
 }
-.Prayer-of-thanks-body table tr {
+.Prayer-of-thanks-body table thead tr {
   width: 100%;
   height: 10%;
   text-align: center;
