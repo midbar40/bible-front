@@ -12,6 +12,7 @@ let serverData = []
 let chapter = []
 let pageNum = 1
 
+
 // 헤더 모듈 가져오기
 function checkIsLogined(){
     {
@@ -38,6 +39,24 @@ async function getBibleData(clickedBookId){
 
 // 성경의 각 책이름을 클릭하면 본문을 보여주는 함수
 async function showClikedBook(e){  
+
+    // 성경책 이름 가져오기 (for문 안에 넣으면 안된다), deleteTitle() 함수보다 밑에 넣으면 호이스팅 문제로 작동하지 않는다.
+ function createTitle(firstPage){
+    console.log(firstPage)
+    const bookTitle = document.createElement('h3')
+    bookTitle.className = 'book-title'
+    bookTitle.innerHTML = `${e.target.innerText}&nbsp${firstPage}장` 
+    mainWrapper.insertAdjacentElement('afterbegin', bookTitle) // 본문 위에 삽입
+}
+   // 첫 화면은 1장을 가져오도록 설정, deleteTitle() 함수보다 밑에 넣으면 호이스팅 문제로 작동하지 않는다.
+   function createfirstPage(firstPage, i){
+    { 
+    if( e.target.id == serverData[0]?.bible[i]?.book
+        && serverData[0].bible[i].chapter == firstPage) { 
+            displayVerse(i)
+        }
+    }
+    }
 function deleteTitle(){
     const bookTitle = mainWrapper.querySelector('.book-title')
     if(bookTitle) mainWrapper.removeChild(bookTitle) // 새로운 성경책 클릭시 기존 타이틀 삭제, if(bookTitle) 안하면 생성간격차이로 오류발생
@@ -50,6 +69,7 @@ function deleteTitle(){
         await getBibleData(clickedBookId)
 
        if(serverData[0].bible.length > 0){  // 서버데이터가 있을때만 작동하도록 설정
+     
 // 출처 표시 : 대한성서공회, 개역한글
 function diplaySource(){
     const source = document.createElement('h4')
@@ -59,26 +79,11 @@ function diplaySource(){
     mainWrapper.insertAdjacentElement('beforebegin', source)
     return source
 }      
-// 성경책 이름 가져오기 (for문 안에 넣으면 안된다)
- function createTitle(firstPage){
-        console.log(firstPage)
-        const bookTitle = document.createElement('h3')
-        bookTitle.className = 'book-title'
-        bookTitle.innerHTML = `${e.target.innerText}&nbsp${firstPage}장` 
-        mainWrapper.insertAdjacentElement('afterbegin', bookTitle) // 본문 위에 삽입
-    }
+
     diplaySource()
     deleteTitle()
     createTitle(pageNum)
-// 첫 화면은 1장을 가져오도록 설정 
-    function createfirstPage(firstPage, i){
-        { 
-        if( e.target.id == serverData[0]?.bible[i]?.book
-            && serverData[0].bible[i].chapter == firstPage) { 
-                displayVerse(i)
-            }
-        }
-        }
+
 // 챕터 수 대로 하단 페이지 넘버 부여            
 async function createdPageNum(i){
     if(e.target.id == serverData[0]?.bible[i]?.book &&
@@ -144,7 +149,7 @@ function minusPage(e, bookId, pages, firstPage){
      
      deleteTitle()
      createTitle(firstPage)
-     console.log(firstPage)
+    //  console.log(firstPage)
      for(let i=0; i<serverData[0].bible.length; i++){
         scriptureList.style.display = 'none'
         createfirstPage(firstPage ,i)    
@@ -204,6 +209,7 @@ scriptureList?.addEventListener('click', showClikedBook) // 성경의 각 책이
 
 // Verse 표시하기
 function displayVerse(parameter){ 
+    console.log(parameter, '여기 들어오긴하니?')
     const bibleContents = document.createElement('div')
     bibleContents.innerHTML = `${serverData[0].bible[parameter].verse}&nbsp${serverData[0].bible[parameter].content}`
     bibleContents.className = 'bible-contents'

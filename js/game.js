@@ -253,12 +253,12 @@ select.append(option)
 }
 
 select.addEventListener('change', async (e)=>{
-    console.log('여기들어오는지 체크')
-    loadingStatus = true
+    console.log('여기들어오는지 체크') // 이곳이 실행되지 않는다
+    loadingStatus = true // 로딩화면 보여주기
     index = e.target.value
     console.log(e.target.childNodes)
     main.replaceChildren()
-    await getBibleText() // 현재 loadingStatus가 false인데 loading이 없어서 null값의 remove를 할 수 없다는 오류가 나온다.
+    await getBibleText() // 코드를 업데이트했는데 반영이 안되는것 같다
 })
 }
 (async () => await getBibleText())()
