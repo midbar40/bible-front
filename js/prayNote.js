@@ -14,11 +14,14 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 // 한번에 여러개의 서버 데이터 가져오기
 async function getPrayNoteServerData(){
-    const reponses = await Promise.all([getPrayBucketlist(), getGrace()])
+    const reponses = await Promise.all([getPrayBucketlist(), getGrace(), getPrayDiary()])
     const prayBucketlistData = reponses[0]
     const graceList = reponses[1]
+    const prayDiaryList = reponses[2]
+
     showPrayBucketlist(prayBucketlistData)
     showGraceList(graceList)
+    showPrayDiary(prayDiaryList)
 }
 
 // PrayBucketlist 서버 데이터 가져오는 함수
@@ -524,3 +527,74 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
     graceIndex ++ 
     deleteAndEditGraceList(graceListList)
   }
+
+
+  /////////////////////////////////////////////////
+  
+  // 기도일기 변수
+  const prayDiaryTitle = document.querySelector('#prayDiary-title')
+  const prayDiaryContent = document.querySelector('#prayDiary-content')
+  const prayDiarySaveBtn = document.querySelector('.btn-group save')
+  const prayDiaryCancelBtn = document.querySelector('.btn-group cancel')
+
+  // 기도일기 작성
+  const savePrayDiary = async() => {
+        const saveDiary = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/saveDiary', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title : prayDiaryTitle.value,
+            content : prayDiaryContent.value,
+            email: localStorage.getItem('유저이름')
+        })
+    })
+    const result = await saveDiary.json()
+    console.log('기도일기 저장결과 :', result)
+}
+ prayDiarySaveBtn.addEventListener('click', savePrayDiary)
+
+// 기도일기 취소
+const cancelPrayDiary = () => {
+    const userResponse = confirm('작성중인 내용이 있습니다. 정말 취소하시겠습니까?')
+    if(userResponse){
+        prayDiaryTitle.value = ''
+        prayDiaryContent.value = ''
+    } else return
+}
+ prayDiaryCancelBtn.addEventListener('click', cancelPrayDiary)
+
+// 저장된 기도일기 서버에서 가져오기
+const getPrayDiary = async() => {
+    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/getDiary', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: localStorage.getItem('유저이름')
+        })
+    })
+    const result = await response.json()
+    console.log('기도일기 조회결과 :', result)
+}
+
+// 서버에서 가져온 기도일기 output 화면에 보여주기
+const showPrayDiary = async(prayDiaryList) => {
+  const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
+  prayDiaryList.result.forEach(element => {
+    const prayDiaryTr = document.createElement('tr')
+    prayDiaryTr.className = `prayDiary-List ${element._id}`
+    const prayDiaryList = element.content 
+    const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
+    const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
+    const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
+  
+    prayDiaryTr.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>${prayDiaryList}</td>
+      `
+})
+prayDiaryOutputBodyTbody.appendChild(prayDiaryList)
+}
