@@ -534,8 +534,8 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
   // 기도일기 변수
   const prayDiaryTitle = document.querySelector('#prayDiary-title')
   const prayDiaryContent = document.querySelector('#prayDiary-content')
-  const prayDiarySaveBtn = document.querySelector('.btn-group save')
-  const prayDiaryCancelBtn = document.querySelector('.btn-group cancel')
+  const prayDiarySaveBtn = document.querySelector('.btn btn-outline save')
+  const prayDiaryCancelBtn = document.querySelector('.btn btn-outline cancel')
 
   // 기도일기 작성
   const savePrayDiary = async() => {
@@ -553,7 +553,11 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
     const result = await saveDiary.json()
     console.log('기도일기 저장결과 :', result)
 }
- prayDiarySaveBtn.addEventListener('click', savePrayDiary)
+ document.body.addEventListener('click', function(e){
+    if(prayDiarySaveBtn && e.target.className == 'btn btn-outline save'){
+        savePrayDiary()
+    }
+ })
 
 // 기도일기 취소
 const cancelPrayDiary = () => {
@@ -563,7 +567,11 @@ const cancelPrayDiary = () => {
         prayDiaryContent.value = ''
     } else return
 }
- prayDiaryCancelBtn.addEventListener('click', cancelPrayDiary)
+document.body.addEventListener('click', function(e){
+    if(prayDiaryCancelBtn && e.target.className == 'btn btn-outline cancel'){
+        cancelPrayDiary()
+    }
+})
 
 // 저장된 기도일기 서버에서 가져오기
 const getPrayDiary = async() => {
