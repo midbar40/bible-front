@@ -591,6 +591,7 @@ const getPrayDiary = async() => {
 
 // 서버에서 가져온 기도일기 output 화면에 보여주기
 const showPrayDiary = async(prayDiaryList) => {
+    console.log('이게 뭘로나오니 prayDiaryList', prayDiaryList)
   const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
   prayDiaryList.result?.forEach(element => {
     const prayDiaryTr = document.createElement('tr')
