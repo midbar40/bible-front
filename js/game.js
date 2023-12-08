@@ -120,7 +120,6 @@ async function getBibleText(){
     
     // 로딩화면
     if(loadingStatus){
-        console.log('여기가 실행되는건가?')
         addLoading()
         await getBibleData()
     } 
@@ -203,11 +202,12 @@ bibleText.addEventListener('click',(e)=>{
  nextButton.addEventListener('click', async (e)=> {
     e.preventDefault()
     loadingStatus = true
-    if(index < serverData[0].psalms.length - 1)  {
+    const psalmsLastIndex = 150
+    if(index < psalmsLastIndex)  {
         index++
         main.replaceChildren()
         await getBibleText()       
-    }else if(index == serverData[0].psalms.length - 1){
+    }else if(index == psalmsLastIndex){
         alert('마지막 장입니다.')
     }
 })
@@ -252,11 +252,10 @@ option.text = chapters[i]
 select.append(option)
 }
 
-select.addEventListener('change', async (e)=>{
-    console.log('여기들어오는지 체크') // 이곳이 실행되지 않는다
-    loadingStatus = true // 로딩화면 보여주기
+select.addEventListener('change',async(e)=>{
+    loadingStatus = true
     index = e.target.value
-    console.log(e.target.childNodes)
+    // console.log(e.target.childNodes)
     main.replaceChildren()
     await getBibleText() // 코드를 업데이트했는데 반영이 안되는것 같다
 })

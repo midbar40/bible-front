@@ -14,7 +14,7 @@ export function indexHeaderModule(isLoggedIn) {
           <div class="menu-btn">
             <a href="/bible-front/html/readbible.html">성경읽기</a>
             <a href="/bible-front/html/game.html">시편필사</a>
-            <a href="#">기도노트</a>
+            <a href="/bible-front/html/prayNote.html">기도노트</a>
           </div>
           <div class="login-btn">
             <a id='logout-link' href="#">로그아웃</a>
@@ -35,10 +35,9 @@ export function indexHeaderModule(isLoggedIn) {
           <h1><a href="./index.html">Sola Scriptura</a></h1>
           <div class="nav-btns">
             <div class="menu-btn">
-              <a href="./html/readbible.html">성경읽기</a>
-              <!-- 나중에 라우터로 변경 -->
-              <a href="./html/game.html">시편필사</a>
-              <a href="#">기도노트</a>
+              <a href="/bible-front/html/readbible.html">성경읽기</a>
+              <a href="/bible-front/html/game.html">시편필사</a>
+              <a href="/bible-front/html/login.html">기도노트</a>
             </div>
             <div class="login-btn">
               <a href="./html/login.html">로그인</a>
@@ -54,6 +53,11 @@ export function indexHeaderModule(isLoggedIn) {
                 window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })   
         }
+        document.addEventListener('click', function(e){
+            if(e.target.innerText === '기도노트'){
+                alert('로그인이 필요한 서비스입니다.')
+            }
+        })
     }
     return header
 }
@@ -74,6 +78,7 @@ export async function logout(e){
             console.log(data)
             if(!data.token){
                 localStorage.removeItem('로그인상태')
+                localStorage.removeItem('유저이름')
                 window.location.reload()
             }
         })
