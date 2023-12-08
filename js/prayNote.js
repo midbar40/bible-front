@@ -18,7 +18,7 @@ async function getPrayNoteServerData(){
     const prayBucketlistData = reponses[0]
     const graceList = reponses[1]
     const prayDiaryList = reponses[2]
-
+    console.log('prayDiaryList', prayDiaryList)
     showPrayBucketlist(prayBucketlistData)
     showGraceList(graceList)
     showPrayDiary(prayDiaryList)
@@ -534,8 +534,8 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
   // 기도일기 변수
   const prayDiaryTitle = document.querySelector('#prayDiary-title')
   const prayDiaryContent = document.querySelector('#prayDiary-content')
-  const prayDiarySaveBtn = document.querySelector('.btn btn-outline save')
-  const prayDiaryCancelBtn = document.querySelector('.btn btn-outline cancel')
+  const prayDiarySaveBtn = document.querySelector('.saveBtn')
+  const prayDiaryCancelBtn = document.querySelector('.cancelBtn')
 
   // 기도일기 작성
   const savePrayDiary = async() => {
@@ -546,16 +546,34 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
         },
         body: JSON.stringify({
             title : prayDiaryTitle.value,
-            content : prayDiaryContent.value,
+            detail : prayDiaryContent.value,
             email: localStorage.getItem('유저이름')
         })
     })
     const result = await saveDiary.json()
     console.log('기도일기 저장결과 :', result)
+
+        const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
+        const prayDiaryTr = document.createElement('tr')
+        prayDiaryTr.className = `prayDiary-List ${result.result._id}`
+        const currentDate = new Date(result.result.createdAt); // 해당 시간을 가진 날짜 객체 생성
+        const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
+
+  prayDiaryTr.innerHTML = `
+        <td>${formattedDate}</td>
+        <td>${result.result.title}</td>
+    `
+    prayDiaryOutputBodyTbody.appendChild(prayDiaryTr)
 }
- document.body.addEventListener('click', function(e){
-    if(prayDiarySaveBtn && e.target.className == 'btn btn-outline save'){
+
+
+document.body.addEventListener('click', function(e){
+    if(prayDiarySaveBtn && e.target.className == 'saveBtn'){
+    e.stopPropagation()
         savePrayDiary()
+        prayDiaryTitle.value = ''
+        prayDiaryContent.value = ''
+
     }
  })
 
@@ -568,8 +586,8 @@ const cancelPrayDiary = () => {
     } else return
 }
 document.body.addEventListener('click', function(e){
-    console.log(prayDiaryCancelBtn)
-    if(prayDiaryCancelBtn && e.target.className == 'btn btn-outline cancel'){
+    e.stopPropagation()
+    if(prayDiaryCancelBtn && e.target.className == 'cancelBtn'){
         cancelPrayDiary()
     }
 })
@@ -587,24 +605,26 @@ const getPrayDiary = async() => {
     })
     const result = await response.json()
     console.log('기도일기 조회결과 :', result)
+    return result
 }
 
 // 서버에서 가져온 기도일기 output 화면에 보여주기
 const showPrayDiary = async(prayDiaryList) => {
     console.log('이게 뭘로나오니 prayDiaryList', prayDiaryList)
   const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
-  prayDiaryList.result?.forEach(element => {
+  if(prayDiaryList !==undefined ||prayDiaryList !==undefined){
+  prayDiaryList?.result?.forEach(element => {
+    console.log('엘리먼트', element)
     const prayDiaryTr = document.createElement('tr')
     prayDiaryTr.className = `prayDiary-List ${element._id}`
-    const prayDiaryList = element.content 
-    const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
-    const currentDate = new Date(currentTime); // 해당 시간을 가진 날짜 객체 생성
+    const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
     const formattedDate = `${currentDate.getFullYear().toString().slice(2,4)}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getDate().toString().padStart(2, '0')}`;
   
     prayDiaryTr.innerHTML = `
           <td>${formattedDate}</td>
-          <td>${prayDiaryList}</td>
+          <td>${element.title}</td>
       `
-})
-prayDiaryOutputBodyTbody.appendChild(prayDiaryList)
+      prayDiaryOutputBodyTbody.appendChild(prayDiaryTr)
+    })
+}
 }
