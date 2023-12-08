@@ -176,7 +176,7 @@ async function getPrayBucketlist(){
 async function showPrayBucketlist(prayBucketlistData){
     console.log(' prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
-    prayBucketlistData.result.forEach(element => {
+    prayBucketlistData.result?.forEach(element => {
         const prayBucketlistList = document.createElement('tr')
         prayBucketlistList.className = `prayBucketlist-List ${element._id}`
         const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
@@ -353,7 +353,7 @@ async function getGrace(){
 
 async function showGraceList(graceList) {
     const PrayerOfThanksBody = document.querySelector('.Prayer-of-thanks-body tbody')
-    graceList.result.forEach(element => {
+    graceList.result?.forEach(element => {
         const PrayerOfThanksList = document.createElement('tr')
         PrayerOfThanksList.className = `Prayer-of-thanksList ${element._id}`
         const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
@@ -568,6 +568,7 @@ const cancelPrayDiary = () => {
     } else return
 }
 document.body.addEventListener('click', function(e){
+    console.log(prayDiaryCancelBtn)
     if(prayDiaryCancelBtn && e.target.className == 'btn btn-outline cancel'){
         cancelPrayDiary()
     }
@@ -591,7 +592,7 @@ const getPrayDiary = async() => {
 // 서버에서 가져온 기도일기 output 화면에 보여주기
 const showPrayDiary = async(prayDiaryList) => {
   const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
-  prayDiaryList.result.forEach(element => {
+  prayDiaryList.result?.forEach(element => {
     const prayDiaryTr = document.createElement('tr')
     prayDiaryTr.className = `prayDiary-List ${element._id}`
     const prayDiaryList = element.content 
