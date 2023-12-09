@@ -628,3 +628,63 @@ const showPrayDiary = async(prayDiaryList) => {
     })
 }
 }
+
+// 클릭시 기도일기 상세보기
+document.body.addEventListener('click', function(e){
+    console.log('e.target :', e.target.parentNode)
+    if(e.target.parentNode.classList.contains('prayDiary-List') ){
+        const clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
+        console.log('clickedPrayDiaryId :', clickedPrayDiaryId)
+        fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/getDiaryDetail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                _id: clickedPrayDiaryId
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('기도일기 상세보기 :', data)
+            if(prayDiaryTitle.value !== '' || prayDiaryContent.value !== ''){
+            const prayDiaryTitle = document.querySelector('#prayDiary-title')
+            const prayDiaryDetail = document.querySelector('#prayDiary-content')
+            const prayDiarySaveBtn = document.querySelector('.saveBtn')
+            prayDiaryTitle.value = data.result.title
+            prayDiaryDetail.value = data.result.detail
+            prayDiarySaveBtn.innerText = '수정'
+            prayDiarySaveBtn.className = 'editBtn'
+
+            if(prayDiarySaveBtn.className == 'editBtn'){
+                prayDiarySaveBtn.addEventListener('click', function(e){
+                    console.log('수정버튼 클릭')
+                    const editPrayDiary = async() => {
+                        const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/editDiary', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                _id: clickedPrayDiaryId,
+                                title: prayDiaryTitle.value,
+                                detail: prayDiaryDetail.value,
+                                lastModifiedAt: new Date()
+                            })
+                        })
+                        const result = await response.json()
+                        console.log('기도일기 수정결과 :', result)
+                        prayDiaryTitle.value = ''
+                        prayDiaryDetail.value = ''
+                        prayDiarySaveBtn.innerText = '저장'
+                        prayDiarySaveBtn.className = 'saveBtn'
+                        location.reload()
+                    }
+                    editPrayDiary()
+                })
+            }
+
+            }
+        })
+    }
+})

@@ -297,15 +297,22 @@ main .pray-wrapper {
   border: none;
   border-radius: 6px;
 }
-.prayDiary-input form .btn-group .cancel {
+.prayDiary-input form .cancelBtn {
   background-color: rgb(238, 34, 34);
   color: rgb(255, 255, 255);
+  cursor: pointer;
 }
-.prayDiary-input form .btn-group .save {
+.prayDiary-input form .saveBtn {
   background-color: rgb(153, 153, 153);
   color: rgb(255, 255, 255);
+  cursor: pointer;
 }
-
+.prayDiary-List:hover {
+  /* text-decoration: underline; */
+  background-color: rgb(126, 49, 214);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
 /* 동작에 따른 디자인 */
 .right-click-menu {
   width: 100px;
