@@ -614,7 +614,6 @@ const showPrayDiary = async(prayDiaryList) => {
   const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
   if(prayDiaryList !==undefined ||prayDiaryList !==undefined){
   prayDiaryList?.result?.forEach(element => {
-    console.log('엘리먼트', element)
     const prayDiaryTr = document.createElement('tr')
     prayDiaryTr.className = `prayDiary-List ${element._id}`
     const currentDate = new Date(element.createdAt); // 해당 시간을 가진 날짜 객체 생성
