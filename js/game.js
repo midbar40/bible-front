@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 // 성경 서버데이터 가져오기
 async function getBibleData(){
     try{
-    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/psalms?title=시편')
+    const data = await fetch('http://127.0.0.1:3300/api/bible/psalms?title=시편')
     const bibleData = await data.json()
     console.log(bibleData)
      // 중복데이터 push방지

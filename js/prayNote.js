@@ -27,7 +27,7 @@ async function getPrayNoteServerData(){
 // PrayBucketlist 서버 데이터 가져오는 함수
 async function getPrayBucketlist(){
     try{
-    const data = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/getBucket',
+    const data = await fetch('http://127.0.0.1:3300/api/prayBucketlist/getBucket',
     {
     method: 'POST',
     headers: {
@@ -86,7 +86,7 @@ async function getPrayBucketlist(){
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function(e){
             console.log('rightClickList :', rightClickList)
-            fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/',
+            fetch('http://127.0.0.1:3300/api/prayBucketlist/',
             {
             method: 'DELETE',
             headers: {
@@ -115,7 +115,7 @@ async function getPrayBucketlist(){
             editDetail.style.width = '100%'
             editDetail.addEventListener('keydown', function(e){
                 if(e.key === 'Enter'){
-                    fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/edit',
+                    fetch('http://127.0.0.1:3300/api/prayBucketlist/edit',
                     {
                     method: 'PUT',
                     headers: {
@@ -228,7 +228,7 @@ prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
   // 몽고DB에 저장하는 코드 작성
   const saveServer = async(number, detail) => {
     try{
-    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/saveBucket', {
+        const response = await fetch('http://127.0.0.1:3300/api/prayBucketlist/saveBucket', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -281,7 +281,7 @@ function handleCheckboxChange(e) {
 
             const clickedDataDbId = e.target.closest('tr').className.split(' ')[1];
             const updatedCheckedDate = async () => {
-                const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/checked', {
+                    const response = await fetch('http://127.0.0.1:3300/api/prayBucketlist/checked', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -301,7 +301,7 @@ function handleCheckboxChange(e) {
 
             const clickedDataDbId = e.target.closest('tr').className.split(' ')[1];
             const updatedUnCheckedDate = async () => {
-                const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayBucketlist/checked', {
+                    const response = await fetch('http://127.0.0.1:3300/api/prayBucketlist/checked', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -332,7 +332,7 @@ let graceDbId = null
 // 감사기도 가져오기
 async function getGrace(){
     try {
-        const reponse = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/grace/getGrace', {
+        const reponse = await fetch('http://127.0.0.1:3300/api/grace/getGrace', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -414,7 +414,7 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function(e){
             console.log('rightClickList :', rightClickList)
-            fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/grace/',
+            fetch('http://127.0.0.1:3300/api/grace/',
             {
             method: 'DELETE',
             headers: {
@@ -443,7 +443,7 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
             editDetail.style.width = '100%'
             editDetail.addEventListener('keydown', function(e){
                 if(e.key === 'Enter'){
-                    fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/grace/edit',
+                    fetch('http://127.0.0.1:3300/api/grace/edit',
                     {
                     method: 'PUT',
                     headers: {
@@ -490,7 +490,7 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
   // 몽고DB에 저장하는 코드 작성
   const saveServer = async(number, detail) => {
     try{
-    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/grace/saveGrace', {
+            const response = await fetch('http://127.0.0.1:3300/api/grace/saveGrace', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -539,7 +539,7 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
 
   // 기도일기 작성
   const savePrayDiary = async() => {
-        const saveDiary = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/saveDiary', {
+        const saveDiary = await fetch('http://127.0.0.1:3300/api/prayDiary/saveDiary', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -594,7 +594,7 @@ document.body.addEventListener('click', function(e){
 
 // 저장된 기도일기 서버에서 가져오기
 const getPrayDiary = async() => {
-    const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/getDiary', {
+    const response = await fetch('http://127.0.0.1:3300/api/prayDiary/getDiary', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -634,7 +634,7 @@ document.body.addEventListener('click', function(e){
     if(e.target.parentNode.classList.contains('prayDiary-List') ){
         const clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
         console.log('clickedPrayDiaryId :', clickedPrayDiaryId)
-        fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/getDiaryDetail', {
+        fetch('http://127.0.0.1:3300/api/prayDiary/getDiaryDetail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -659,7 +659,7 @@ document.body.addEventListener('click', function(e){
                 prayDiarySaveBtn.addEventListener('click', function(e){
                     console.log('수정버튼 클릭')
                     const editPrayDiary = async() => {
-                        const response = await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/prayDiary/editDiary', {
+                        const response = await fetch('http://127.0.0.1:3300/api/prayDiary/editDiary', {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'

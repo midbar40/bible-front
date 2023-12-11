@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 // 서버데이터 가져오기
 async function getBibleData(searchWord){
     try{
-    const data = await fetch(`https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/search?query=${searchWord}`)
+    const data = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}`)
     const bibleData = await data.json()
     serverData.push(bibleData)
     console.log(serverData[0])
