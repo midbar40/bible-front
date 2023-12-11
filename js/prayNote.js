@@ -630,7 +630,6 @@ const showPrayDiary = async(prayDiaryList) => {
 
 // 클릭시 기도일기 상세보기
 document.body.addEventListener('click', function(e){
-    console.log('e.target :', e.target.parentNode)
     if(e.target.parentNode.classList.contains('prayDiary-List') ){
         const clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
         console.log('clickedPrayDiaryId :', clickedPrayDiaryId)
