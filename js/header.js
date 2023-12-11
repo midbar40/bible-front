@@ -10,13 +10,13 @@ export function headerModule(isLoggedIn) {
         <h1><a href="../index.html">Sola Scriptura</a></h1>
         <div class="nav-btns">
           <div class="menu-btn">
-            <a href="./readbible.html">성경읽기</a>
-            <a href="./game.html">시편필사</a>
-            <a href="./prayNote.html">기도노트</a>
+            <a href="./html/readbible.html">성경읽기</a>
+            <a href="./html/game.html">시편필사</a>
+            <a href="./html/prayNote.html">기도노트</a>
           </div>
           <div class="login-btn">
             <a id='logout-link' href="#">로그아웃</a>
-            <a href="./register.html">회원가입</a>
+            <a href="./html/register.html">회원가입</a>
           </div>
         </div>
         <span class="material-symbols-outlined"> menu </span>
@@ -35,13 +35,13 @@ export function headerModule(isLoggedIn) {
         <h1><a href="../index.html">Sola Scriptura</a></h1>
         <div class="nav-btns">
           <div class="menu-btn">
-            <a href="./readbible.html">성경읽기</a>
-            <a href="./game.html">시편필사</a>
-            <a href="./login.html">기도노트</a>
+            <a href="./html/readbible.html">성경읽기</a>
+            <a href="./html/game.html">시편필사</a>
+            <a href="./html/login.html">기도노트</a>
           </div>
           <div class="login-btn">
-            <a href="./login.html">로그인</a>
-            <a href="./register.html">회원가입</a>
+            <a href="./html/login.html">로그인</a>
+            <a href="./html/register.html">회원가입</a>
           </div>
         </div>
         <span class="material-symbols-outlined"> menu </span>
@@ -49,8 +49,8 @@ export function headerModule(isLoggedIn) {
         header.appendChild(nav)
         if(document.querySelector('.login-btn')){
             document.querySelector('.login-btn').addEventListener('click', ()=> {
-                // window.location.href = 'http://127.0.0.1:5500/bible-front/html/login.html'
-                window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
+                window.location.href = 'http://127.0.0.1:5500/html/login.html'
+                // window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })   
         }
         document.addEventListener('click', function(e){
@@ -64,9 +64,7 @@ export function headerModule(isLoggedIn) {
 
 export async function logout(e){
     if(e.target.innerText == '로그아웃'){
-        // await fetch('http://127.0.0.1:3300/api/users/logout', {
-        await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/logout', {
-
+        await fetch('http://127.0.0.1:3300/api/users/logout', {
             method: 'POST',
             credentials : 'include',
             headers: {

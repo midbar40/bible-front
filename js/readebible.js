@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 //  서버 데이터 가져오는 함수수
 async function getBibleData(clickedBookId){
     try{
-    const data = await fetch(`https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/bible/read?query=${clickedBookId}`)
+    const data = await fetch(`http://127.0.0.1:3300/api/bible/read?query=${clickedBookId}`)
     const bibleData = await data.json()
     serverData.push(bibleData)
     return bibleData
