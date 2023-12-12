@@ -27,17 +27,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 // 성경 전문 가져오기
 async function getSearchedBibleData(searchWord){
     try{
-    const data = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}`,
-    {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-        },
-       credentials : 'include',
-       
-}
-    )
+    const data = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}`)
     const bibleData = await data.json()
     console.log('검색bibletest', bibleData)
     updateResults.push(bibleData)
@@ -50,15 +40,7 @@ async function getSearchedBibleData(searchWord){
 // 성경 서버데이터 랜덤 가져오기 -> 개선필요, 업로드가 너무 느림 -> 23.11.28 서버에서 랜덤으로 가져오도록 변경함 
 async function getBibleRandomData(){
     try{
-    const data = await fetch('http://127.0.0.1:3300/api/bible/random',{
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-
-        },
-       credentials : 'include'
-    })
+    const data = await fetch('http://127.0.0.1:3300/api/bible/random')
     const bibleData = await data.json()
     randomData.push(bibleData)
     console.log('랜덤bibletest', randomData[0].bibles[0])

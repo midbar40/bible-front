@@ -29,6 +29,7 @@ async function getBibleData(clickedBookId){
     const data = await fetch(`http://127.0.0.1:3300/api/bible/read?query=${clickedBookId}`)
     const bibleData = await data.json()
     serverData.push(bibleData)
+    console.log(serverData)
     return bibleData
 }catch(error){
     console.log(error)
@@ -209,10 +210,10 @@ scriptureList?.addEventListener('click', showClikedBook) // 성경의 각 책이
 
 // Verse 표시하기
 function displayVerse(parameter){ 
-    console.log(parameter, '여기 들어오긴하니?')
     const bibleContents = document.createElement('div')
     bibleContents.innerHTML = `${serverData[0].bible[parameter].verse}&nbsp${serverData[0].bible[parameter].content}`
     bibleContents.className = 'bible-contents'
+    console.log('바이블컨텐츠', bibleContents)
     displayBible.appendChild(bibleContents)
 }
 

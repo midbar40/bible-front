@@ -51,7 +51,7 @@ async function getUserData(){
         // alert('로그인이 완료되었습니다, 메인 페이지로 이동합니다.')
             localStorage.setItem('로그인상태', true)
             localStorage.setItem('유저이름', userData.user)
-            window.location.href = 'http://127.0.0.1:3300/html/index.html'
+            window.location.href = 'http://127.0.0.1:5500/bible-front/index.html'
         // window.location.href = 'https://midbar40.github.io/bible-front/index.html'
         // checkIsLogined()
     }
