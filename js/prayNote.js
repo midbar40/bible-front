@@ -138,39 +138,40 @@ async function getPrayBucketlist(){
                 }
             })
     })
-
     })
    }
 
    // 우클릭 메뉴가 떠있는 상태에서 다른 곳을 클릭하면 우클릭 메뉴가 사라지게 하기
-   document.body.addEventListener('click', function(e){
-    e.stopPropagation()
-    const rightClickMenu = document.querySelector('.right-click-menu')
-    const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
-    const graceList = document.querySelectorAll('.Prayer-of-thanksList')
-    const editDetail = document.querySelector('#edit-detail')
+    const hideRightClickMenu = (e) => {
+        e.stopPropagation()
+        const rightClickMenu = document.querySelector('.right-click-menu')
+        const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
+        const graceList = document.querySelectorAll('.Prayer-of-thanksList')
+        const editDetail = document.querySelector('#edit-detail')
+    
+        if(rightClickMenu){
+            rightClickMenu.style.display = 'none'
+            rightClickMenu.style.top = null
+            rightClickMenu.style.left = null
+            if(prayBucketlistList){
+                prayBucketlistList.forEach(element => {
+                    element.classList.remove('active')
+                })
+            }
+            if(graceList){
+                graceList.forEach(element => {
+                    element.classList.remove('active')
+                })
+            }
+        }
+        // 수정버튼 눌러서 생긴 input창을 제외한 다른 곳을 클릭하면 input창이 사라지게 하기 && 수정창 1개만 열리게해야함
+        if(editDetail && e.target.id !== 'edit-detail' && e.target.className !== 'right-click-menu' 
+        && e.target.className !== 'right-click-menu-edit' && e.target.className !== 'right-click-menu-delete' ){
+            editDetail.parentNode.innerHTML = rightClickNearestTdInnerText 
+          }
+   }
 
-    if(rightClickMenu){
-        rightClickMenu.style.display = 'none'
-        rightClickMenu.style.top = null
-        rightClickMenu.style.left = null
-        if(prayBucketlistList){
-            prayBucketlistList.forEach(element => {
-                element.classList.remove('active')
-            })
-        }
-        if(graceList){
-            graceList.forEach(element => {
-                element.classList.remove('active')
-            })
-        }
-    }
-    // 수정버튼 눌러서 생긴 input창을 제외한 다른 곳을 클릭하면 input창이 사라지게 하기 && 수정창 1개만 열리게해야함
-    if(editDetail && e.target.id !== 'edit-detail' && e.target.className !== 'right-click-menu' 
-    && e.target.className !== 'right-click-menu-edit' && e.target.className !== 'right-click-menu-delete' ){
-        editDetail.parentNode.innerHTML = rightClickNearestTdInnerText 
-      }
-  })
+   document.body.addEventListener('click', hideRightClickMenu)
 
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(prayBucketlistData){
@@ -194,16 +195,6 @@ async function showPrayBucketlist(prayBucketlistData){
 }
 
 document.addEventListener('DOMContentLoaded', getPrayNoteServerData)  // 서버데이터 가져오기
-
-// 모바일 버거버튼 클릭시
-document.body.addEventListener('click', function(e){
-    if(e.target.className == 'material-symbols-outlined'){
-        const navButtons = document.querySelector('.nav-btns')
-        const mobileBackground = document.querySelector('.mobile-background')
-        navButtons.classList.toggle('show')
-        mobileBackground.classList.toggle('show')
-    }
-})
 
 
 // PrayBucketList 작업
@@ -516,7 +507,7 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
   }
 
 
-  /////////////////////////////////////////////////
+  // < 기도일기 >  //
   
   // 기도일기 전역변수
   const prayDiaryTitle = document.querySelector('#prayDiary-title')
@@ -552,8 +543,49 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
     prayDiaryOutputBodyTbody.appendChild(prayDiaryTr)
 }
 
-// 기도일기 저장버튼 클릭시
-document.body.addEventListener('click', function(e){
+// 기도일기 수정 경고창 보여주기 
+const showWarningModal = () => {
+    const warningModal = document.createElement('div')
+                warningModal.className = 'warning-modal'
+                warningModal.innerHTML = `
+                <div class='warning-modal-content'>
+                <p>작성중인 내용이 있습니다. 정말 취소하시겠습니까?</p>
+                <div class='warning-modal-btns'>
+                <button class='warning-modal-cancel'>취소</button>
+                <button class='warning-modal-ok'>확인</button>
+                </div>
+                </div>
+                `
+                warningModal.style.position = 'fixed'
+                warningModal.style.top = '50%'
+                warningModal.style.left = '50%'
+                warningModal.style.transform = 'translate(-50%, -50%)'
+                warningModal.style.backgroundColor = 'white'
+                warningModal.style.width = '300px'
+                warningModal.style.height = '200px'
+                warningModal.style.borderRadius = '10px'
+                warningModal.style.display = 'flex'
+                warningModal.style.flexDirection = 'column'
+                warningModal.style.justifyContent = 'center'
+                warningModal.style.alignItems = 'center'
+                warningModal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.25)'
+
+                document.body.appendChild(warningModal)
+                const warningModalCancel = document.querySelector('.warning-modal-cancel')
+                const warningModalOk = document.querySelector('.warning-modal-ok')
+                warningModalCancel.addEventListener('click', function(){
+                    warningModal.remove()
+                })
+                warningModalOk.addEventListener('click', function(){
+                    warningModal.remove()
+                    prayDiaryTitle.value = ''
+                    prayDiaryContent.value = ''
+                })
+}
+
+// 클릭이벤트 모음
+document.body.addEventListener('click', async function(e){
+    // 기도일기 저장버튼 클릭시
     if(prayDiarySaveBtn && e.target.className == 'saveBtn'){
         if(prayDiaryTitle.value !== '' && prayDiaryContent.value !== '') {
     e.stopPropagation()
@@ -564,7 +596,43 @@ document.body.addEventListener('click', function(e){
      else {
         alert('제목과 내용을 입력해주세요')
      }
- }})
+ }
+
+    // 기도일기 취소버튼 클릭시 
+    if(prayDiaryCancelBtn && e.target.className == 'cancelBtn'){
+        cancelPrayDiary()
+    }
+    // 기도일기 output 화면에서 일기 클릭시 input창에 기도일기 내용 보여주기
+    if(e.target.parentNode.classList.contains('prayDiary-List')) {
+        clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
+        const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
+        changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
+        addNewDiaryBtn() // 새일기 버튼 생성
+        changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경    
+
+        const prayDiaryContentInput = document.querySelector('#prayDiary-content');
+        const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
+        
+        prayDiaryContentInput.addEventListener('change', checkInputValueChange)
+        prayDiaryTitleInput.addEventListener('change', checkInputValueChange)
+        function checkInputValueChange(e){
+            if(e.target.value !== diaryData.result.detail || e.target.value !== diaryData.result.title){
+                showWarningModal()
+            }}
+        }
+        if(e.target.className == 'editBtn'){
+            e.stopPropagation()
+            await editPrayDiary(clickedPrayDiaryId)
+        }
+
+    // 모바일 버거버튼 클릭시
+    if(e.target.className == 'material-symbols-outlined'){
+        const navButtons = document.querySelector('.nav-btns')
+        const mobileBackground = document.querySelector('.mobile-background')
+        navButtons.classList.toggle('show')
+        mobileBackground.classList.toggle('show')
+    }
+})
 
 // 기도일기 취소
 const cancelPrayDiary = () => {
@@ -577,12 +645,7 @@ const cancelPrayDiary = () => {
         } 
     }
 }
-document.body.addEventListener('click', function(e){
-    e.stopPropagation()
-    if(prayDiaryCancelBtn && e.target.className == 'cancelBtn'){
-        cancelPrayDiary()
-    }
-})
+
 
 // 저장된 기도일기 서버에서 가져오기
 const getPrayDiary = async() => {
@@ -713,77 +776,4 @@ const editPrayDiary = async(clickedPrayDiaryId) => {
     // alert('수정되었습니다.')
 }
 
-
-
-// 클릭시 기도일기 상세보기
-document.body.addEventListener('click', async function(e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    if(e.target.parentNode.classList.contains('prayDiary-List')) {
-
-        clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
-  
-                const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
-                changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
-                addNewDiaryBtn() // 새일기 버튼 생성
-                changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경    
-  
-                const prayDiaryContentInput = document.querySelector('#prayDiary-content');
-                const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
-                
-                // prayDiaryContentInput의 change 이벤트 리스너 추가
-                function addChangeEventListenerToContentInput() {
-                    prayDiaryContentInput.removeEventListener('change', onContentInputChange);
-                    prayDiaryContentInput.addEventListener('change', onContentInputChange);
-                }
-                
-                // prayDiaryTitleInput의 change 이벤트 리스너 추가
-                function addChangeEventListenerToTitleInput() {
-                    prayDiaryTitleInput.removeEventListener('change', onTitleInputChange);
-                    prayDiaryTitleInput.addEventListener('change', onTitleInputChange);
-                }
-                
-                function onContentInputChange(e) {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    const userInput = e.target.value;
-                    const originalData = diaryData.result.detail; // 예시로 사용한 기존 데이터
-                
-                    if (userInput !== originalData) {
-                        const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
-                        if (userResponse) {
-                            prayDiaryContent.value = originalData;
-                            prayDiarySaveBtn.innerText = '수정';
-                            prayDiarySaveBtn.className = 'editBtn';
-                        }
-                    }
-                }
-                
-                function onTitleInputChange(e) {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    const userInput = e.target.value;
-                    const originalData = diaryData.result.title; // 예시로 사용한 기존 데이터
-                
-                    if (userInput !== originalData) {
-                        const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
-                        if (userResponse) {
-                            prayDiaryTitle.value = originalData;
-                            prayDiarySaveBtn.innerText = '수정';
-                            prayDiarySaveBtn.className = 'editBtn';
-                        }
-                    }
-                }
-                
-                addChangeEventListenerToContentInput();
-                addChangeEventListenerToTitleInput();
-                
-
-        }
-        if(e.target.className == 'editBtn'){
-            e.stopPropagation()
-            await editPrayDiary(clickedPrayDiaryId)
-        }
-})
 
