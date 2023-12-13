@@ -81,8 +81,8 @@ async function getPrayBucketlist(){
     
         const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
         const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
-        rightClickMenuEdit.style='cursor:pointer'
-        rightClickMenuDelete.style='cursor:pointer'
+        rightClickMenuEdit.style.cursor='pointer'
+        rightClickMenuDelete.style.cursor='pointer'
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function(e){
             console.log('rightClickList :', rightClickList)
@@ -518,13 +518,14 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
 
   /////////////////////////////////////////////////
   
-  // 기도일기 변수
+  // 기도일기 전역변수
   const prayDiaryTitle = document.querySelector('#prayDiary-title')
   const prayDiaryContent = document.querySelector('#prayDiary-content')
   const prayDiarySaveBtn = document.querySelector('.saveBtn')
   const prayDiaryCancelBtn = document.querySelector('.cancelBtn')
+  let clickedPrayDiaryId = null
 
-  // 기도일기 작성
+  // 기도일기 작성(저장)
   const savePrayDiary = async() => {
         const saveDiary = await fetch('http://127.0.0.1:3300/api/prayDiary/saveDiary', {
         method: 'POST',
@@ -551,7 +552,7 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
     prayDiaryOutputBodyTbody.appendChild(prayDiaryTr)
 }
 
-
+// 기도일기 저장버튼 클릭시
 document.body.addEventListener('click', function(e){
     if(prayDiarySaveBtn && e.target.className == 'saveBtn'){
         if(prayDiaryTitle.value !== '' && prayDiaryContent.value !== '') {
@@ -624,12 +625,9 @@ const transformDate = (date) => {
     return formattedDate
 }
 
-// 클릭시 기도일기 상세보기
-document.body.addEventListener('click', function(e){
-    if(e.target.parentNode.classList.contains('prayDiary-List') ){
-        const clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
-        console.log('clickedPrayDiaryId :', clickedPrayDiaryId)
-        fetch('http://127.0.0.1:3300/api/prayDiary/getDiaryDetail', {
+// 기도일기 OUtput 화면에서 일기 클릭시 input창에 기도일기 내용 보여주기
+const showPrayDiaryDetail = async(clickedPrayDiaryId) => {
+    const response = await fetch('http://127.0.0.1:3300/api/prayDiary/getDiaryDetail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -638,85 +636,154 @@ document.body.addEventListener('click', function(e){
                 _id: clickedPrayDiaryId
             })
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log('기도일기 상세보기 :', data)
-            // 기도일기 수정하기
-            if(prayDiaryTitle.value == '' || prayDiaryContent.value == ''){
-            const prayDiaryTitle = document.querySelector('#prayDiary-title')
-            const prayDiaryDetail = document.querySelector('#prayDiary-content')
-            const prayDiarySaveBtn = document.querySelector('.saveBtn')
-            const buttonGroup = document.querySelector('.btn-group')
-            const prayNewDiary = document.createElement('button')
+    const result = await response.json()
+    const prayDiaryTitle = document.querySelector('#prayDiary-title')
+    const prayDiaryContent = document.querySelector('#prayDiary-content')
+    prayDiaryTitle.value = result.result.title
+    prayDiaryContent.value = result.result.detail
+    return result
+}
 
+// 기도일기 OUtput 화면에서 일기 클릭시, 저장버튼 수정버튼으로 변경
+const changeSaveBtnToEdit  = (clicked) => {
+    if(document.querySelector('.editBtn')) return
+    const prayDiarySaveBtn = document.querySelector('.saveBtn')
+        prayDiarySaveBtn.innerText = '수정'
+        prayDiarySaveBtn.className = 'editBtn'
+        prayDiarySaveBtn.style.cursor ='pointer'
+        prayDiarySaveBtn.style.backgroundColor ='rgb(27, 161, 117)'
+        prayDiarySaveBtn.style.color ='white'
+}
+
+// 기도일기 OUtput 화면에서 일기 클릭시, 새일기 버튼 생성
+const addNewDiaryBtn = () => {
+    const buttonGroup = document.querySelector('.btn-group')
+    const prayNewDiary = document.createElement('button')
             prayNewDiary.innerText = '새일기'
-            prayNewDiary.className = 'newDiary'
-            
-            prayNewDiary.style = 'cursor:pointer', 'margin-left:10px', 'border:none', 'background-color:green', 'color:white'
-            if(buttonGroup.children.length == 2)buttonGroup.insertAdjacentElement('afterbegin', prayNewDiary)
-            
-            if(prayNewDiary.className == 'newDiary'){
+            prayNewDiary.className = 'newDiary'        
+            prayNewDiary.style.cursor = 'pointer'
+            prayNewDiary.style.backgroundColor = 'skyblue'
+            prayNewDiary.style.color = 'white'
+    if(buttonGroup.children.length == 2) buttonGroup.insertAdjacentElement('afterbegin', prayNewDiary)
+}
 
-                prayNewDiary.addEventListener('click', function(e){
-                    prayDiaryTitle.value = ''
-                    prayDiaryDetail.value = ''
-                    prayDiarySaveBtn.innerText = '저장'
-                    prayDiarySaveBtn.className = 'saveBtn'
-                })
-            }    
+// 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경
+const changeEditBtnToSave = () => {
+    const prayNewDiary = document.querySelector('.newDiary')
+        if(document.querySelector('.saveBtn')) return
+        prayNewDiary.addEventListener('click', function(e){
+            e.preventDefault()
+            prayDiaryTitle.value = ''
+            prayDiaryContent.value = ''
+            prayDiarySaveBtn.innerText = '저장'
+            prayDiarySaveBtn.className = 'saveBtn'
+        })    
+}
 
-            prayDiaryTitle.value = data.result.title
-            prayDiaryDetail.value = data.result.detail
-            prayDiarySaveBtn.innerText = '수정'
-            prayDiarySaveBtn.className = 'editBtn'
-            prayDiarySaveBtn.style ='cursor:pointer'
+// 수정버튼 클릭시 기도일기 수정하기
+const editPrayDiary = async(clickedPrayDiaryId) => {
+    const prayDiaryTitle = document.querySelector('#prayDiary-title')
+    const prayDiaryContent = document.querySelector('#prayDiary-content')
 
-            if(prayDiarySaveBtn.className == 'editBtn'){
-            
-                prayDiarySaveBtn.addEventListener('click', function(e){
-                    console.log('수정버튼 클릭')
-                    const editPrayDiary = async() => {
-                        const response = await fetch('http://127.0.0.1:3300/api/prayDiary/editDiary', {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                _id: clickedPrayDiaryId,
-                                title: prayDiaryTitle.value,
-                                detail: prayDiaryDetail.value,
-                                lastModifiedAt: new Date()
-                            })
-                        })
-                        const result = await response.json()
-                        console.log('기도일기 수정결과 :', result)
-                        prayDiaryTitle.value = result.result.title
-                        prayDiaryDetail.value = result.result.detail
-                        // prayDiarySaveBtn.innerText = '저장'
-                        // prayDiarySaveBtn.className = 'saveBtn'
-
-                        // 수정버튼 누르면 output 화면에 수정된 내용 보여주기
-                        const prayDiaryList = document.querySelectorAll('.prayDiary-List')
-                        prayDiaryList.forEach(element => {
-                            if(element.className.split(' ')[1] == clickedPrayDiaryId){
-                                element.querySelector('td:nth-child(1)').innerText = transformDate(result.result.lastModifiedAt)
-                                element.querySelector('td:nth-child(2)').innerText = result.result.title
-                            }
-                        })
-                    }
-                    editPrayDiary()
-                })
-            }
-            // 조건이 바뀌어야 한다, prayDiaryTitle.value !== data.result.title 이긴한데 지금은 클릭한 것과 현재 input창의 내용을 비교하는 것 같다
-            } else if((prayDiaryTitle.value !== '' || prayDiaryContent.value !== '') && (prayDiaryTitle.value !== data.result.title || prayDiaryContent.value !== data.result.detail)){
-                const userResponse = confirm('작성중인 내용이 있습니다. 정말 취소하시겠습니까?')
-                if(userResponse){
-                    prayDiaryTitle.value = data.result.title
-                    prayDiaryContent.value = data.result.detail
-                    prayDiarySaveBtn.innerText = '수정'
-                    prayDiarySaveBtn.className = 'editBtn'
-                } else return
-            }
+    const response = await fetch('http://127.0.0.1:3300/api/prayDiary/editDiary', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            _id: clickedPrayDiaryId,
+            title: prayDiaryTitle.value,
+            detail: prayDiaryContent.value,
+            lastModifiedAt: new Date()
         })
-    }
+    })
+    const result = await response.json()
+    console.log('기도일기 수정결과 :', result)
+    prayDiaryTitle.value = result.result.title
+    prayDiaryContent.value = result.result.detail
+
+    // 수정버튼 누르면 output 화면에 수정된 내용 보여주기
+    const prayDiaryList = document.querySelectorAll('.prayDiary-List')
+    prayDiaryList.forEach(element => {
+        if(element.className.split(' ')[1] == clickedPrayDiaryId){
+            element.querySelector('td:nth-child(1)').innerText = transformDate(result.result.lastModifiedAt)
+            element.querySelector('td:nth-child(2)').innerText = result.result.title
+        }
+    })
+    // alert('수정되었습니다.')
+}
+
+
+
+// 클릭시 기도일기 상세보기
+document.body.addEventListener('click', async function(e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    if(e.target.parentNode.classList.contains('prayDiary-List')) {
+
+        clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
+  
+                const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
+                changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
+                addNewDiaryBtn() // 새일기 버튼 생성
+                changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경    
+  
+                const prayDiaryContentInput = document.querySelector('#prayDiary-content');
+                const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
+                
+                // prayDiaryContentInput의 change 이벤트 리스너 추가
+                function addChangeEventListenerToContentInput() {
+                    prayDiaryContentInput.removeEventListener('change', onContentInputChange);
+                    prayDiaryContentInput.addEventListener('change', onContentInputChange);
+                }
+                
+                // prayDiaryTitleInput의 change 이벤트 리스너 추가
+                function addChangeEventListenerToTitleInput() {
+                    prayDiaryTitleInput.removeEventListener('change', onTitleInputChange);
+                    prayDiaryTitleInput.addEventListener('change', onTitleInputChange);
+                }
+                
+                function onContentInputChange(e) {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    const userInput = e.target.value;
+                    const originalData = diaryData.result.detail; // 예시로 사용한 기존 데이터
+                
+                    if (userInput !== originalData) {
+                        const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
+                        if (userResponse) {
+                            prayDiaryContent.value = originalData;
+                            prayDiarySaveBtn.innerText = '수정';
+                            prayDiarySaveBtn.className = 'editBtn';
+                        }
+                    }
+                }
+                
+                function onTitleInputChange(e) {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    const userInput = e.target.value;
+                    const originalData = diaryData.result.title; // 예시로 사용한 기존 데이터
+                
+                    if (userInput !== originalData) {
+                        const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
+                        if (userResponse) {
+                            prayDiaryTitle.value = originalData;
+                            prayDiarySaveBtn.innerText = '수정';
+                            prayDiarySaveBtn.className = 'editBtn';
+                        }
+                    }
+                }
+                
+                addChangeEventListenerToContentInput();
+                addChangeEventListenerToTitleInput();
+                
+
+        }
+        if(e.target.className == 'editBtn'){
+            e.stopPropagation()
+            await editPrayDiary(clickedPrayDiaryId)
+        }
 })
+
