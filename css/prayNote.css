@@ -37,6 +37,7 @@ main .pray-wrapper {
   height: 85%;
   /* background-color: blueviolet; */
   border: 1px solid black;
+  overflow-y: auto;
 }
 .prayBucketList-body table {
   width: 100%;
@@ -107,6 +108,7 @@ main .pray-wrapper {
   height: 85%;
   /* background-color: rgb(191, 171, 211); */
   border: 1px solid black;
+  overflow-y: auto;
 }
 
 .Prayer-of-thanks-body table {
@@ -224,6 +226,7 @@ main .pray-wrapper {
   height: 85%;
   /* background-color: rgb(191, 171, 211); */
   border: 1px solid black;
+  overflow-y: auto;
 }
 
 .prayDiary-output-body table {
@@ -281,6 +284,8 @@ main .pray-wrapper {
 .prayDiary-input form textarea {
   width: 90%;
   height: 80%;
+  resize: none;
+  overflow-y:auto;
 }
 .prayDiary-input form .btn-group {
   width: 90%;
@@ -309,7 +314,7 @@ main .pray-wrapper {
 }
 .prayDiary-List:hover {
   /* text-decoration: underline; */
-  background-color: rgb(126, 49, 214);
+  background-color: rgb(253, 155, 125);
   color: rgb(255, 255, 255);
   cursor: pointer;
 }
@@ -339,4 +344,53 @@ main .pray-wrapper {
 .active {
   background-color: rgb(126, 49, 214);
   color: rgb(255, 255, 255);
+}
+.warning-modal {
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+.warning-modal-content p{
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+}
+.warning-modal-btns{
+  margin-top: 20px;
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  }
+  .warning-modal-ok{
+    width: 75px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    background-color: rgb(153, 153, 153);
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+  .warning-modal-cancel{
+    width: 75px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    background-color: rgb(238, 34, 34);
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+  /* 모달 뒤에 불투명한 레이어 */
+.modal-background {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 투명도 조절 가능 */
+  z-index: 10; /* 모달보다 낮은 숫자 */
 }

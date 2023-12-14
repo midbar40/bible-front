@@ -75,8 +75,8 @@ async function getPrayBucketlist(){
         `
         document.body.appendChild(rightClickMenu)
 
-        rightClickMenu.style.top = `${e.clientY}px`
-        rightClickMenu.style.left = `${e.clientX}px`
+        rightClickMenu.style.top = `${e.clientY + scrollY}px`
+        rightClickMenu.style.left = `${e.clientX + scrollY}px`
         rightClickMenu.style.display = 'flex'
     
         const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
@@ -141,12 +141,15 @@ async function getPrayBucketlist(){
     })
    }
 
+
+
    // 우클릭 메뉴가 떠있는 상태에서 다른 곳을 클릭하면 우클릭 메뉴가 사라지게 하기
     const hideRightClickMenu = (e) => {
         e.stopPropagation()
         const rightClickMenu = document.querySelector('.right-click-menu')
         const prayBucketlistList = document.querySelectorAll('.prayBucketlist-List')
         const graceList = document.querySelectorAll('.Prayer-of-thanksList')
+        const prayDiaryList = document.querySelectorAll('.prayDiaryList')
         const editDetail = document.querySelector('#edit-detail')
     
         if(rightClickMenu){
@@ -160,6 +163,11 @@ async function getPrayBucketlist(){
             }
             if(graceList){
                 graceList.forEach(element => {
+                    element.classList.remove('active')
+                })
+            }
+            if(prayDiaryList){
+                prayDiaryList.forEach(element => {
                     element.classList.remove('active')
                 })
             }
@@ -383,8 +391,8 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
         `
         document.body.appendChild(rightClickMenu)
 
-        rightClickMenu.style.top = `${e.clientY}px`
-        rightClickMenu.style.left = `${e.clientX}px`
+        rightClickMenu.style.top = `${e.clientY + scrollY}px`
+        rightClickMenu.style.left = `${e.clientX + scrollX}px`
         rightClickMenu.style.display = 'flex'
     
         const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
@@ -541,6 +549,7 @@ PrayerOfThanksListForm.addEventListener('submit', addGraceList)
         <td>${result.result.title}</td>
     `
     prayDiaryOutputBodyTbody.appendChild(prayDiaryTr)
+    deletePrayDiary(prayDiaryTr)
 }
 
 // 기도일기 수정 경고창 보여주기 
@@ -551,35 +560,24 @@ const showWarningModal = () => {
                 <div class='warning-modal-content'>
                 <p>작성중인 내용이 있습니다. 정말 취소하시겠습니까?</p>
                 <div class='warning-modal-btns'>
-                <button class='warning-modal-cancel'>취소</button>
                 <button class='warning-modal-ok'>확인</button>
+                <button class='warning-modal-cancel'>취소</button>
                 </div>
                 </div>
                 `
-                warningModal.style.position = 'fixed'
-                warningModal.style.top = '50%'
-                warningModal.style.left = '50%'
-                warningModal.style.transform = 'translate(-50%, -50%)'
-                warningModal.style.backgroundColor = 'white'
-                warningModal.style.width = '300px'
-                warningModal.style.height = '200px'
-                warningModal.style.borderRadius = '10px'
-                warningModal.style.display = 'flex'
-                warningModal.style.flexDirection = 'column'
-                warningModal.style.justifyContent = 'center'
-                warningModal.style.alignItems = 'center'
-                warningModal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.25)'
-
+                warningModal.classList.add('modal-background')
+                document.body.style.overflow = 'hidden'
                 document.body.appendChild(warningModal)
                 const warningModalCancel = document.querySelector('.warning-modal-cancel')
                 const warningModalOk = document.querySelector('.warning-modal-ok')
                 warningModalCancel.addEventListener('click', function(){
                     warningModal.remove()
+                    document.body.style.overflow = ''
+                    
                 })
                 warningModalOk.addEventListener('click', function(){
                     warningModal.remove()
-                    prayDiaryTitle.value = ''
-                    prayDiaryContent.value = ''
+                    document.body.style.overflow = ''
                 })
 }
 
@@ -609,17 +607,8 @@ document.body.addEventListener('click', async function(e){
         changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
         addNewDiaryBtn() // 새일기 버튼 생성
         changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경    
-
-        const prayDiaryContentInput = document.querySelector('#prayDiary-content');
-        const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
-        
-        prayDiaryContentInput.addEventListener('change', checkInputValueChange)
-        prayDiaryTitleInput.addEventListener('change', checkInputValueChange)
-        function checkInputValueChange(e){
-            if(e.target.value !== diaryData.result.detail || e.target.value !== diaryData.result.title){
-                showWarningModal()
-            }}
         }
+
         if(e.target.className == 'editBtn'){
             e.stopPropagation()
             await editPrayDiary(clickedPrayDiaryId)
@@ -633,6 +622,35 @@ document.body.addEventListener('click', async function(e){
         mobileBackground.classList.toggle('show')
     }
 })
+
+// 기도일기 input창에서 기존 title, content에서 수정이 있을 경우 
+function checkInputValueChange(e){
+    const result = document.body.querySelectorAll('.prayDiary-List').forEach(element => {
+        element.addEventListener('click', function(e){
+            let currentEventTarget = e.target.parentNode.className.split(' ')[1]
+            console.log(currentEventTarget, clickedPrayDiaryId)
+                if(e.target.value !== prayDiaryTitle.value || 
+                    e.target.value !== prayDiaryContent.value) 
+                   
+                    // 현재 일기가 아닌 다른 일기를 클릭했을 때 조건이 추가 되어야한다.
+                     { 
+                        if( clickedPrayDiaryId !== currentEventTarget ) showWarningModal()
+                 }
+            
+        })
+    })
+}
+
+// 기도일기 다른 일기 클릭하면 경고창 띄우기
+const checkInputValueAndShowWarningModal = async() => {
+    const prayDiaryContentInput = document.querySelector('#prayDiary-content');
+    const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
+    
+        prayDiaryContentInput.addEventListener('change', checkInputValueChange)
+        prayDiaryTitleInput.addEventListener('change', checkInputValueChange)
+}
+checkInputValueAndShowWarningModal()
+
 
 // 기도일기 취소
 const cancelPrayDiary = () => {
@@ -677,6 +695,7 @@ const showPrayDiary = async(prayDiaryList) => {
           <td>${element.title}</td>
       `
       prayDiaryOutputBodyTbody.appendChild(prayDiaryTr)
+      deletePrayDiary(prayDiaryTr)
     })
 }
 }
@@ -776,4 +795,62 @@ const editPrayDiary = async(clickedPrayDiaryId) => {
     // alert('수정되었습니다.')
 }
 
+// 
+const deletePrayDiary = (prayDiaryList) => {
+    prayDiaryList.addEventListener('contextmenu', function(e){
+          // 마우스 우클릭 시 클릭된 곳 색깔 입히기
+          const rightClickeActive = e.target.parentNode.classList.add('active')
+          const prayDiaryLists = document.querySelectorAll('.prayDiary-List')
+        // 기존에 active 클래스가 있으면 삭제하고 새로운 active 클래스 추가하기
+        prayDiaryLists.forEach((element => {
+            if(element.classList.contains('active')){
+                element.classList.remove('active')
+                e.currentTarget.classList.add('active')    
+         } 
+        }))
+        // 마우스 우클릭시 기존에 열려있던 input 수정창 사라지게 하기
+        const editDetail = document.querySelector('#edit-detail')
+        if(editDetail) editDetail.parentNode.innerHTML = rightClickNearestTdInnerText
 
+        const rightClickList = e.target.parentNode.className.split(' ')[1]
+        const rightClickNearestTd = e.target
+         rightClickNearestTdInnerText = e.target.innerText
+        console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
+        console.log('rightClickNearestTdInnerText :', rightClickNearestTdInnerText)
+        e.preventDefault()
+        const rightClickMenu = document.querySelector('.right-click-menu')
+        rightClickMenu.innerHTML = `
+        <div class='right-click-menu-delete'>삭제</div>
+        `
+        document.body.appendChild(rightClickMenu)
+
+        rightClickMenu.style.top = `${e.clientY + scrollY}px`
+        rightClickMenu.style.left = `${e.clientX + screenX}px`
+        rightClickMenu.style.display = 'flex'
+    
+        const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
+        rightClickMenuDelete.style.cursor='pointer'
+        // 삭제하기
+        rightClickMenuDelete.addEventListener('click', async function(e){
+            console.log('rightClickList :', rightClickList)
+            await fetch('http://127.0.0.1:3300/api/prayDiary/deleteDiary',
+            {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body : JSON.stringify({
+                _id: rightClickList
+            })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('data :', data)
+                if(data.code == 200){
+                    alert('삭제되었습니다.')
+                    location.reload()
+                }
+            })
+        })
+    })
+   }
