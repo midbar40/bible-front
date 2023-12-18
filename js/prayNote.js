@@ -607,7 +607,7 @@ document.body.addEventListener('click', async function (e) {
         changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
         addNewDiaryBtn() // 새일기 버튼 생성
         changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경 
-        checkInputValueAndShowWarningModal(diaryData) // 기도일기 다른 일기 클릭하면 경고창 띄우기
+        // checkInputValueAndShowWarningModal(diaryData) // 기도일기 다른 일기 클릭하면 경고창 띄우기
     }
 
     if (e.target.className == 'editBtn') {
@@ -623,24 +623,6 @@ document.body.addEventListener('click', async function (e) {
         mobileBackground.classList.toggle('show')
     }
 })
-
-const checkInputValueAndShowWarningModal = async (diaryData) => {
-    //     const clickedDiaryData = diaryData.result
-    //     const prayDiaryContentInput = document.querySelector('#prayDiary-content');
-    //     const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
-document.body.querySelectorAll('.prayDiary-List').forEach(element => {
-
-    element.addEventListener('click', function (e) {
-        let currentEventTarget = e.target.parentNode.className.split(' ')[1]
-
-        console.log(prayDiaryTitle.value, diaryData.result.title)
-        // 수정전
-        if ( prayDiaryTitle.value !== diaryData.result.title && clickedPrayDiaryId !== currentEventTarget) showWarningModal()
-        
-        // 수정후
-    })
-})
-}
 
 
 // 기도일기 취소
@@ -698,6 +680,11 @@ const transformDate = (date) => {
     return formattedDate
 }
 
+let previousData = {
+    title : '',
+    content : ''
+}
+
 // 기도일기 OUtput 화면에서 일기 클릭시 input창에 기도일기 내용 보여주기
 const showPrayDiaryDetail = async (clickedPrayDiaryId) => {
     const response = await fetch('http://127.0.0.1:3300/api/prayDiary/getDiaryDetail', {
@@ -712,8 +699,44 @@ const showPrayDiaryDetail = async (clickedPrayDiaryId) => {
     const result = await response.json()
     const prayDiaryTitle = document.querySelector('#prayDiary-title')
     const prayDiaryContent = document.querySelector('#prayDiary-content')
-    prayDiaryTitle.value = result.result.title
-    prayDiaryContent.value = result.result.detail
+    // previousData.title : 이전에 클릭한 일기의 title
+    // prayDiaryTitle.value : 현재 input창에서 보여지는 value값
+    // result.result.title  : 방금 클릭한 일기의 title 
+    // 이전 데이터 : 바꾸자 인풋창 값 : 수정확인 서버에서 가져온 값 : 타이밍문제인가?
+    // 수정확인 input창과 수정확인 result.result.title이 비교하는게 조건문이어야 한다.
+    // 현재 문제는 result.result.title가 이전데이터가 아닌 클릭한 일기의 title을 가져오는 부분이다.
+    // 다른글을 클릭하는 순간 다른글의 result.result.title이 기준이 되어버린다. 현재 글을 value와 result.result를 비교해야한다.
+    // 이전글의 title과 content를 저장해놔야하나? 
+    // 현재 문제 : 내용을 수정하지 않았는데도 다른 일기를 클릭하면 작성중인 내용이 있습니다, 정말 취소하시겠습니까? 하는 경고창이 나온다.
+    
+    if(prayDiaryTitle.value == '' && prayDiaryContent.value == '') {
+        prayDiaryTitle.value = result.result.title
+        prayDiaryContent.value = result.result.detail
+        previousData.title = result.result.title
+        previousData.content = result.result.detail
+    }
+    else if(prayDiaryTitle.value == result.result.title && prayDiaryContent.value == result.result.detail){
+        previousData.title = result.result.title
+        previousData.content = result.result.detail
+    } 
+    else if (prayDiaryTitle.value == previousData.title && prayDiaryContent.value == previousData.content) {
+        prayDiaryTitle.value = result.result.title
+        prayDiaryContent.value = result.result.detail
+        previousData.title = result.result.title
+        previousData.content = result.result.detail
+    }
+    else if(prayDiaryTitle.value !== result.result.title || prayDiaryContent.value !==  result.result.detail){
+        console.log('이전 데이터 :',previousData.title,'인풋창 값 :',prayDiaryTitle.value, '서버에서 가져온 값 :',result.result.title)
+        const userResponse = confirm('작성중인 내용이 있습니다. 정말 취소하시겠습니까?')
+        if (userResponse) {
+            prayDiaryTitle.value = result.result.title
+            prayDiaryContent.value = result.result.detail
+            previousData.title = result.result.title
+            previousData.content = result.result.detail
+        }
+
+    }
+  
     return result
 }
 
@@ -774,6 +797,8 @@ const editPrayDiary = async (clickedPrayDiaryId) => {
     console.log('기도일기 수정결과 :', result)
     prayDiaryTitle.value = result.result.title
     prayDiaryContent.value = result.result.detail
+    previousData.title = result.result.title
+    previousData.content = result.result.detail
 
     // 수정버튼 누르면 output 화면에 수정된 내용 보여주기
     const prayDiaryList = document.querySelectorAll('.prayDiary-List')
