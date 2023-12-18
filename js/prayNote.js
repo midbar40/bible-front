@@ -14,14 +14,19 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 // 한번에 여러개의 서버 데이터 가져오기
 async function getPrayNoteServerData() {
-    const reponses = await Promise.all([getPrayBucketlist(), getGrace(), getPrayDiary()])
+    const firstPostIt = 1
+    const secondPostIt = 2
+    const reponses = await Promise.all([getPrayBucketlist(), getGrace(), getPrayDiary(), getPickPosts(firstPostIt), getPickPosts(secondPostIt)])
     const prayBucketlistData = reponses[0]
     const graceList = reponses[1]
     const prayDiaryList = reponses[2]
-    console.log('prayDiaryList', prayDiaryList)
+    const pickPost1 = reponses[3]
+    const pickPost2 = reponses[4]
+    console.log('pickPost1', pickPost1)
     showPrayBucketlist(prayBucketlistData)
     showGraceList(graceList)
     showPrayDiary(prayDiaryList)
+    showPickPosts(pickPost1, pickPost2)
 }
 
 // PrayBucketlist 서버 데이터 가져오는 함수
@@ -573,12 +578,93 @@ const showWarningModal = () => {
     warningModalCancel.addEventListener('click', function () {
         warningModal.remove()
         document.body.style.overflow = ''
-        
+
     })
     warningModalOk.addEventListener('click', function () {
         warningModal.remove()
         document.body.style.overflow = ''
     })
+}
+
+// 포스트잇 가져오기
+const getPickPosts = async(postNum) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:3300/api/pickPosts/post${postNum}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: localStorage.getItem('유저이름')
+            })
+        }) 
+        const result = await response.json()
+        console.log(`포스트잇${postNum} 가져오기 결과 :`, result)
+        return result
+    }
+    catch (err) {
+        console.log(`포스트잇${postNum} 가져오기 실패 :`, err)
+    }
+}
+
+// 포스트잇 정보 뿌려주기
+const showPickPosts = (firstPost, secondPost) => {
+    console.log('firstPost :', firstPost)
+    const scripture1 = document.querySelector('.scripture-1') 
+    const scripture2 = document.querySelector('.scripture-2')
+    if (firstPost.result.length > 0) {
+        scripture1.innerHTML = `<p class='scripture-1-text'>${firstPost.result[0].text}</p>`
+    } else {
+        scripture1.innerHTML = `<p class='scripture-1-text'></p>`
+    }
+    if (secondPost.result.length > 0) {
+        scripture2.innerHTML = `<p class='scripture-2-text'>${secondPost.result[0].text}</p>`
+    } else {
+        scripture2.innerHTML = `<p class='scripture-2-text'></p>`
+    }
+}
+
+// 포스트잇 저장
+const saveScripture = async (postNum, pickText) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:3300/api/pickPosts/savePost${postNum}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                label: `post${postNum}`,
+                text: pickText.value || '클릭해서 내용 작성',
+                email: localStorage.getItem('유저이름')
+            })
+        })
+        const result = await response.json()
+        console.log(`post${postNum} 저장 결과:`, result)
+    }
+    catch (err) {
+        console.log(`post${postNum} 저장 실패:`, err)
+    }
+}
+// 포스트잇 업데이트
+const updateScripture = async (postNum, pickText) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:3300/api/pickPosts/updatePost${postNum}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                label: `post${postNum}`,
+                text: pickText.value || '클릭해서 내용 작성',
+                email: localStorage.getItem('유저이름')
+            })
+        })
+        const result = await response.json()
+        console.log(`post${postNum} 업데이트 결과:`, result)
+    }
+    catch (err) {
+        console.log(`post${postNum} 업데이트 실패:`, err)
+    }
 }
 
 // 클릭이벤트 모음
@@ -616,12 +702,14 @@ document.body.addEventListener('click', async function (e) {
     }
 
     // 포스트잇 부분 
-    if(e.target.className == 'scripture-1' || e.target.className == 'scripture-1-text'){
+    if (e.target.className == 'scripture-1' || e.target.className == 'scripture-1-text') {
         e.stopPropagation()
         const scripture1 = document.querySelector('.scripture-1')
+        const scripture1Paragraph = document.querySelector('.scripture-1-text')
+        // console.log('scripture1Paragraph.innerText :', scripture1Paragraph.innerText)
         scripture1.innerHTML =
-        `
-        <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'></textarea>
+            `
+        <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'>${scripture1Paragraph.innerText}</textarea>
         <div class='scripture-1-btns'>
             <button class='scripture-1-saveBtn'>저장</button>
             <button class='scripture-1-cancelBtn'>취소</button>
@@ -630,47 +718,43 @@ document.body.addEventListener('click', async function (e) {
         const pickText = document.querySelector('#pickText1')
         const scripture1SaveBtn = document.querySelector('.scripture-1-saveBtn')
         const scripture1CancelBtn = document.querySelector('.scripture-1-cancelBtn')
-   
-        pickText.addEventListener('keydown', function(e){
-            if(e.key === 'Enter'){
-                scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value}</p>`
+        const postNum = 1
+        pickText.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                // 화면 변경
+                scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || '클릭해서 내용 작성'}</p>`
+                // 서버에 저장
+                if (scripture1Paragraph.innerText == '') saveScripture(postNum, pickText)
+                else {
+                    updateScripture(postNum, pickText)
+                }
             }
         })
 
         // 저장버튼 누르면 서버에 저장
-        scripture1SaveBtn.addEventListener('click', function(e){
+        scripture1SaveBtn.addEventListener('click', function (e) {
+
             // 화면 변경
-            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value}</p>`
+            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || '클릭해서 내용 작성'}</p>`
             // 서버에 저장
-            const saveScripture1 = async () => {
-                try{
-                    const response = await fetch('http://127.0.0.1:3300/api/pickPosts/savePost1', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            label : 'post1',
-                            text : pickText.value
-                        })
-                    })
-                    const result = await response.json()
-                    console.log('post1 저장 성공:', result)
-                }
-                catch(err){
-                    console.log('post1 저장 실패:', err)
-                }   
+            const scripture1Paragraph = document.querySelector('.scripture-1-text')
+            if (scripture1Paragraph.innerText == '') saveScripture(postNum, pickText)
+            else {
+                updateScripture(postNum, pickText)
             }
-            saveScripture1()
         })
-     
+        scripture1CancelBtn.addEventListener('click', function (e) {
+            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value}</p>` // ${pickText.value} 서버에서 가져온 데이터로 변경
+        })
     }
-    if(e.target.className == 'scripture-2' || e.target.className == 'scripture-2-text'){
+    if (e.target.className == 'scripture-2' || e.target.className == 'scripture-2-text') {
         e.stopPropagation()
         const scripture2 = document.querySelector('.scripture-2')
+        const scripture2Paragraph = document.querySelector('.scripture-2-text')
+        console.log('scripture2Paragraph.innerText :', scripture2Paragraph.innerText)
         scripture2.innerHTML =
-        `
-        <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'></textarea>
+            `
+        <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'>${scripture2Paragraph.innerText}</textarea>
         <div class='scripture-2-btns'>
             <button class='scripture-2-saveBtn'>저장</button>
             <button class='scripture-2-cancelBtn'>취소</button>
@@ -679,36 +763,33 @@ document.body.addEventListener('click', async function (e) {
         const pickText = document.querySelector('#pickText2')
         const scripture2SaveBtn = document.querySelector('.scripture-2-saveBtn')
         const scripture2CancelBtn = document.querySelector('.scripture-2-cancelBtn')
-
-        scripture2SaveBtn.addEventListener('click', function(e){
+        const postNum = 2
+            pickText.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    // 화면 변경
+                    scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || '클릭해서 내용 작성' }</p>`
+                    // 서버에 저장
+                    if (scripture2Paragraph.innerText == '') saveScripture(postNum, pickText)
+                    else {
+                        updateScripture(postNum, pickText)
+                    }
+                }
+            })
+        scripture2SaveBtn.addEventListener('click', function (e) {
             // 화면 변경
             scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value}</p>`
             // 서버에 저장
-            const saveScripture2 = async () => {
-                try{
-                    const response = await fetch('http://127.0.0.1:3300/api/pickPosts/savePost2', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            label : 'post2',
-                            text : pickText.value
-                        })
-                    })
-                    const result = await response.json()
-                    console.log('post2 저장 성공:', result)
-                }
-                catch(err){
-                    console.log('post2 저장 실패:', err)
-                }   
+            const scripture2Paragraph = document.querySelector('.scripture-2-text')
+            if (scripture2Paragraph.innerText == '') saveScripture(postNum, pickText)
+            else {
+                updateScripture(postNum, pickText)
             }
-            saveScripture2()
-
-            
+        })
+        scripture2CancelBtn.addEventListener('click', function (e) {
+            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || '클릭해서 내용 작성'}</p>` 
         })
     }
-    
+
 
 
     // 모바일 버거버튼 클릭시
@@ -777,8 +858,8 @@ const transformDate = (date) => {
 }
 
 let previousData = {
-    title : '',
-    content : ''
+    title: '',
+    content: ''
 }
 
 // 기도일기 OUtput 화면에서 일기 클릭시 input창에 기도일기 내용 보여주기
@@ -804,25 +885,25 @@ const showPrayDiaryDetail = async (clickedPrayDiaryId) => {
     // 다른글을 클릭하는 순간 다른글의 result.result.title이 기준이 되어버린다. 현재 글을 value와 result.result를 비교해야한다.
     // 이전글의 title과 content를 저장해놔야하나? 
     // 현재 문제 : 내용을 수정하지 않았는데도 다른 일기를 클릭하면 작성중인 내용이 있습니다, 정말 취소하시겠습니까? 하는 경고창이 나온다.
-    
-    if(prayDiaryTitle.value == '' && prayDiaryContent.value == '') {
+
+    if (prayDiaryTitle.value == '' && prayDiaryContent.value == '') {
         prayDiaryTitle.value = result.result.title
         prayDiaryContent.value = result.result.detail
         previousData.title = result.result.title
         previousData.content = result.result.detail
     }
-    else if(prayDiaryTitle.value == result.result.title && prayDiaryContent.value == result.result.detail){
+    else if (prayDiaryTitle.value == result.result.title && prayDiaryContent.value == result.result.detail) {
         previousData.title = result.result.title
         previousData.content = result.result.detail
-    } 
+    }
     else if (prayDiaryTitle.value == previousData.title && prayDiaryContent.value == previousData.content) {
         prayDiaryTitle.value = result.result.title
         prayDiaryContent.value = result.result.detail
         previousData.title = result.result.title
         previousData.content = result.result.detail
     }
-    else if(prayDiaryTitle.value !== result.result.title || prayDiaryContent.value !==  result.result.detail){
-        console.log('이전 데이터 :',previousData.title,'인풋창 값 :',prayDiaryTitle.value, '서버에서 가져온 값 :',result.result.title)
+    else if (prayDiaryTitle.value !== result.result.title || prayDiaryContent.value !== result.result.detail) {
+        console.log('이전 데이터 :', previousData.title, '인풋창 값 :', prayDiaryTitle.value, '서버에서 가져온 값 :', result.result.title)
         const userResponse = confirm('작성중인 내용이 있습니다. 정말 취소하시겠습니까?')
         if (userResponse) {
             prayDiaryTitle.value = result.result.title
@@ -832,7 +913,7 @@ const showPrayDiaryDetail = async (clickedPrayDiaryId) => {
         }
 
     }
-  
+
     return result
 }
 
