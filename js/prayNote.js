@@ -615,6 +615,102 @@ document.body.addEventListener('click', async function (e) {
         await editPrayDiary(clickedPrayDiaryId)
     }
 
+    // 포스트잇 부분 
+    if(e.target.className == 'scripture-1' || e.target.className == 'scripture-1-text'){
+        e.stopPropagation()
+        const scripture1 = document.querySelector('.scripture-1')
+        scripture1.innerHTML =
+        `
+        <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'></textarea>
+        <div class='scripture-1-btns'>
+            <button class='scripture-1-saveBtn'>저장</button>
+            <button class='scripture-1-cancelBtn'>취소</button>
+        </div>
+        `
+        const pickText = document.querySelector('#pickText1')
+        const scripture1SaveBtn = document.querySelector('.scripture-1-saveBtn')
+        const scripture1CancelBtn = document.querySelector('.scripture-1-cancelBtn')
+   
+        pickText.addEventListener('keydown', function(e){
+            if(e.key === 'Enter'){
+                scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value}</p>`
+            }
+        })
+
+        // 저장버튼 누르면 서버에 저장
+        scripture1SaveBtn.addEventListener('click', function(e){
+            // 화면 변경
+            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value}</p>`
+            // 서버에 저장
+            const saveScripture1 = async () => {
+                try{
+                    const response = await fetch('http://127.0.0.1:3300/api/pickPosts/savePost1', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            label : 'post1',
+                            text : pickText.value
+                        })
+                    })
+                    const result = await response.json()
+                    console.log('post1 저장 성공:', result)
+                }
+                catch(err){
+                    console.log('post1 저장 실패:', err)
+                }   
+            }
+            saveScripture1()
+        })
+     
+    }
+    if(e.target.className == 'scripture-2' || e.target.className == 'scripture-2-text'){
+        e.stopPropagation()
+        const scripture2 = document.querySelector('.scripture-2')
+        scripture2.innerHTML =
+        `
+        <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'></textarea>
+        <div class='scripture-2-btns'>
+            <button class='scripture-2-saveBtn'>저장</button>
+            <button class='scripture-2-cancelBtn'>취소</button>
+        </div>
+        `
+        const pickText = document.querySelector('#pickText2')
+        const scripture2SaveBtn = document.querySelector('.scripture-2-saveBtn')
+        const scripture2CancelBtn = document.querySelector('.scripture-2-cancelBtn')
+
+        scripture2SaveBtn.addEventListener('click', function(e){
+            // 화면 변경
+            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value}</p>`
+            // 서버에 저장
+            const saveScripture2 = async () => {
+                try{
+                    const response = await fetch('http://127.0.0.1:3300/api/pickPosts/savePost2', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            label : 'post2',
+                            text : pickText.value
+                        })
+                    })
+                    const result = await response.json()
+                    console.log('post2 저장 성공:', result)
+                }
+                catch(err){
+                    console.log('post2 저장 실패:', err)
+                }   
+            }
+            saveScripture2()
+
+            
+        })
+    }
+    
+
+
     // 모바일 버거버튼 클릭시
     if (e.target.className == 'material-symbols-outlined') {
         const navButtons = document.querySelector('.nav-btns')
@@ -865,3 +961,4 @@ const deletePrayDiary = (prayDiaryList) => {
         })
     })
 }
+
