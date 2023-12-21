@@ -14,7 +14,7 @@ export function indexHeaderModule(isLoggedIn) {
           <div class="menu-btn">
           <a href="./html/readbible.html">성경읽기</a>
           <a href="./html/game.html">시편필사</a>
-          <a href="./html/login.html">기도노트</a>
+          <a href="./html/prayNote.html">기도노트</a>
           </div>
           <div class="login-btn">
             <a id='logout-link' href="#">로그아웃</a>
@@ -79,7 +79,7 @@ export async function logout(e) {
                 if (!data.token) {
                     localStorage.removeItem('로그인상태')
                     localStorage.removeItem('유저이름')
-                    window.location.reload()
+                    window.location.href = 'http://127.0.0.1:5500/index.html'
                 }
             })
     }

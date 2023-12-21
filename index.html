@@ -15,6 +15,16 @@
   <link rel="stylesheet" href="./css/style.css" />
   <script type="module" src="./js/indexHeader.js" defer></script>
   <script type="module" src="./js/app.js" defer></script>
+  <script>
+    const redirectPage = () => {
+      const isLoggedIn = localStorage.getItem('로그인상태')
+      if(!isLoggedIn) {    
+        alert("로그인이 필요한 서비스입니다.");
+        location.href = "./html/login.html";
+    }
+      else{location.href = "./html/prayNote.html";}
+    };
+  </script>
 </head>
 
 <body>
@@ -38,7 +48,7 @@
           <div class="bible-game" onclick="location.href='./html/game.html'">
             <h3>시편 필사</h3>
           </div>
-          <div class="pray-note" onclick="location.href='./html/prayNote.html'">
+          <div class="pray-note" onclick="redirectPage()">
             <h3>나의 기도노트</h3>
           </div>
         </div>

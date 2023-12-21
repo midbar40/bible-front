@@ -1,13 +1,5 @@
 // 전역변수
 const searchWord = localStorage.getItem('inputWord')
-const main = document.querySelector('main')
-const footer = document.querySelector('footer')
-const contents = document.querySelector('.contents')
-const moreViewBtn = document.querySelector('.moreview-btn')
-const burgerButton = document.querySelector('.material-symbols-outlined')
-const navButtons = document.querySelector('.nav-btns')
-const mobileBackground = document.querySelector('.mobile-background')
-let serverData = []
 
 // 헤더 모듈 가져오기
 function checkIsLogined() {
@@ -24,8 +16,7 @@ async function getBibleData(searchWord) {
     try {
         const data = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}`)
         const bibleData = await data.json()
-        serverData.push(bibleData)
-        console.log(serverData[0])
+        return bibleData
     } catch (error) {
         console.log(error)
     }
@@ -56,15 +47,15 @@ async function displayContent(updateResults, searchWord) {
 // 검색결과 가져오기
 async function showSearchBible() {
     displayLoadingImg() // 로딩화면 보여주기
-    await getBibleData(searchWord) // 서버데이터 가져오기
+    const searchedResults = await getBibleData(searchWord) // 서버데이터 가져오기
     // 로딩화면 가리고 리스트 보여주기 (데이터 다 가져왔으니)
     const loadingPhrases = document.querySelector('.loading-Phrases')
     loadingPhrases.remove()
 
-    const updateResults = await serverData[0].bibles.filter(bibles => {
+    const updateResults = await searchedResults.bibles.filter(bibles => {
         if (searchWord) {
             return bibles.content.includes(searchWord)
-        }
+        } 
     })
     // 로딩화면 문구 만드는 함수      
     function displayLoadingImg() {
@@ -73,13 +64,16 @@ async function showSearchBible() {
         loading.className = 'loading-Phrases'
         contents.appendChild(loading)
     }
-
-    displayContent(updateResults, searchWord)
-
+    // 검색결과 유무에 따른 문구 표시
+     if(updateResults.length > 0) displayContent(updateResults, searchWord)
+     else {
+         const noResult = document.createElement('h2')
+         noResult.innerText = '검색결과가 없습니다'
+         contents.appendChild(noResult)
+     }
 }
 
 showSearchBible()
-
 
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function (e) {

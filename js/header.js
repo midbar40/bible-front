@@ -77,7 +77,7 @@ export async function logout(e) {
                 if (!data.token) {
                     localStorage.removeItem('로그인상태')
                     localStorage.removeItem('유저이름')
-                    window.location.reload()
+                    window.location.href = 'http://127.0.0.1:5500/index.html'
                 }
             })
     }

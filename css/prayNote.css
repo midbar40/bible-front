@@ -201,8 +201,8 @@ main .pray-wrapper {
   text-align: center;
   border-radius: 0 0 2rem 0;
 }
-.scripture-1 p {
-  font-size: 1.5rem;
+.scripture-1 p, .scripture-2 p {
+  font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 .scripture-1 h5 {
@@ -218,10 +218,6 @@ main .pray-wrapper {
   align-items: center;
   text-align: center;
   border-radius: 0 0 2rem 0;
-}
-.scripture-2 p {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
 }
 /* .scripture-2 h5 {
   font-size: 1rem;
@@ -410,7 +406,7 @@ main .pray-wrapper {
   cursor: pointer;
 }
 #pickText1, #pickText2 {
-  width: 200px;
+  width: 350px;
   height: 200px;
   resize: none;
   margin-top: 30px;
@@ -440,4 +436,141 @@ main .pray-wrapper {
   background-color: rgb(238, 34, 34);
   color: rgb(255, 255, 255);
   cursor: pointer;
+}
+
+@media (max-width: 420px) {
+  .show{
+      display: flex !important;
+  }
+  header .nav-btns{
+      position: relative;
+      top: 12rem;
+      align-items: center;
+      flex-wrap: wrap;
+      z-index: 50;
+      display: none;
+  }
+  header .nav-btns{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 13rem;
+    width: 100%;
+    text-align: center;
+    flex-wrap: wrap;
+    z-index: 50;
+    display: none;
+}
+header .menu-btn{
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+header .menu-btn a{
+    margin-left: 0;
+    width: 100%;
+}
+header .menu-btn a:hover{
+  opacity: .8;
+  border: none;
+}
+header .login-btn{
+    margin: 0 auto;
+    gap: 15px;
+    margin-top: 5rem;
+    text-align: center;
+}
+  header h1 a{
+      font-size: 1.5rem;
+      color: #fff;
+  }
+  .material-symbols-outlined{
+      display: block;
+      color: #fff;
+      cursor: pointer;
+  }
+  main .wrapper form{
+      width: 100%;
+  }
+  #serachbible{
+      font-size: 1.2rem;
+      left: 0;
+      transform: none;
+  }
+  main .wrapper .input-btn{
+      display: none;
+  }
+  main .wrapper .random-paragraph h3::-webkit-scrollbar {
+      display: none;
+    }
+  main .wrapper .random-paragraph h3{
+      font-size: 1.1rem;
+      overflow: auto;
+  }
+  main .wrapper .random-paragraph p{
+      font-size: .8rem;
+  }
+  main .wrapper .multi-contents {
+      gap: 20px;
+  }
+  main .wrapper .multi-contents .bible-game,
+  main .wrapper .multi-contents .pray-note{
+      height: 200px;
+  }
+  main .wrapper .multi-contents .bible-game h3,
+  main .wrapper .multi-contents .pray-note h3{
+      font-size: 1.1rem;
+  }
+  .mobile-background{
+      width: 100%;
+      height: 500px;
+      background-color: rgba(0,0,0,.8);
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 0;
+      display: none;
+  }
+  main .wrapper .book-title{
+    font-size: 1.1rem;
+   }
+   main .wrapper .scripture .bible-contents{
+    font-size: 1rem;
+  }
+   .source{
+    font-size: .8rem;
+    display: inline-block;
+    text-align: right;
+    position: relative;
+    left: 58%;
+    top: 8%;
+  }
+
+  main .wrapper .buttons{
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    top: -3px;
+  }
+  main .wrapper .buttons button{
+    font-size: 1rem;
+  }
+  .prev-button{
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    margin: 0;
+  }
+  .next-button{
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    margin: 0;
+  }
+  .prev-button:hover,
+  .next-button:hover{
+    background-color: #fff;
+  }
 }

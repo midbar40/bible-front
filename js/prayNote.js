@@ -22,7 +22,6 @@ async function getPrayNoteServerData() {
     const prayDiaryList = reponses[2]
     const pickPost1 = reponses[3]
     const pickPost2 = reponses[4]
-    console.log('pickPost1', pickPost1)
     showPrayBucketlist(prayBucketlistData)
     showGraceList(graceList)
     showPrayDiary(prayDiaryList)
@@ -90,8 +89,9 @@ const deleteAndEditPrayBucketlist = (prayBucketlistList) => {
         rightClickMenuDelete.style.cursor = 'pointer'
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function (e) {
-            console.log('rightClickList :', rightClickList)
-            fetch('http://127.0.0.1:3300/api/prayBucketlist/',
+            if(confirm('정말 삭제하시겠습니까?') === false) return
+            else{
+                fetch('http://127.0.0.1:3300/api/prayBucketlist/',
                 {
                     method: 'DELETE',
                     headers: {
@@ -109,12 +109,13 @@ const deleteAndEditPrayBucketlist = (prayBucketlistList) => {
                         location.reload()
                     }
                 })
+            }
         })
 
         // 수정하기
         rightClickMenuEdit.addEventListener('click', function (e) {
             rightClickNearestTd.innerHTML = `
-            <input id='edit-detail' type='text' placeholder ='수정할 내용을 입력하세요'/>
+            <input id='edit-detail' type='text' value ='${rightClickNearestTdInnerText}'/> 
             `
             const editDetail = document.querySelector('#edit-detail')
             editDetail.style.width = '100%'
@@ -406,8 +407,9 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
         rightClickMenuDelete.style = 'cursor:pointer'
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function (e) {
-            console.log('rightClickList :', rightClickList)
-            fetch('http://127.0.0.1:3300/api/grace/',
+            if(confirm('정말 삭제하시겠습니까?') === false) return
+            else{
+                fetch('http://127.0.0.1:3300/api/grace/',
                 {
                     method: 'DELETE',
                     headers: {
@@ -425,12 +427,13 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
                         location.reload()
                     }
                 })
+            }
         })
 
         // 수정하기
         rightClickMenuEdit.addEventListener('click', function (e) {
             rightClickNearestTd.innerHTML = `
-            <input id='edit-detail' type='text' placeholder ='수정할 내용을 입력하세요'/>
+            <input id='edit-detail' type='text' value ='${rightClickNearestTdInnerText}'/>
             `
             const editDetail = document.querySelector('#edit-detail')
             editDetail.style.width = '100%'
@@ -609,16 +612,15 @@ const getPickPosts = async(postNum) => {
 
 // 포스트잇 정보 뿌려주기
 const showPickPosts = (firstPost, secondPost) => {
-    console.log('firstPost :', firstPost)
     const scripture1 = document.querySelector('.scripture-1') 
     const scripture2 = document.querySelector('.scripture-2')
     if (firstPost.result.length > 0) {
-        scripture1.innerHTML = `<p class='scripture-1-text'>${firstPost.result[0].text}</p>`
+        scripture1.innerHTML = `<p class='scripture-1-text'>${firstPost.result[0].text || ''}</p>`
     } else {
         scripture1.innerHTML = `<p class='scripture-1-text'></p>`
     }
     if (secondPost.result.length > 0) {
-        scripture2.innerHTML = `<p class='scripture-2-text'>${secondPost.result[0].text}</p>`
+        scripture2.innerHTML = `<p class='scripture-2-text'>${secondPost.result[0].text || ''}</p>`
     } else {
         scripture2.innerHTML = `<p class='scripture-2-text'></p>`
     }
@@ -634,7 +636,7 @@ const saveScripture = async (postNum, pickText) => {
             },
             body: JSON.stringify({
                 label: `post${postNum}`,
-                text: pickText.value || '클릭해서 내용 작성',
+                text: pickText.value,
                 email: localStorage.getItem('유저이름')
             })
         })
@@ -655,7 +657,7 @@ const updateScripture = async (postNum, pickText) => {
             },
             body: JSON.stringify({
                 label: `post${postNum}`,
-                text: pickText.value || '클릭해서 내용 작성',
+                text: pickText.value || '클릭하면 내용을 작성할 수 있습니다',
                 email: localStorage.getItem('유저이름')
             })
         })
@@ -701,15 +703,18 @@ document.body.addEventListener('click', async function (e) {
         await editPrayDiary(clickedPrayDiaryId)
     }
 
-    // 포스트잇 부분 
+    // 포스트 잇 1 
     if (e.target.className == 'scripture-1' || e.target.className == 'scripture-1-text') {
         e.stopPropagation()
+        const postNum = 1
+        const serverData = await getPickPosts(postNum)
+        console.log('serverData :', serverData)
         const scripture1 = document.querySelector('.scripture-1')
         const scripture1Paragraph = document.querySelector('.scripture-1-text')
         // console.log('scripture1Paragraph.innerText :', scripture1Paragraph.innerText)
         scripture1.innerHTML =
             `
-        <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'>${scripture1Paragraph.innerText}</textarea>
+        <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
         <div class='scripture-1-btns'>
             <button class='scripture-1-saveBtn'>저장</button>
             <button class='scripture-1-cancelBtn'>취소</button>
@@ -718,43 +723,49 @@ document.body.addEventListener('click', async function (e) {
         const pickText = document.querySelector('#pickText1')
         const scripture1SaveBtn = document.querySelector('.scripture-1-saveBtn')
         const scripture1CancelBtn = document.querySelector('.scripture-1-cancelBtn')
-        const postNum = 1
+
         pickText.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 // 화면 변경
-                scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || '클릭해서 내용 작성'}</p>`
+                scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
                 // 서버에 저장
-                if (scripture1Paragraph.innerText == '') saveScripture(postNum, pickText)
-                else {
-                    updateScripture(postNum, pickText)
-                }
+                if(pickText.value == '' ) alert('내용을 입력해주세요')
+                    else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+                    else if (serverData.result.length > 0 && pickText.value !== ''){
+                        updateScripture(postNum, pickText)
+                    }
             }
         })
 
         // 저장버튼 누르면 서버에 저장
         scripture1SaveBtn.addEventListener('click', function (e) {
 
-            // 화면 변경
-            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || '클릭해서 내용 작성'}</p>`
-            // 서버에 저장
             const scripture1Paragraph = document.querySelector('.scripture-1-text')
-            if (scripture1Paragraph.innerText == '') saveScripture(postNum, pickText)
-            else {
+            // 화면 변경
+            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
+            // 서버에 저장
+            if(pickText.value == '' ) alert('내용을 입력해주세요')
+            else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+            else if (serverData.result.length > 0 && pickText.value !== ''){
                 updateScripture(postNum, pickText)
             }
         })
         scripture1CancelBtn.addEventListener('click', function (e) {
-            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value}</p>` // ${pickText.value} 서버에서 가져온 데이터로 변경
+            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>` // ${pickText.value} 서버에서 가져온 데이터로 변경
         })
     }
+    // 포스트 잇 2
     if (e.target.className == 'scripture-2' || e.target.className == 'scripture-2-text') {
         e.stopPropagation()
+       
+        const postNum = 2
+        const serverData = await getPickPosts(postNum)
+        console.log('serverData :', serverData)
         const scripture2 = document.querySelector('.scripture-2')
         const scripture2Paragraph = document.querySelector('.scripture-2-text')
-        console.log('scripture2Paragraph.innerText :', scripture2Paragraph.innerText)
         scripture2.innerHTML =
             `
-        <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 50글자까지 작성가능합니다' maxlength ='50'>${scripture2Paragraph.innerText}</textarea>
+        <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
         <div class='scripture-2-btns'>
             <button class='scripture-2-saveBtn'>저장</button>
             <button class='scripture-2-cancelBtn'>취소</button>
@@ -763,30 +774,31 @@ document.body.addEventListener('click', async function (e) {
         const pickText = document.querySelector('#pickText2')
         const scripture2SaveBtn = document.querySelector('.scripture-2-saveBtn')
         const scripture2CancelBtn = document.querySelector('.scripture-2-cancelBtn')
-        const postNum = 2
             pickText.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
                     // 화면 변경
-                    scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || '클릭해서 내용 작성' }</p>`
+                    scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
                     // 서버에 저장
-                    if (scripture2Paragraph.innerText == '') saveScripture(postNum, pickText)
-                    else {
+                    if(pickText.value == '' ) alert('내용을 입력해주세요')
+                    else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+                    else if (serverData.result.length > 0 && pickText.value !== ''){
                         updateScripture(postNum, pickText)
                     }
                 }
             })
         scripture2SaveBtn.addEventListener('click', function (e) {
+            console.log(serverData.result.length == 0)
             // 화면 변경
-            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value}</p>`
+            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
             // 서버에 저장
-            const scripture2Paragraph = document.querySelector('.scripture-2-text')
-            if (scripture2Paragraph.innerText == '') saveScripture(postNum, pickText)
-            else {
+            if(pickText.value == '' ) alert('내용을 입력해주세요')
+            else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+            else if (serverData.result.length > 0 && pickText.value !== ''){
                 updateScripture(postNum, pickText)
             }
         })
         scripture2CancelBtn.addEventListener('click', function (e) {
-            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || '클릭해서 내용 작성'}</p>` 
+            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>` 
         })
     }
 
@@ -1020,8 +1032,9 @@ const deletePrayDiary = (prayDiaryList) => {
         rightClickMenuDelete.style.cursor = 'pointer'
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', async function (e) {
-            console.log('rightClickList :', rightClickList)
-            await fetch('http://127.0.0.1:3300/api/prayDiary/deleteDiary',
+            if(confirm('정말 삭제하시겠습니까?') === false) return
+            else{
+                await fetch('http://127.0.0.1:3300/api/prayDiary/deleteDiary',
                 {
                     method: 'DELETE',
                     headers: {
@@ -1039,6 +1052,7 @@ const deletePrayDiary = (prayDiaryList) => {
                         location.reload()
                     }
                 })
+            }
         })
     })
 }
