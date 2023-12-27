@@ -26,6 +26,7 @@ async function getBibleData(searchWord) {
 /* 검색 결과 보여주기 */
 // 검색 content 표시하기
 async function displayContent(updateResults, searchWord) {
+    const contents = document.querySelector('.contents')
     for (let i = 0; i < updateResults.length; i++) {
         const bookChapter = document.createElement('h4')
         const searchContent = document.createElement('p')
@@ -59,6 +60,7 @@ async function showSearchBible() {
     })
     // 로딩화면 문구 만드는 함수      
     function displayLoadingImg() {
+        const contents = document.querySelector('.contents')
         const loading = document.createElement('h2')
         loading.innerText = '검색결과를 가져오고 있습니다'
         loading.className = 'loading-Phrases'
@@ -67,6 +69,7 @@ async function showSearchBible() {
     // 검색결과 유무에 따른 문구 표시
      if(updateResults.length > 0) displayContent(updateResults, searchWord)
      else {
+         const contents = document.querySelector('.contents')
          const noResult = document.createElement('h2')
          noResult.innerText = '검색결과가 없습니다'
          contents.appendChild(noResult)

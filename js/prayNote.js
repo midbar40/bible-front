@@ -200,9 +200,10 @@ async function showPrayBucketlist(prayBucketlistData) {
                 <td>${prayBucketIndex}</td>
                 <td>${element.detail}</td>
                 <td>${transformDate(element.createdAt)}</td>
-                <td class='checkedDate'></td>
+                <td class='checkedDate'>${element.finishedAt ? transformDate(element.finishedAt): ''}</td>
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
+        if(element.isDone) prayBucketlistList.querySelector('.complete-checkbox').checked = true
         prayBucketIndex++
         deleteAndEditPrayBucketlist(prayBucketlistList)
     });
@@ -294,6 +295,7 @@ function handleCheckboxChange(e) {
             };
             updatedCheckedDate();
         } else {
+            confirm('체크박스를 해제하시겠습니까?') === false ? e.target.checked = true :
             e.target.closest('tr').querySelector('.checkedDate').innerText = '';
 
             const clickedDataDbId = e.target.closest('tr').className.split(' ')[1];

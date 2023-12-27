@@ -47,14 +47,13 @@ main .pray-wrapper {
   height: 10%;
   text-align: center;
   padding-left: 1rem;
-  border-bottom: 1px solid black;
 }
 .prayBucketList-body table thead tr {
   background-color: rgb(199, 199, 199);
   font-weight: bold;
 }
 .prayBucketList-body table tr td:nth-child(1) {
-  width: 5%;
+  width: 5%;  
 }
 .prayBucketList-body table tr td:nth-child(2) {
   width: 5%;
@@ -94,6 +93,13 @@ main .pray-wrapper {
   width: 90%;
   height: 50%;
 }
+.complete-checkbox{
+  width: 16px;
+  height: 16px;
+  margin-top: 8px;
+}
+
+
 /* main -  Prayer-of-thanks */
 .Prayer-of-thanks {
   width: 40%;

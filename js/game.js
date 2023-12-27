@@ -1,13 +1,6 @@
 // 전역변수
 const main = document.querySelector('main')
-const burgerButton = document.querySelector('.material-symbols-outlined')
-const navButtons = document.querySelector('.nav-btns')
-const mobileBackground = document.querySelector('.mobile-background')
-
-let charIndex = 0
 let index = 1
-let serverData = []
-let newArr = []
 let loadingStatus = true
 
 // 헤더 모듈 가져오기
@@ -26,11 +19,7 @@ async function getBibleData() {
         const data = await fetch('http://127.0.0.1:3300/api/bible/psalms?title=시편')
         const bibleData = await data.json()
         console.log(bibleData)
-        // 중복데이터 push방지
-        if (serverData[0]?.psalms[0].chapter !== bibleData.psalms[0].chapter) {
-            serverData.push(bibleData)
-        }
-        loadingStatus = false
+        // loadingStatus = false
         return bibleData
     } catch (error) {
         console.log(error)
@@ -117,14 +106,6 @@ const removeLoading = () => {
 
 // 시편본문가져오기
 async function getBibleText() {
-
-    // 로딩화면
-    if (loadingStatus) {
-        addLoading()
-        await getBibleData()
-    }
-    if (!loadingStatus) removeLoading()
-
     // 반환함수 호출
     const {
         typingContent,
@@ -138,12 +119,25 @@ async function getBibleText() {
         inputDiv,
         buttonGroup
     } = createTextField()
+    
+    const bibleData = await getBibleData()
+    console.log(bibleData)
+    // 로딩화면
+    if (bibleData.psalms.length == 0) {
+        // const bibleData = await getBibleData()
+        addLoading()
+        // loadingStatus = false
+    }
+    if (bibleData.psalms.length !== 0) removeLoading()
+
+    
 
     // 시편본문 생성하기
-    for (let i = 0; i < serverData[0].psalms.length - 1; i++) {
-        if (serverData[0].psalms[i].chapter == index) {
+    
+    for (let i = 0; i < bibleData.psalms.length - 1; i++) {
+        if (bibleData.psalms[i].chapter == index) {
             const biblePargraph = document.createElement('p')
-            biblePargraph.innerHTML = ` ${serverData[0].psalms[i].verse} ${serverData[0].psalms[i].content}`
+            biblePargraph.innerHTML = ` ${bibleData.psalms[i].verse} ${bibleData.psalms[i].content}`
             bibleText.appendChild(biblePargraph)
         }
     }
@@ -157,6 +151,7 @@ async function getBibleText() {
     const textSpan = typingContent.querySelectorAll('span')
     // 텍스트 입력창 글자입력 오류검증 기능
     textWindow.addEventListener('input', e => {
+        let charIndex = 0
         const inputSpanText = e.target.value
         inputDiv.innerText = inputSpanText
         let typedText = inputSpanText.split('')
@@ -237,11 +232,17 @@ async function getBibleText() {
 
     })
 
+    
     // 셀렉트 옵션넣기
-    for (let i = 0; i < serverData[0].psalms.length - 1; i++) {
-        newArr.push(serverData[0].psalms[i].chapter)
+    let newArr = []
+    for (let i = 0; i < bibleData.psalms.length - 1; i++) {
+        newArr.push(bibleData.psalms[i].chapter)
     }
     let chapters = [...new Set(newArr)]
+
+    // 숫자 배열로 변환하여 오름차순 정렬
+    chapters = chapters.map(Number).sort((a, b) => a - b)
+
     chapters.unshift('작성하고 싶은 편수를 선택하세요')
 
     const select = document.createElement('select')
