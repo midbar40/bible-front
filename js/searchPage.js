@@ -22,6 +22,20 @@ async function getBibleData(searchWord) {
     }
 }
 
+ // 로딩화면 문구 만드는 함수      
+ const addLoading = () => {
+    const loading = document.createElement('div')
+    const contents = document.querySelector('.contents')
+    loading.className = 'loading'
+    loading.style.position = 'absolute'
+    loading.style.top = '50%'
+    loading.style.left = '50%'
+    loading.style.transform = 'translate(-50%, -50%)'
+    loading.style.textAlign = 'center'
+    loading.innerHTML =
+        `<div class="loading-text"><img src='../asssets/imgs/loading.gif' width=30%/><h4>LOADING...</h4></div>`
+    contents.appendChild(loading)
+}
 
 /* 검색 결과 보여주기 */
 // 검색 content 표시하기
@@ -47,33 +61,26 @@ async function displayContent(updateResults, searchWord) {
 
 // 검색결과 가져오기
 async function showSearchBible() {
-    displayLoadingImg() // 로딩화면 보여주기
+    addLoading() // 로딩화면 보여주기
     const searchedResults = await getBibleData(searchWord) // 서버데이터 가져오기
     // 로딩화면 가리고 리스트 보여주기 (데이터 다 가져왔으니)
-    const loadingPhrases = document.querySelector('.loading-Phrases')
-    loadingPhrases.remove()
+    const loading = document.querySelector('.loading')
+    loading.remove()
 
     const updateResults = await searchedResults.bibles.filter(bibles => {
         if (searchWord) {
             return bibles.content.includes(searchWord)
-        } 
+        }
     })
-    // 로딩화면 문구 만드는 함수      
-    function displayLoadingImg() {
-        const contents = document.querySelector('.contents')
-        const loading = document.createElement('h2')
-        loading.innerText = '검색결과를 가져오고 있습니다'
-        loading.className = 'loading-Phrases'
-        contents.appendChild(loading)
-    }
+   
     // 검색결과 유무에 따른 문구 표시
-     if(updateResults.length > 0) displayContent(updateResults, searchWord)
-     else {
-         const contents = document.querySelector('.contents')
-         const noResult = document.createElement('h2')
-         noResult.innerText = '검색결과가 없습니다'
-         contents.appendChild(noResult)
-     }
+    if (updateResults.length > 0) displayContent(updateResults, searchWord)
+    else {
+        const contents = document.querySelector('.contents')
+        const noResult = document.createElement('h2')
+        noResult.innerText = '검색결과가 없습니다'
+        contents.appendChild(noResult)
+    }
 }
 
 showSearchBible()
