@@ -1,7 +1,6 @@
 // 전역변수
 const main = document.querySelector('main')
 let index = 1
-let loadingStatus = true
 
 // 헤더 모듈 가져오기
 function checkIsLogined() {
@@ -19,7 +18,6 @@ async function getBibleData() {
         const data = await fetch('http://127.0.0.1:3300/api/bible/psalms?title=시편')
         const bibleData = await data.json()
         console.log(bibleData)
-        // loadingStatus = false
         return bibleData
     } catch (error) {
         console.log(error)
@@ -120,17 +118,11 @@ async function getBibleText() {
         buttonGroup
     } = createTextField()
     
+    addLoading()
     const bibleData = await getBibleData()
     console.log(bibleData)
-    // 로딩화면
-    if (bibleData.psalms.length == 0) {
-        // const bibleData = await getBibleData()
-        addLoading()
-        // loadingStatus = false
-    }
-    if (bibleData.psalms.length !== 0) removeLoading()
-
-    
+    const loading = document.querySelector('.loading')
+    loading.remove()
 
     // 시편본문 생성하기
     
@@ -197,7 +189,6 @@ async function getBibleText() {
     // 다음버튼
     nextButton.addEventListener('click', async (e) => {
         e.preventDefault()
-        loadingStatus = true
         const psalmsLastIndex = 150
         if (index < psalmsLastIndex) {
             index++
@@ -211,7 +202,6 @@ async function getBibleText() {
     // 이전버튼
     prevButton.addEventListener('click', (e) => {
         e.preventDefault()
-        loadingStatus = true
         if (index > 1) {
             index--
             main.replaceChildren()
@@ -222,7 +212,6 @@ async function getBibleText() {
     // 다시버튼
     retryButton.addEventListener('click', (e) => {
         e.preventDefault()
-        loadingStatus = true
         // 작성한 내용만 지우기, 커서를 원위치 하는 것을 구현해야함 
         // inputDiv.innerText =''
         // textSpan.forEach(span => span.classList.remove('incorrect'))
@@ -255,7 +244,6 @@ async function getBibleText() {
     }
 
     select.addEventListener('change', async (e) => {
-        loadingStatus = true
         index = e.target.value
         // console.log(e.target.childNodes)
         main.replaceChildren()
