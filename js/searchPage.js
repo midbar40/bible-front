@@ -16,14 +16,53 @@ async function getBibleData(searchWord) {
     try {
         const data = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}`)
         const bibleData = await data.json()
+        page += 1;
         return bibleData
     } catch (error) {
         console.log(error)
     }
 }
 
- // 로딩화면 문구 만드는 함수      
- const addLoading = () => {
+// 무한 스크롤
+let page = 1;
+
+async function fetchItems() {
+    try {
+        const reponse = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}&page=${page}`)
+        const bibleData = await reponse.json()
+        page += 1;
+        return bibleData.bibles
+    }
+    catch (error) {
+        console.log(error)
+    }
+
+}
+
+// 스크롤 이벤트 감지
+const contents = document.querySelector('.contents')
+contents.addEventListener('scroll', () => {
+
+    const { scrollTop, scrollHeight, clientHeight } = contents;
+    if (scrollTop + clientHeight >= scrollHeight - 1) {
+        async function getScrollData() {
+            const scrollResults = await fetchItems()
+            if(scrollResults.length == 0) {
+                return;
+            }else {
+                displayContent(scrollResults, searchWord)
+                return scrollResults
+            }
+        }
+        // 페이지의 하단에 도달하면 추가 데이터 요청
+        getScrollData()
+    }
+});
+
+
+
+// 로딩화면 문구 만드는 함수      
+const addLoading = () => {
     const loading = document.createElement('div')
     const contents = document.querySelector('.contents')
     loading.className = 'loading'
@@ -37,6 +76,8 @@ async function getBibleData(searchWord) {
     contents.appendChild(loading)
 }
 
+
+
 /* 검색 결과 보여주기 */
 // 검색 content 표시하기
 async function displayContent(updateResults, searchWord) {
@@ -47,7 +88,6 @@ async function displayContent(updateResults, searchWord) {
 
         bookChapter.innerHTML = `${JSON.stringify(updateResults[i].title).replace(/"/g, '')}&nbsp${JSON.stringify(updateResults[i].chapter).replace(/"/g, '')}장&nbsp${JSON.stringify(updateResults[i].verse).replace(/"/g, '')}절`
         searchContent.innerHTML = `${JSON.stringify(updateResults[i].content).replace(/"/g, '')}`
-
 
         contents.append(bookChapter, searchContent)
 
@@ -63,6 +103,7 @@ async function displayContent(updateResults, searchWord) {
 async function showSearchBible() {
     addLoading() // 로딩화면 보여주기
     const searchedResults = await getBibleData(searchWord) // 서버데이터 가져오기
+    
     // 로딩화면 가리고 리스트 보여주기 (데이터 다 가져왔으니)
     const loading = document.querySelector('.loading')
     loading.remove()
@@ -72,7 +113,7 @@ async function showSearchBible() {
             return bibles.content.includes(searchWord)
         }
     })
-   
+
     // 검색결과 유무에 따른 문구 표시
     if (updateResults.length > 0) displayContent(updateResults, searchWord)
     else {
