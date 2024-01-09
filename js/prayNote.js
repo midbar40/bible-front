@@ -716,74 +716,74 @@ const editPrayDiary = async(clickedPrayDiaryId) => {
 
 
 // 클릭시 기도일기 상세보기
-document.body.addEventListener('click', async function(e){
-    e.stopPropagation()
-    e.preventDefault()
+// document.body.addEventListener('click', async function(e){
+//     e.stopPropagation()
+//     e.preventDefault()
 
-    if(e.target.parentNode.classList.contains('prayDiary-List')) {
+//     if(e.target.parentNode.classList.contains('prayDiary-List')) {
 
-        clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
+//         clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
   
-                const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
-                changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
-                addNewDiaryBtn() // 새일기 버튼 생성
-                changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경    
+//                 const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
+//                 changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
+//                 addNewDiaryBtn() // 새일기 버튼 생성
+//                 changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경    
   
-                const prayDiaryContentInput = document.querySelector('#prayDiary-content');
-                const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
+//                 const prayDiaryContentInput = document.querySelector('#prayDiary-content');
+//                 const prayDiaryTitleInput = document.querySelector('#prayDiary-title');
                 
-                // prayDiaryContentInput의 change 이벤트 리스너 추가
-                function addChangeEventListenerToContentInput() {
-                    prayDiaryContentInput.removeEventListener('change', onContentInputChange);
-                    prayDiaryContentInput.addEventListener('change', onContentInputChange);
-                }
+//                 // prayDiaryContentInput의 change 이벤트 리스너 추가
+//                 function addChangeEventListenerToContentInput() {
+//                     prayDiaryContentInput.removeEventListener('change', onContentInputChange);
+//                     prayDiaryContentInput.addEventListener('change', onContentInputChange);
+//                 }
                 
-                // prayDiaryTitleInput의 change 이벤트 리스너 추가
-                function addChangeEventListenerToTitleInput() {
-                    prayDiaryTitleInput.removeEventListener('change', onTitleInputChange);
-                    prayDiaryTitleInput.addEventListener('change', onTitleInputChange);
-                }
+//                 // prayDiaryTitleInput의 change 이벤트 리스너 추가
+//                 function addChangeEventListenerToTitleInput() {
+//                     prayDiaryTitleInput.removeEventListener('change', onTitleInputChange);
+//                     prayDiaryTitleInput.addEventListener('change', onTitleInputChange);
+//                 }
                 
-                function onContentInputChange(e) {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    const userInput = e.target.value;
-                    const originalData = diaryData.result.detail; // 예시로 사용한 기존 데이터
+//                 function onContentInputChange(e) {
+//                     e.stopPropagation()
+//                     e.preventDefault()
+//                     const userInput = e.target.value;
+//                     const originalData = diaryData.result.detail; // 예시로 사용한 기존 데이터
                 
-                    if (userInput !== originalData) {
-                        const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
-                        if (userResponse) {
-                            prayDiaryContent.value = originalData;
-                            prayDiarySaveBtn.innerText = '수정';
-                            prayDiarySaveBtn.className = 'editBtn';
-                        }
-                    }
-                }
+//                     if (userInput !== originalData) {
+//                         const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
+//                         if (userResponse) {
+//                             prayDiaryContent.value = originalData;
+//                             prayDiarySaveBtn.innerText = '수정';
+//                             prayDiarySaveBtn.className = 'editBtn';
+//                         }
+//                     }
+//                 }
                 
-                function onTitleInputChange(e) {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    const userInput = e.target.value;
-                    const originalData = diaryData.result.title; // 예시로 사용한 기존 데이터
+//                 function onTitleInputChange(e) {
+//                     e.stopPropagation()
+//                     e.preventDefault()
+//                     const userInput = e.target.value;
+//                     const originalData = diaryData.result.title; // 예시로 사용한 기존 데이터
                 
-                    if (userInput !== originalData) {
-                        const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
-                        if (userResponse) {
-                            prayDiaryTitle.value = originalData;
-                            prayDiarySaveBtn.innerText = '수정';
-                            prayDiarySaveBtn.className = 'editBtn';
-                        }
-                    }
-                }
+//                     if (userInput !== originalData) {
+//                         const userResponse = confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?');
+//                         if (userResponse) {
+//                             prayDiaryTitle.value = originalData;
+//                             prayDiarySaveBtn.innerText = '수정';
+//                             prayDiarySaveBtn.className = 'editBtn';
+//                         }
+//                     }
+//                 }
                 
-                addChangeEventListenerToContentInput();
-                addChangeEventListenerToTitleInput();
+//                 addChangeEventListenerToContentInput();
+//                 addChangeEventListenerToTitleInput();
                 
 
-        }
-        if(e.target.className == 'editBtn'){
-            e.stopPropagation()
-            await editPrayDiary(clickedPrayDiaryId)
-        }
-})
+//         }
+//         if(e.target.className == 'editBtn'){
+//             e.stopPropagation()
+//             await editPrayDiary(clickedPrayDiaryId)
+//         }
+// })
 
