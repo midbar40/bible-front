@@ -1,0 +1,22 @@
+@import url(../css/reset.css);
+@import url(../css/header.css);
+.subject {
+  width: 100%;
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.sub {
+  border: 1px solid #e0e0e0;
+  width: 100px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6rem;
+  cursor: pointer;
+}
+
+.sub:hover {
+  background-color: #e0e0e0;
+}
