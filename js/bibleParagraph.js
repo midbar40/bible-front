@@ -26,11 +26,55 @@ const createSubject = () => {
 }
 
 createSubject()
-const subOne = document.querySelector('.sub.one')
-subOne.addEventListener('click', () => {
-    subOne.style.backgroundColor = '#ff7f00'
-    subOne.style.color = 'white'
-})
+
+
+async function getSavationData() {
+    try{
+        const response = await fetch('http://127.0.0.1:3300/api/bibleParagraphs/salvation')
+        const data = await response.json()
+        return data
+    }catch(error){
+        console.log(error)
+    }
+}
+
+async function renderData() {
+    const serverData = await getSavationData()
+    console.log(serverData)
+    // 화면에 렌더링
+    const contents = document.querySelector('.contents')
+    const subjectContents = document.createElement('div')
+    subjectContents.className = 'subject-contents'
+    subjectContents.innerHTML = `
+     ${serverData.bibleParagraphs && serverData.bibleParagraphs.map(para => 
+       ` <div>
+            <h3>${para.title}</h3>
+            <p>${para.detail}</p>
+        </div>`
+        ).join(' ')}
+    `
+    contents.appendChild(subjectContents)
+}
+
+const btns = document.querySelectorAll('.sub');
+btns[0].classList.add('btnActive'); // 첫번째 버튼은 처음부터 클릭되어 있도록
+
+btns.forEach((btn) => {
+    if(btn.classList.contains('one')) {
+        renderData()
+    }
+    // 클릭시 버튼 스타일 변경
+    btn.addEventListener('click', (e) => {
+        btns.forEach((btn) => {
+            if (btn.classList.contains('btnActive')) {
+                btn.classList.remove('btnActive');
+            }
+        });
+        e.currentTarget.classList.add('btnActive');
+    });
+});
+
+
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function (e) {
     if (e.target.className == 'material-symbols-outlined') {
@@ -40,3 +84,4 @@ document.body.addEventListener('click', function (e) {
         mobileBackground.classList.toggle('show')
     }
 })
+
