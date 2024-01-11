@@ -1,5 +1,8 @@
 @import url(../css/reset.css);
 @import url(../css/header.css);
+body{
+  overflow-x: hidden; 
+}
 .subject {
   width: 100%;
   padding-top: 50px;
@@ -24,4 +27,13 @@
 .btnActive {
   background-color: #ff7f00;
   color: white;
+}
+.subject-contents{
+  max-width: 50%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  gap: 20px;
 }

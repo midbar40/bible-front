@@ -16,21 +16,21 @@ const createSubject = () => {
     const subjectDiv = document.createElement('div')
     subjectDiv.className = 'subject'
     subjectDiv.innerHTML = `
-    <div class='sub one'><h3>구원</h3></div>
-    <div class='sub two'><h3>감사</h3></div>
-    <div class='sub three'><h3>고난</h3></div>
-    <div class='sub four'><h3>치유</h3></div>
-    <div class='sub five'><h3>용기</h3></div>
+    <div class='sub salvation'><h3>구원</h3></div>
+    <div class='sub thanks'><h3>감사</h3></div>
+    <div class='sub adversity'><h3>고난</h3></div>
+    <div class='sub Healing'><h3>치유</h3></div>
+    <div class='sub Courageous'><h3>용기</h3></div>
     `
     contents.appendChild(subjectDiv)
 }
 
 createSubject()
 
-
-async function getSavationData() {
+// 서버데이터 가져오기
+async function getServerData(category) {
     try{
-        const response = await fetch('http://127.0.0.1:3300/api/bibleParagraphs/salvation')
+        const response = await fetch(`http://127.0.0.1:3300/api/bibleParagraphs/${category}`)
         const data = await response.json()
         return data
     }catch(error){
@@ -38,8 +38,9 @@ async function getSavationData() {
     }
 }
 
-async function renderData() {
-    const serverData = await getSavationData()
+// 화면에 서버데이터 렌더링하기
+async function renderData(category) {
+    const serverData = await getServerData(category)
     console.log(serverData)
     // 화면에 렌더링
     const contents = document.querySelector('.contents')
@@ -48,7 +49,7 @@ async function renderData() {
     subjectContents.innerHTML = `
      ${serverData.bibleParagraphs && serverData.bibleParagraphs.map(para => 
        ` <div>
-            <h3>${para.title}</h3>
+            <h4>${para.title}</h4>
             <p>${para.detail}</p>
         </div>`
         ).join(' ')}
@@ -58,19 +59,27 @@ async function renderData() {
 
 const btns = document.querySelectorAll('.sub');
 btns[0].classList.add('btnActive'); // 첫번째 버튼은 처음부터 클릭되어 있도록
+// 처음에 성경구절 페이지 들어가면 salvation data가 렌더링 되어야 한다
+renderData('salvation')
 
 btns.forEach((btn) => {
-    if(btn.classList.contains('one')) {
-        renderData()
-    }
     // 클릭시 버튼 스타일 변경
     btn.addEventListener('click', (e) => {
+        const category = e.currentTarget.className.split(' ')[1]
+
         btns.forEach((btn) => {
             if (btn.classList.contains('btnActive')) {
                 btn.classList.remove('btnActive');
+                const subjectContents = document.querySelector('.subject-contents')
+                if(subjectContents) subjectContents.remove()
             }
         });
         e.currentTarget.classList.add('btnActive');
+        if(e.currentTarget.classList.contains('btnActive')) {
+            // 렌더링된 데이터가 이미 있으면 렌더링하지 않는다
+            const subjectContents = document.querySelector('.subject-contents')
+            if(!subjectContents) renderData(category)
+        }
     });
 });
 
