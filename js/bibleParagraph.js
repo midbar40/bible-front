@@ -19,8 +19,8 @@ const createSubject = () => {
     <div class='sub salvation'><h3>구원</h3></div>
     <div class='sub thanks'><h3>감사</h3></div>
     <div class='sub adversity'><h3>고난</h3></div>
-    <div class='sub Healing'><h3>치유</h3></div>
-    <div class='sub Courageous'><h3>용기</h3></div>
+    <div class='sub healing'><h3>치유</h3></div>
+    <div class='sub courageous'><h3>용기</h3></div>
     `
     contents.appendChild(subjectDiv)
 }
@@ -40,8 +40,8 @@ async function getServerData(category) {
 
 // 화면에 서버데이터 렌더링하기
 async function renderData(category) {
+    console.log(category)
     const serverData = await getServerData(category)
-    console.log(serverData)
     // 화면에 렌더링
     const contents = document.querySelector('.contents')
     const subjectContents = document.createElement('div')
