@@ -1,7 +1,7 @@
 @import url(../css/reset.css);
 @import url(../css/header.css);
-body{
-  overflow-x: hidden; 
+body {
+  overflow-x: hidden;
 }
 .subject {
   width: 100%;
@@ -28,7 +28,7 @@ body{
   background-color: #ff7f00;
   color: white;
 }
-.subject-contents{
+.subject-contents {
   max-width: 50%;
   margin: 0 auto;
   display: flex;

@@ -16,6 +16,7 @@ async function getBibleData(searchWord) {
     try {
         const data = await fetch(`http://127.0.0.1:3300/api/bible/search?query=${searchWord}`)
         const bibleData = await data.json()
+        console.log(bibleData)
         page += 1;
         return bibleData
     } catch (error) {
@@ -92,9 +93,12 @@ async function displayContent(updateResults, searchWord) {
         contents.append(bookChapter, searchContent)
 
         // 검색단어 하이라이트 적용하기
-        if (searchContent.innerText.includes(searchWord)) {
-            searchContent.innerHTML = searchContent.innerHTML.split(searchWord).join(`<span class='highlight'>${searchWord}</span>`)
-        }
+        const searchWords = searchWord.split(/\s+/).filter(word => word.trim() !== '');
+
+        searchWords.forEach(word => {
+            const regex = new RegExp(word, 'gi');
+            searchContent.innerHTML = searchContent.innerHTML.replace(regex, `<span class='highlight'>$&</span>`);
+        });
     }
 }
 
@@ -108,12 +112,14 @@ async function showSearchBible() {
     const loading = document.querySelector('.loading')
     loading.remove()
 
-    const updateResults = await searchedResults.bibles.filter(bibles => {
-        if (searchWord) {
-            return bibles.content.includes(searchWord)
-        }
+    const searchWords = searchWord.split(/\s+/).filter(word => word.trim() !== '');
+    const updateResults = await searchedResults.bibles.filter(bible => {
+         return searchWords.every(word => {
+        const regex = new RegExp(word, 'i');
+        return regex.test(bible.content);
+    });
     })
-
+    console.log('updateResults',updateResults)
     // 검색결과 유무에 따른 문구 표시
     if (updateResults.length > 0) displayContent(updateResults, searchWord)
     else {

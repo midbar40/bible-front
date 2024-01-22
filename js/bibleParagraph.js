@@ -39,8 +39,8 @@ async function getServerData(category) {
 
 // 화면에 서버데이터 렌더링하기
 async function renderData(category) {
+    console.log(category)
     const serverData = await getServerData(category)
-    console.log(serverData)
     // 화면에 렌더링
     const contents = document.querySelector('.contents')
     const subjectContents = document.createElement('div')
