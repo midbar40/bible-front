@@ -142,26 +142,16 @@ main .pray-wrapper {
 
 /* main -  Prayer-of-thanks */
 .Prayer-of-thanks {
-  width: 40%;
-  height: 800px;
+  width: 95%;
 }
 
-.Prayer-of-thanks-header {
-  width: 100%;
-  height: 5%;
-  display: flex;
-  justify-content: baseline;
-  align-items: center;
-  padding-left: 1rem;
-  background-color: aqua;
-}
+
 
 .Prayer-of-thanks-body {
   width: 100%;
   height: 85%;
-  /* background-color: rgb(191, 171, 211); */
-  /* border: 1px solid black; */
   overflow-y: auto;
+  font-size: 1.2rem;
 }
 
 .Prayer-of-thanks-body table {
@@ -173,8 +163,8 @@ main .pray-wrapper {
   height: 10%;
   text-align: center;
   padding-left: 1rem;
-  border-bottom: 1px solid black;
-  background-color: rgb(199, 199, 199);
+  /* border-bottom: 1px solid black; */
+  background-color: rgb(244, 236, 236);
   font-weight: bold;
 }
 
@@ -206,10 +196,9 @@ main .pray-wrapper {
 }
 
 .Prayer-of-thanks-input {
-  width: 100%;
-  height: 10%;
-  /* background-color: rgb(231, 151, 151); */
-  /* border: 1px solid black; */
+  width: 1150px;
+  height: 80px;
+  margin-left: 6rem;
 }
 
 .Prayer-of-thanks-input form {
@@ -223,6 +212,7 @@ main .pray-wrapper {
 .Prayer-of-thanks-input form input {
   width: 90%;
   height: 50%;
+  font-size: 1.5rem;
 }
 
 /* main - scripture & prayDiary */

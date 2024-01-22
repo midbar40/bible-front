@@ -1,6 +1,8 @@
 let prayBucketIndex = 1
 let prayBucketDbId = null
 let rightClickNearestTdInnerText
+let currentScreen = ''; // 전역 변수를 사용하여 현재 화면 추적
+
 
 // 헤더 모듈 가져오기
 function checkIsLogined() {
@@ -19,15 +21,39 @@ const transformDate = (date) => {
     return formattedDate
 }
 
-// 한번에 여러개의 서버 데이터 가져오기
+// 버킷리스트 초기DOM 렌더링
+const createPrayBucketlist = () => {
+    const prayWrapper = document.querySelector('.pray-wrapper')
+    prayWrapper.innerHTML = `
+        <div class="prayBucketList">
+        <div class="prayBucketList-body">
+        <table>
+            <thead>
+            <tr>
+                <td>응답</td>
+                <td>순번</td>
+                <td>내용</td>
+                <td>기도일자</td>
+                <td>응답일자</td>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="right-click-menu"></div>
+        </div>
+        <div class="prayBucketList-input">
+        <form>
+            <input type="text" placeholder="기도 버킷리스트를 입력하세요, 마우스 우클릭을 통해 수정하거나 삭제할 수 있어요" />
+        </form>
+        </div>
+        `
+}
+
+// 첫화면 버킷리스트 서버 데이터 가져오기
 async function getPrayNoteServerData() {
-    const firstPostIt = 1
-    const secondPostIt = 2
-    const reponses = await Promise.all([getPrayBucketlist()])
-    const prayBucketlistData = reponses[0]
-
+    const reponses = await getPrayBucketlist()
+    const prayBucketlistData = reponses
     showPrayBucketlist(prayBucketlistData)
-
 }
 
 // PrayBucketlist 서버 데이터 가져오는 함수
@@ -91,26 +117,25 @@ const deleteAndEditPrayBucketlist = (prayBucketlistList) => {
         rightClickMenuDelete.style.cursor = 'pointer'
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function (e) {
-            if(confirm('정말 삭제하시겠습니까?') === false) return
-            else{
+            if (confirm('정말 삭제하시겠습니까?') === false) return
+            else {
                 fetch('http://127.0.0.1:3300/api/prayBucketlist/',
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        _id: rightClickList
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            _id: rightClickList
+                        })
                     })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('data :', data)
-                    if (data.code == 200) {
-                        alert('삭제되었습니다.')
-                        location.reload()
-                    }
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('data :', data)
+                        if (data.code == 200) {
+                            rightClickNearestTd.parentNode.remove()
+                        }
+                    })
             }
         })
 
@@ -139,8 +164,7 @@ const deleteAndEditPrayBucketlist = (prayBucketlistList) => {
                         .then(data => {
                             console.log('글수정하기 :', data)
                             if (data.code == 200) {
-                                alert('수정되었습니다.')
-                                location.reload()
+                                rightClickNearestTd.innerText = editDetail.value;
                             }
                         })
                 }
@@ -191,6 +215,8 @@ document.body.addEventListener('click', hideRightClickMenu)
 
 // 버킷리스트 화면에 뿌려주는 함수
 async function showPrayBucketlist(prayBucketlistData) {
+    createPrayBucketlist()
+    submitPrayBucketlist()
     console.log(' prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.result?.forEach(element => {
@@ -202,10 +228,10 @@ async function showPrayBucketlist(prayBucketlistData) {
                 <td>${prayBucketIndex}</td>
                 <td>${element.detail}</td>
                 <td>${transformDate(element.createdAt)}</td>
-                <td class='checkedDate'>${element.finishedAt ? transformDate(element.finishedAt): ''}</td>
+                <td class='checkedDate'>${element.finishedAt !==null ? transformDate(element.finishedAt) : ''}</td>
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
-        if(element.isDone) prayBucketlistList.querySelector('.complete-checkbox').checked = true
+        if (element.isDone) prayBucketlistList.querySelector('.complete-checkbox').checked = true
         prayBucketIndex++
         deleteAndEditPrayBucketlist(prayBucketlistList)
     });
@@ -215,8 +241,10 @@ document.addEventListener('DOMContentLoaded', getPrayNoteServerData)  // 서버�
 
 
 // PrayBucketList 작업
-const prayBucketlistForm = document.querySelector('.prayBucketList-input form')
-prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
+const submitPrayBucketlist = () => {
+    const prayBucketlistForm = document.querySelector('.prayBucketList-input form')
+    prayBucketlistForm.addEventListener('submit', addPrayBucketlist)
+}
 
 // PrayBucketList 추가
 async function addPrayBucketlist(event) {
@@ -240,6 +268,8 @@ async function addPrayBucketlist(event) {
                     number: number,
                     detail: detail,
                     email: localStorage.getItem('유저이름'),
+                    finishedAt: ''
+                    ,
                 })
             })
             const result = await response.json()
@@ -298,7 +328,7 @@ function handleCheckboxChange(e) {
             updatedCheckedDate();
         } else {
             confirm('체크박스를 해제하시겠습니까?') === false ? e.target.checked = true :
-            e.target.closest('tr').querySelector('.checkedDate').innerText = '';
+                e.target.closest('tr').querySelector('.checkedDate').innerText = '';
 
             const clickedDataDbId = e.target.closest('tr').className.split(' ')[1];
             const updatedUnCheckedDate = async () => {
@@ -327,6 +357,235 @@ document.body.addEventListener('click', handleCheckboxChange);
 
 
 
+//  감사기도 초기DOM 렌더링
+const createPrayerOfThanks = () => {
+    const prayWrapper = document.querySelector('.pray-wrapper')
+    prayWrapper.innerHTML = `
+    <div class="Prayer-of-thanks">
+      <div class="Prayer-of-thanks-body">
+        <table>
+          <thead>
+            <tr>
+              <td>순번</td>
+              <td>내용</td>
+              <td>일자</td>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="right-click-menu"></div>
+      <div class="Prayer-of-thanks-input">
+        <form>
+          <input type="text" placeholder="감사한 일을 기억해보세요, 마우스 우클릭을 통해 수정하거나 삭제할 수 있어요" />
+        </form>
+      </div>
+    </div>
+        `
+}
+
+let graceIndex = 1
+let graceDbId = null
+
+// 감사기도 가져오기
+async function getGrace() {
+    try {
+        const reponse = await fetch('http://127.0.0.1:3300/api/grace/getGrace', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: localStorage.getItem('유저이름')
+            })
+        })
+        const result = await reponse.json()
+        console.log('감사기도 조회:', result)
+        return result
+    } catch (error) {
+        console.log('감사기도 조회 실패:', error)
+    }
+}
+
+// 감사기도 작성하기
+
+async function showGraceList(graceList) {
+    createPrayerOfThanks()
+    submitGraceList()
+    const PrayerOfThanksBody = document.querySelector('.Prayer-of-thanks-body tbody')
+    graceList.result?.forEach(element => {
+        const PrayerOfThanksList = document.createElement('tr')
+        PrayerOfThanksList.className = `Prayer-of-thanksList ${element._id}`
+        PrayerOfThanksList.innerHTML =
+            `
+                <td>${graceIndex}</td>
+                <td>${element.detail}</td>
+                <td>${transformDate(element.createdAt)}</td>
+        `
+        PrayerOfThanksBody.appendChild(PrayerOfThanksList)
+        graceIndex++
+        deleteAndEditGraceList(PrayerOfThanksList)
+    });
+}
+
+
+// 마우스 우클릭해서 기능 (수정, 삭제) 추가하기
+const deleteAndEditGraceList = (PrayerOfThanksList) => {
+    PrayerOfThanksList.addEventListener('contextmenu', function (e) {
+        // 마우스 우클릭 시 클릭된 곳 색깔 입히기
+        const rightClickeActive = e.target.parentNode.classList.add('active')
+        const PrayerOfThanksList = document.querySelectorAll('.Prayer-of-thanksList')
+        // 기존에 active 클래스가 있으면 삭제하고 새로운 active 클래스 추가하기
+        PrayerOfThanksList.forEach((element => {
+            if (element.classList.contains('active')) {
+                element.classList.remove('active')
+                e.currentTarget.classList.add('active')
+            }
+        }))
+        // 마우스 우클릭시 기존에 열려있던 input 수정창 사라지게 하기
+        const editDetail = document.querySelector('#edit-detail')
+        if (editDetail) editDetail.parentNode.innerHTML = rightClickNearestTdInnerText
+
+        const rightClickList = e.target.parentNode.className.split(' ')[1]
+        console.log('rightClickList :', rightClickList)
+        const rightClickNearestTd = e.target
+        rightClickNearestTdInnerText = e.target.innerText
+        console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
+        console.log('rightClickNearestTdInnerText :', rightClickNearestTdInnerText)
+        e.preventDefault()
+        const rightClickMenu = document.querySelector('.right-click-menu')
+        rightClickMenu.innerHTML = `
+        <div class='right-click-menu-edit'>수정</div>
+        <div class='right-click-menu-delete'>삭제</div>
+        `
+        document.body.appendChild(rightClickMenu)
+
+        rightClickMenu.style.top = `${e.clientY + scrollY}px`
+        rightClickMenu.style.left = `${e.clientX + scrollX}px`
+        rightClickMenu.style.display = 'flex'
+
+        const rightClickMenuEdit = document.querySelector('.right-click-menu-edit')
+        const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
+        rightClickMenuEdit.style = 'cursor:pointer'
+        rightClickMenuDelete.style = 'cursor:pointer'
+        // 삭제하기
+        rightClickMenuDelete.addEventListener('click', function (e) {
+            if(confirm('정말 삭제하시겠습니까?') === false) return
+            else{
+                fetch('http://127.0.0.1:3300/api/grace/',
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        _id: rightClickList
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('data :', data)
+                    if (data.code == 200) {
+                        rightClickNearestTd.parentNode.remove()
+                    }
+                })
+            }
+        })
+
+        // 수정하기
+        rightClickMenuEdit.addEventListener('click', function (e) {
+            rightClickNearestTd.innerHTML = `
+            <input id='edit-detail' type='text' value ='${rightClickNearestTdInnerText}'/>
+            `
+            const editDetail = document.querySelector('#edit-detail')
+            editDetail.style.width = '100%'
+            editDetail.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    fetch('http://127.0.0.1:3300/api/grace/edit',
+                        {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                _id: rightClickList,
+                                detail: editDetail.value,
+                                lastModifiedAt: new Date()
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log('글수정하기 :', data)
+                            if (data.code == 200) {
+                                rightClickNearestTd.innerText = editDetail.value;
+                            }
+                        })
+                }
+            })
+        })
+
+    })
+}
+
+
+
+
+const submitGraceList = () => {
+    const PrayerOfThanksListForm = document.querySelector('.Prayer-of-thanks-input form')
+    PrayerOfThanksListForm.addEventListener('submit', addGraceList)
+}
+
+// PrayerOfThanksList 추가
+async function addGraceList(event) {
+    console.log('addGraceList ', graceIndex)
+    event.preventDefault()
+    const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
+    const graceListTbody = document.querySelector('.Prayer-of-thanks-body tbody')
+    const graceListInput = document.querySelector('.Prayer-of-thanks-input input')
+    const graceList = graceListInput.value
+    const graceListList = document.createElement('tr')
+
+    // 몽고DB에 저장하는 코드 작성
+    const saveServer = async (number, detail) => {
+        try {
+            const response = await fetch('http://127.0.0.1:3300/api/grace/saveGrace', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    number: number,
+                    detail: detail,
+                    email: localStorage.getItem('유저이름'),
+                })
+            })
+            const result = await response.json()
+            console.log('감사기도 등록결과 :', result)
+            graceDbId = result.result._id // 몽고DB에 저장된 감사기도의 아이디를 전역변수에 저장
+            return graceDbId
+        }
+        catch (err) {
+            console.log('감사기도 등록오류 :', err)
+        }
+    }
+    await saveServer(graceIndex, graceList) // 서버에 저장하는 함수
+
+    graceListList.className = `Prayer-of-thanksList ${graceDbId}`
+    graceListList.innerHTML =
+        `
+            <td>${graceIndex}</td>
+            <td>${graceList}</td>
+            <td>${transformDate(currentTime)}</td>
+    `
+
+
+    graceListTbody.appendChild(graceListList)
+    graceListInput.value = ''
+
+    graceIndex++
+    deleteAndEditGraceList(graceListList)
+}
+
 
 // 스프링 배경만들기
 const createSpringBackground = () => {
@@ -344,7 +603,7 @@ const createSpringBackground = () => {
     springBackgroundImg.style.zIndex = '1'
     springBackgroundImg.style.opacity = '0.5'
 
-    
+
     document.body.appendChild(springBackground)
     springBackground.appendChild(springBackgroundImg)
 }
@@ -361,7 +620,7 @@ const createBookmark = () => {
     bookmark2.innerHTML = `<h4 class='prayOfThanksTitle'>감사기도</h4>`
     bookmark2.className = 'bookmark2'
     document.body.appendChild(bookmark2)
-    
+
     const bookmark3 = document.createElement('div')
     bookmark3.innerHTML = `<h4 class='prayDiaryTitle'>기도일기</h4>`
     bookmark3.className = 'bookmark3'
@@ -371,14 +630,58 @@ createBookmark()
 
 
 // 북마크 클릭시
-document.body.addEventListener('click', function(e){
-    if(e.target.className == 'bookmark1'){
-        location.href = '/pages/prayNote.html'
+document.body.addEventListener('click', function (e) {
+    console.log('e.target.className :', e.target)
+    if (e.target.className == 'prayBucketTitle') {   
+        currentScreen = 'prayBucketList'
+        const prayWrapper = document.querySelector('.pray-wrapper')
+        const prayBucketList = document.querySelector('.prayBucketList')
+        if(!prayBucketList) {
+            prayWrapper.innerHTML = ''
+            prayBucketIndex = 1
+            createPrayBucketlist()  
+            getPrayBucketlist()
+            .then(data => {
+                showPrayBucketlist(data)
+            })
+        } 
+        console.log('버킷리스트')
     }
-    if(e.target.className == 'bookmark2'){
-        location.href = '/pages/PrayerOfThanks.html'
+    else if (e.target.className == 'prayOfThanksTitle') {
+        currentScreen = 'prayOfThanks'
+        const prayWrapper = document.querySelector('.pray-wrapper')
+        const prayerOfThanks = document.querySelector('.Prayer-of-thanks')
+        if(!prayerOfThanks) {
+            prayWrapper.innerHTML = ''
+            graceIndex = 1
+            createPrayBucketlist()  
+            getGrace()
+            .then(data => {
+                showGraceList(data)
+            })
+        } 
+        console.log('감사기도')
+        
     }
-    if(e.target.className == 'bookmark3'){
-        location.href = '/pages/prayDiary.html'
+    else if (e.target.className == 'prayDiaryTitle') {
+        currentScreen = 'prayDiary'
+        console.log('기도일기')
+
     }
 })
+// 페이지 리로드 시 화면 복원
+window.addEventListener('load', function() {
+    switch(currentScreen) {
+        case 'prayBucketList':
+            // prayBucketList 화면 복원 로직 추가
+            break;
+        case 'prayOfThanks':
+            // prayerOfThanks 화면 복원 로직 추가
+            break;
+        case 'prayDiary':
+            // prayDiary 화면 복원 로직 추가
+            break;
+        default:
+            break;
+    }
+});
