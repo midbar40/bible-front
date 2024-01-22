@@ -9,7 +9,6 @@ function checkIsLogined() {
 document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 
-
 // 구절 주제 부분
 const createSubject = () => {
     const contents = document.querySelector('.contents')
@@ -19,8 +18,8 @@ const createSubject = () => {
     <div class='sub salvation'><h3>구원</h3></div>
     <div class='sub thanks'><h3>감사</h3></div>
     <div class='sub adversity'><h3>고난</h3></div>
-    <div class='sub Healing'><h3>치유</h3></div>
-    <div class='sub Courageous'><h3>용기</h3></div>
+    <div class='sub healing'><h3>치유</h3></div>
+    <div class='sub courageous'><h3>용기</h3></div>
     `
     contents.appendChild(subjectDiv)
 }
@@ -29,11 +28,11 @@ createSubject()
 
 // 서버데이터 가져오기
 async function getServerData(category) {
-    try{
+    try {
         const response = await fetch(`http://127.0.0.1:3300/api/bibleParagraphs/${category}`)
         const data = await response.json()
         return data
-    }catch(error){
+    } catch (error) {
         console.log(error)
     }
 }
@@ -47,12 +46,12 @@ async function renderData(category) {
     const subjectContents = document.createElement('div')
     subjectContents.className = 'subject-contents'
     subjectContents.innerHTML = `
-     ${serverData.bibleParagraphs && serverData.bibleParagraphs.map(para => 
-       ` <div>
+     ${serverData.bibleParagraphs && serverData.bibleParagraphs.map(para =>
+        ` <div>
             <h4>${para.title}</h4>
             <p>${para.detail}</p>
         </div>`
-        ).join(' ')}
+    ).join(' ')}
     `
     contents.appendChild(subjectContents)
 }
@@ -71,14 +70,14 @@ btns.forEach((btn) => {
             if (btn.classList.contains('btnActive')) {
                 btn.classList.remove('btnActive');
                 const subjectContents = document.querySelector('.subject-contents')
-                if(subjectContents) subjectContents.remove()
+                if (subjectContents) subjectContents.remove()
             }
         });
         e.currentTarget.classList.add('btnActive');
-        if(e.currentTarget.classList.contains('btnActive')) {
+        if (e.currentTarget.classList.contains('btnActive')) {
             // 렌더링된 데이터가 이미 있으면 렌더링하지 않는다
             const subjectContents = document.querySelector('.subject-contents')
-            if(!subjectContents) renderData(category)
+            if (!subjectContents) renderData(category)
         }
     });
 });

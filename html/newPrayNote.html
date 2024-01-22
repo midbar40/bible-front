@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>기도노트</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&family=Noto+Serif+KR:wght@200;300;400;500;600&family=Russo+One&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="stylesheet" href="../css/newPrayNote.css" />
+  <script type="module" src="../js/header.js" defer></script>
+  <script type="module" src="../js/newPrayNote.js" defer></script>
+</head>
+
+<body>
+  <!-- 헤더 -->
+  <!-- 모듈로 가져옴 -->
+  <div class="background"></div>
+  <!-- 메인 -->
+  <main>
+    <!-- Wrapper -->
+    <div class="pray-wrapper">
+      <!-- prayBucketList -->
+      <div class="prayBucketList">
+        <div class="prayBucketList-body">
+          <table>
+            <thead>
+              <tr>
+                <td>응답</td>
+                <td>순번</td>
+                <td>내용</td>
+                <td>기도</td>
+                <td>응답</td>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="right-click-menu"></div>
+        </div>
+        <div class="prayBucketList-input">
+          <form>
+            <input type="text" placeholder="기도 버킷리스트를 입력하세요, 마우스 우클릭을 통해 수정하거나 삭제할 수 있어요" />
+          </form>
+        </div>
+      </div>
+  </main>
+  <div class="mobile-background"></div>
+</body>
+
+</html>
