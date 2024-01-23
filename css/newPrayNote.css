@@ -17,7 +17,10 @@ main .pray-wrapper {
   padding-left: 2rem;
   /* gap: 10px; */
   /* background-color: rgb(255, 255, 255); */
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px -3px 3px -3px rgba(0, 0, 0, 0.75),
+                inset 0px 3px 3px -3px rgba(0, 0, 0, 0.75),
+                inset -3px 0px 3px -3px rgba(0, 0, 0, 0.75),
+                inset 3px 0px 3px -3px rgba(0, 0, 0, 0.75);
 }
 
 /* main - prayBucketList */
@@ -26,6 +29,7 @@ main .pray-wrapper {
   /* height: 800px; */
   display: flex;
   flex-direction: column;
+  padding-top: 2rem;
 }
 
 .prayBucketList-body {
@@ -108,33 +112,6 @@ main .pray-wrapper {
   margin-top: 8px;
 }
 
-.bookmark1, .bookmark2, .bookmark3 {
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  right: 30px;
-  z-index: 1;
-  opacity: 0.5;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: center;
-  line-height: 100px;
-  color: #fff;
-}
-.bookmark1{
-  top: 17%;
-  background-color: red;
-}
-.bookmark2{
-  top: 30%;
-  background-color: green;
-}
-.bookmark3{
-  top: 44%;
-  background-color: blue;
-}
-
-
 
 
 
@@ -143,6 +120,7 @@ main .pray-wrapper {
 /* main -  Prayer-of-thanks */
 .Prayer-of-thanks {
   width: 95%;
+  padding-top: 2rem;
 }
 
 
@@ -210,84 +188,27 @@ main .pray-wrapper {
 }
 
 .Prayer-of-thanks-input form input {
-  width: 90%;
+  width: 100%;
   height: 50%;
   font-size: 1.5rem;
 }
 
 /* main - scripture & prayDiary */
 .prayDiary {
-  width: 100%;
+  width: 95%;
   height: 600px;
-  /* border: 1px solid black; */
   display: flex;
+  padding-top: 2rem;
 }
-
-.scripture-board {
-  width: 60%;
-  height: 100%;
-  /* background-color: blue; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* border: 1px solid black; */
-}
-
-.scripture {
-  width: 90%;
-  height: 50%;
-  display: flex;
-  gap: 10px;
-  margin: 1rem 0;
-}
-
-.scripture-1 {
-  width: 50%;
-  height: 100%;
-  background-color: rgb(79, 250, 64);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border-radius: 0 0 2rem 0;
-}
-
-.scripture-1 p,
-.scripture-2 p {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.scripture-1 h5 {
-  font-size: 1rem;
-}
-
-.scripture-2 {
-  width: 50%;
-  height: 100%;
-  background-color: rgb(218, 252, 67);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border-radius: 0 0 2rem 0;
-}
-
-/* .scripture-2 h5 {
-  font-size: 1rem;
-} */
 .prayDiary-output {
-  width: 90%;
+  width: 100%;
   height: 50%;
+  font-size: 1.2rem;
 }
 
 .prayDiary-output-body {
   width: 100%;
   height: 85%;
-  /* background-color: rgb(191, 171, 211); */
-  /* border: 1px solid black; */
   overflow-y: auto;
 }
 
@@ -300,11 +221,10 @@ main .pray-wrapper {
   height: 10%;
   text-align: center;
   padding-left: 1rem;
-  border-bottom: 1px solid black;
 }
 
 .prayDiary-output-body table tr:nth-child(1) {
-  background-color: rgb(199, 199, 199);
+  background-color: rgb(244, 236, 236);
   font-weight: bold;
 }
 
@@ -321,22 +241,12 @@ main .pray-wrapper {
 }
 
 .prayDiary-input {
-  width: 40%;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
   /* border: 1px solid black; */
-}
-
-.prayDiary-header {
-  width: 100%;
-  height: 5%;
-  display: flex;
-  justify-content: baseline;
-  align-items: center;
-  padding-left: 2rem;
-  background-color: rgb(27, 161, 117);
 }
 
 .prayDiary-input form {
@@ -351,12 +261,14 @@ main .pray-wrapper {
 .prayDiary-input form input {
   width: 90%;
   height: 5%;
+  font-size: 1.3rem;
 }
 
 .prayDiary-input form textarea {
   width: 90%;
   height: 80%;
   resize: none;
+  font-size: 1.3rem;
   overflow-y: auto;
 }
 
@@ -485,6 +397,50 @@ main .pray-wrapper {
 }
 
 /* 포스트잇 부분 */
+.scripture-board {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  padding-top: 2rem;
+  padding-left: 2rem;
+}
+.scripture {
+  width: 20%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 1rem 0;
+}
+.scripture-1 {
+  width: 200px;
+  height: 200px;
+  background-color: rgb(93, 149, 87);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 0 0 2rem 0;
+}
+.scripture-1 p, .scripture-2 p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+.scripture-1 h5 {
+  font-size: 1rem;
+}
+.scripture-2 {
+  width: 200px;
+  height: 200px;
+  background-color: rgb(238, 175, 140);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 0 0 2rem 0;
+}
 .scripture-1,
 .scripture-2 {
   cursor: pointer;
@@ -496,6 +452,7 @@ main .pray-wrapper {
   height: 200px;
   resize: none;
   margin-top: 30px;
+  font-size: 1.2rem;
 }
 
 .scripture-1-btns,
@@ -530,6 +487,153 @@ main .pray-wrapper {
   cursor: pointer;
 }
 
+/* 스프링 디자인 */
+.spring-background-img{
+  width: 100px;
+  height: 930px;
+  position: absolute;
+  top: 15%;
+  left: 30px;
+  z-index: 1;
+  opacity: 0.5;
+}
+/* 설교노트 */
+.sermon{
+  width: 100%;
+  height: 95%;
+  display: flex;
+  padding-top: 1rem;
+}
+.sermon-input{
+  width: 50%;
+  height: 100%;
+  border: 2px solid rgb(8, 130, 16);
+  border-radius: 6px;
+  padding-left: 10px;
+  padding-top: 1rem;
+}
+.sermon-input form{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.sermon-input form label{
+  display: flex;
+  align-items: center;
+}
+.sermon-input form label span{
+  display: inline-block;
+  width: 50px;
+}
+.sermon-input form input{
+  width: 89%;
+  height: 35px;
+}
+#sermon-content{
+  width: 98%;
+  height: 70%;
+  resize: none;
+  font-size: 1.2rem;
+}
+#sermon-takeaway{
+  width: 98%;
+  height: 30%;
+  resize: none;
+  font-size: 1.2rem;
+}
+.sermon-btns{
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+.sermon-saveBtn{
+  width: 100px;
+  height: 35px;
+  border: none;
+  border-radius: 6px;
+  background-color: rgb(153, 153, 153);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+.sermon-cancelBtn{
+  width: 100px;
+  height: 35px;
+  border: none;
+  border-radius: 6px;
+  background-color: rgb(238, 34, 34);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+.sermon-output{
+  width: 50%;
+  height: 100%;
+}
+.sermon-output-body table{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.sermon-output-body table tr:nth-child(1){
+  background-color: rgb(244, 236, 236);
+  font-weight: bold;
+}
+.sermon-output-body table td:nth-child(1){
+  width: 15%;
+}
+.sermon-output-body table td:nth-child(2){
+  width: 45%;
+}
+.sermon-output-body table td:nth-child(3){
+  width: 25%;
+}
+.sermon-output-body table td:nth-child(4){
+  width: 15%;
+}
+
+/* 북마크 디자인 */
+.bookmark1, .bookmark2, .bookmark3, .bookmark4 {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  right: 30px;
+  z-index: 1;
+  opacity: 0.6;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 100px;
+  color: #fff;
+}
+.bookmark1{
+  top: 17%;
+  background-color: red;
+}
+.bookmark2{
+  top: 30%;
+  background-color: green;
+}
+.bookmark3{
+  top: 43%;
+  background-color: blue;
+}
+.bookmark4{
+  top: 56%;
+  background-color: rgb(172, 172, 0);
+}
+
+.bookmark1:hover, .bookmark2:hover, .bookmark3:hover, .bookmark4:hover {
+  opacity: 1;
+}
+
+
+
+/* 반응형 */
 @media (max-width: 420px) {
   .show {
     display: flex !important;
