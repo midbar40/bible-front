@@ -227,7 +227,7 @@ async function showPrayBucketlist(prayBucketlistData) {
                 <td>${prayBucketIndex}</td>
                 <td>${element.detail}</td>
                 <td>${transformDate(element.createdAt)}</td>
-                <td class='checkedDate'>${element.finishedAt !==null ? transformDate(element.finishedAt) : ''}</td>
+                <td class='checkedDate'>${element.finishedAt !== null ? transformDate(element.finishedAt) : ''}</td>
         `
         prayBucketListTbody.appendChild(prayBucketlistList)
         if (element.isDone) prayBucketlistList.querySelector('.complete-checkbox').checked = true
@@ -302,9 +302,10 @@ async function addPrayBucketlist(event) {
 
 // PrayBuckelist checkbox 클릭시 체크당시 날짜 출력
 function handleCheckboxChange(e) {
-    if (e.target.className === 'complete-checkbox') {
+    e.stopPropagation()
+    if (e.target.className === 'complete-checkbox' && e.target.checked) {
         const currentTime = Date.now();
-        if (e.target.checked) {
+        
             let getCheckedTime = transformDate(currentTime);
             e.target.closest('tr').querySelector('.checkedDate').innerText = getCheckedTime;
 
@@ -325,7 +326,8 @@ function handleCheckboxChange(e) {
                 console.log('체크박스클릭 :', result);
             };
             updatedCheckedDate();
-        } else {
+    } else if(e.target.className === 'complete-checkbox' && !e.target.checked) {
+            
             confirm('체크박스를 해제하시겠습니까?') === false ? e.target.checked = true :
                 e.target.closest('tr').querySelector('.checkedDate').innerText = '';
 
@@ -348,7 +350,7 @@ function handleCheckboxChange(e) {
             updatedUnCheckedDate();
         }
     }
-}
+
 
 document.body.removeEventListener('click', handleCheckboxChange);
 document.body.addEventListener('click', handleCheckboxChange);
@@ -469,25 +471,25 @@ const deleteAndEditGraceList = (PrayerOfThanksList) => {
         rightClickMenuDelete.style = 'cursor:pointer'
         // 삭제하기
         rightClickMenuDelete.addEventListener('click', function (e) {
-            if(confirm('정말 삭제하시겠습니까?') === false) return
-            else{
+            if (confirm('정말 삭제하시겠습니까?') === false) return
+            else {
                 fetch('http://127.0.0.1:3300/api/grace/',
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        _id: rightClickList
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            _id: rightClickList
+                        })
                     })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('data :', data)
-                    if (data.code == 200) {
-                        rightClickNearestTd.parentNode.remove()
-                    }
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('data :', data)
+                        if (data.code == 200) {
+                            rightClickNearestTd.parentNode.remove()
+                        }
+                    })
             }
         })
 
@@ -657,83 +659,6 @@ const savePrayDiary = async () => {
     deletePrayDiary(prayDiaryTr)
 }
 
-// 기도일기 수정 경고창 보여주기 
-const showWarningModal = () => {
-    const warningModal = document.createElement('div')
-    warningModal.className = 'warning-modal'
-    warningModal.innerHTML = `
-                <div class='warning-modal-content'>
-                <p>작성중인 내용이 있습니다. 정말 취소하시겠습니까?</p>
-                <div class='warning-modal-btns'>
-                <button class='warning-modal-ok'>확인</button>
-                <button class='warning-modal-cancel'>취소</button>
-                </div>
-                </div>
-                `
-    warningModal.classList.add('modal-background')
-    document.body.style.overflow = 'hidden'
-    document.body.appendChild(warningModal)
-    const warningModalCancel = document.querySelector('.warning-modal-cancel')
-    const warningModalOk = document.querySelector('.warning-modal-ok')
-    warningModalCancel.addEventListener('click', function () {
-        warningModal.remove()
-        document.body.style.overflow = ''
-
-    })
-    warningModalOk.addEventListener('click', function () {
-        warningModal.remove()
-        document.body.style.overflow = ''
-    })
-}
-
-
-// 클릭이벤트 모음
-document.body.addEventListener('click', async function (e) {
-    const prayDiaryTitle = document.querySelector('#prayDiary-title')
-    const prayDiaryContent = document.querySelector('#prayDiary-content')
-    const prayDiarySaveBtn = document.querySelector('.saveBtn')
-    const prayDiaryCancelBtn = document.querySelector('.cancelBtn')
-    // 기도일기 저장버튼 클릭시
-    if (prayDiarySaveBtn && e.target.className == 'saveBtn') {
-        if (prayDiaryTitle.value !== '' && prayDiaryContent.value !== '') {
-            e.stopPropagation()
-            savePrayDiary()
-            prayDiaryTitle.value = ''
-            prayDiaryContent.value = ''
-        }
-        else {
-            alert('제목과 내용을 입력해주세요')
-        }
-    }
-
-    // 기도일기 취소버튼 클릭시 
-    if (prayDiaryCancelBtn && e.target.className == 'cancelBtn') {
-        cancelPrayDiary()
-    }
-    // 기도일기 output 화면에서 일기 클릭시 input창에 기도일기 내용 보여주기
-    if (e.target.parentNode.classList.contains('prayDiary-List')) {
-        clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
-        const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
-        changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
-        addNewDiaryBtn() // 새일기 버튼 생성
-        changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경 
-        // checkInputValueAndShowWarningModal(diaryData) // 기도일기 다른 일기 클릭하면 경고창 띄우기
-    }
-
-    if (e.target.className == 'editBtn') {
-        e.stopPropagation()
-        await editPrayDiary(clickedPrayDiaryId)
-    }
-
-    // 모바일 버거버튼 클릭시
-    if (e.target.className == 'material-symbols-outlined') {
-        const navButtons = document.querySelector('.nav-btns')
-        const mobileBackground = document.querySelector('.mobile-background')
-        navButtons.classList.toggle('show')
-        mobileBackground.classList.toggle('show')
-    }
-})
-
 
 // 기도일기 취소
 const cancelPrayDiary = () => {
@@ -770,7 +695,7 @@ const getPrayDiary = async () => {
 const showPrayDiary = async (prayDiaryList) => {
     console.log('이게 뭘로나오니 prayDiaryList', prayDiaryList)
     const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
-    if (prayDiaryList !== undefined || prayDiaryList !== undefined) {
+    if (prayDiaryList !== undefined) {
         prayDiaryList?.result?.forEach(element => {
             const prayDiaryTr = document.createElement('tr')
             prayDiaryTr.className = `prayDiary-List ${element._id}`
@@ -865,9 +790,9 @@ const changeEditBtnToSave = () => {
     const prayDiaryTitle = document.querySelector('#prayDiary-title')
     const prayDiaryContent = document.querySelector('#prayDiary-content')
     const prayDiaryEditBtn = document.querySelector('.editBtn')
-    
+
     if (document.querySelector('.saveBtn')) return
-    else{
+    else {
         prayNewDiary.addEventListener('click', function (e) {
             e.preventDefault()
             prayDiaryTitle.value = ''
@@ -939,31 +864,31 @@ const deletePrayDiary = (prayDiaryList) => {
         rightClickMenu.style.top = `${e.clientY + scrollY}px`
         rightClickMenu.style.left = `${e.clientX + screenX}px`
         rightClickMenu.style.display = 'flex'
-        
+
         const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
         rightClickMenuDelete.style.cursor = 'pointer'
         // 삭제하기
         const rightClickNearestTd = e.target
         rightClickMenuDelete.addEventListener('click', async function (e) {
-            if(confirm('정말 삭제하시겠습니까?') === false) return
-            else{
+            if (confirm('정말 삭제하시겠습니까?') === false) return
+            else {
                 await fetch('http://127.0.0.1:3300/api/prayDiary/deleteDiary',
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        _id: rightClickList
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            _id: rightClickList
+                        })
                     })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('data :', data)
-                    if (data.code == 200) {
-                        rightClickNearestTd.parentNode.remove()
-                    }
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('data :', data)
+                        if (data.code == 200) {
+                            rightClickNearestTd.parentNode.remove()
+                        }
+                    })
             }
         })
     })
@@ -1004,6 +929,7 @@ const createPostIt = () => {
             <div class="sermon-btns">
                 <button class="sermon-saveBtn">저장</button>
                 <button class="sermon-cancelBtn">취소</button>
+                </form>
             </div>     
         </div>    
             <div class="sermon-output">
@@ -1028,9 +954,9 @@ const createPostIt = () => {
 
 
 // 포스트잇 가져오기
-const getPickPosts = async(postNum) => {
+const getPickPosts = async (postNum) => {
     try {
-        const response = await fetch(`http://127.0.0.1:3300/api/pickPosts/post${postNum}`,{
+        const response = await fetch(`http://127.0.0.1:3300/api/pickPosts/post${postNum}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1038,7 +964,7 @@ const getPickPosts = async(postNum) => {
             body: JSON.stringify({
                 email: localStorage.getItem('유저이름')
             })
-        }) 
+        })
         const result = await response.json()
         console.log(`포스트잇${postNum} 가져오기 결과 :`, result)
         return result
@@ -1050,7 +976,7 @@ const getPickPosts = async(postNum) => {
 
 // 포스트잇 정보 뿌려주기
 const showPickPosts = (firstPost, secondPost) => {
-    const scripture1 = document.querySelector('.scripture-1') 
+    const scripture1 = document.querySelector('.scripture-1')
     const scripture2 = document.querySelector('.scripture-2')
     if (firstPost?.result.length > 0) {
         scripture1.innerHTML = `<p class='scripture-1-text'>${firstPost.result[0].text || ''}</p>`
@@ -1107,115 +1033,392 @@ const updateScripture = async (postNum, pickText) => {
     }
 }
 
-document.body.addEventListener('click', async function (e) {
-     // 포스트 잇 1 
-     if (e.target.className == 'scripture-1' || e.target.className == 'scripture-1-text') {
-        e.stopPropagation()
-        const postNum = 1
-        const serverData = await getPickPosts(postNum)
-        console.log('serverData :', serverData)
-        const scripture1 = document.querySelector('.scripture-1')
-        const scripture1Paragraph = document.querySelector('.scripture-1-text')
-        // console.log('scripture1Paragraph.innerText :', scripture1Paragraph.innerText)
-        scripture1.innerHTML =
-            `
-        <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
-        <div class='scripture-1-btns'>
-            <button class='scripture-1-saveBtn'>저장</button>
-            <button class='scripture-1-cancelBtn'>취소</button>
-        </div>
-        `
-        const pickText = document.querySelector('#pickText1')
-        const scripture1SaveBtn = document.querySelector('.scripture-1-saveBtn')
-        const scripture1CancelBtn = document.querySelector('.scripture-1-cancelBtn')
-
-        pickText.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                // 화면 변경
-                scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
-                // 서버에 저장
-                if(pickText.value == '' ) alert('내용을 입력해주세요')
-                    else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
-                    else if (serverData.result.length > 0 && pickText.value !== ''){
-                        updateScripture(postNum, pickText)
-                    }
-            }
-        })
-
-        // 저장버튼 누르면 서버에 저장
-        scripture1SaveBtn.addEventListener('click', function (e) {
-
-            const scripture1Paragraph = document.querySelector('.scripture-1-text')
-            // 화면 변경
-            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
-            // 서버에 저장
-            if(pickText.value == '' ) alert('내용을 입력해주세요')
-            else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
-            else if (serverData.result.length > 0 && pickText.value !== ''){
-                updateScripture(postNum, pickText)
-            }
-        })
-        scripture1CancelBtn.addEventListener('click', function (e) {
-            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>` // ${pickText.value} 서버에서 가져온 데이터로 변경
-        })
-    }
-    // 포스트 잇 2
-    if (e.target.className == 'scripture-2' || e.target.className == 'scripture-2-text') {
-        e.stopPropagation()
-       
-        const postNum = 2
-        const serverData = await getPickPosts(postNum)
-        console.log('serverData :', serverData)
-        const scripture2 = document.querySelector('.scripture-2')
-        const scripture2Paragraph = document.querySelector('.scripture-2-text')
-        scripture2.innerHTML =
-            `
-        <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
-        <div class='scripture-2-btns'>
-            <button class='scripture-2-saveBtn'>저장</button>
-            <button class='scripture-2-cancelBtn'>취소</button>
-        </div>
-        `
-        const pickText = document.querySelector('#pickText2')
-        const scripture2SaveBtn = document.querySelector('.scripture-2-saveBtn')
-        const scripture2CancelBtn = document.querySelector('.scripture-2-cancelBtn')
-            pickText.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    // 화면 변경
-                    scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
-                    // 서버에 저장
-                    if(pickText.value == '' ) alert('내용을 입력해주세요')
-                    else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
-                    else if (serverData.result.length > 0 && pickText.value !== ''){
-                        updateScripture(postNum, pickText)
-                    }
-                }
-            })
-        scripture2SaveBtn.addEventListener('click', function (e) {
-            console.log(serverData.result.length == 0)
-            // 화면 변경
-            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
-            // 서버에 저장
-            if(pickText.value == '' ) alert('내용을 입력해주세요')
-            else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
-            else if (serverData.result.length > 0 && pickText.value !== ''){
-                updateScripture(postNum, pickText)
-            }
-        })
-        scripture2CancelBtn.addEventListener('click', function (e) {
-            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>` 
-        })
-    }
-
-
-})
-
 const getPostItData = async () => {
     const post1 = await getPickPosts(1)
     const post2 = await getPickPosts(2)
     return [post1, post2]
 }
 
+// < 설교노트Sermon > //
+
+// 설교노트 전역변수
+let clickedSermonId = null
+
+// 설교노트 작성(저장)
+const saveSermon = async () => {
+    const sermonDate = document.querySelector('#sermon-datepicker')
+    const sermonTitle = document.querySelector('#sermon-title')
+    const sermonScripture = document.querySelector('#sermon-scripture')
+    const sermonPreacher = document.querySelector('#sermon-preacher')
+    const sermonContent = document.querySelector('#sermon-content')
+    const sermonTakeaway = document.querySelector('#sermon-takeaway')
+    console.log('sermonDate.value :', sermonDate.value)
+    const saveSermon = await fetch('http://127.0.0.1:3300/api/sermon/saveSermon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            date: sermonDate.value,
+            title: sermonTitle.value,
+            scripture: sermonScripture.value,
+            preacher: sermonPreacher.value,
+            content: sermonContent.value,
+            takeaway: sermonTakeaway.value,
+            email: localStorage.getItem('유저이름')
+        })
+    })
+    const result = await saveSermon.json()
+    console.log('설교노트 저장결과 :', result)
+
+    const sermonOutputBodyTbody = document.querySelector('.sermon-output-body tbody')
+    const sermonTr = document.createElement('tr')
+    sermonTr.className = `sermon-list ${result.result._id}`
+
+    sermonTr.innerHTML = `
+        <td>${transformDate(result.result.date)}</td>
+        <td>${result.result.title}</td>
+        <td>${result.result.scripture}</td>
+        <td>${result.result.preacher}</td>
+    `
+    sermonOutputBodyTbody.appendChild(sermonTr)
+    deleteSermon(sermonTr)
+}
+
+
+// 설교노트 취소
+const cancelSermon = () => {
+    const sermonDate = document.querySelector('#sermon-datepicker')
+    const sermonTitle = document.querySelector('#sermon-title')
+    const sermonScripture = document.querySelector('#sermon-scripture')
+    const sermonPreacher = document.querySelector('#sermon-preacher')
+    const sermonContent = document.querySelector('#sermon-content')
+    const sermonTakeaway = document.querySelector('#sermon-takeaway')
+
+    if (sermonDate.value !== ''
+        && sermonTitle.value !== ''
+        && sermonScripture.value !== ''
+        && sermonPreacher.value !== ''
+        && sermonContent.value !== ''
+        && sermonTakeaway.value !== ''
+    ) return
+    else {
+        const userResponse = confirm('작성중인 내용이 있습니다. 정말 취소하시겠습니까?')
+        if (userResponse) {
+            sermonDate.value = ''
+            sermonTitle.value = ''
+            sermonScripture.value = ''
+            sermonPreacher.value = ''
+            sermonContent.value = ''
+            sermonTakeaway.value = ''
+        }
+    }
+}
+
+
+// 저장된 설교노트 서버에서 가져오기
+const getSermon = async () => {
+    const response = await fetch('http://127.0.0.1:3300/api/sermon/getSermon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: localStorage.getItem('유저이름')
+        })
+    })
+    const result = await response.json()
+    console.log('설교노트 조회결과 :', result)
+    return result
+}
+
+// 서버에서 가져온 설교노트 output 화면에 보여주기
+const showSermon = async (sermonList) => {
+    console.log('sermonList', sermonList)
+    const sermonOutputBodyTbody = document.querySelector('.sermon-output-body tbody')
+    if (sermonList !== undefined) {
+        sermonList?.result?.forEach(element => {
+            const sermonTr = document.createElement('tr')
+            sermonTr.className = `sermon-list ${element._id}`
+            sermonTr.style.cursor = 'pointer'
+            sermonTr.innerHTML = `
+          <td>${transformDate(element.createdAt)}</td>
+          <td>${element.title}</td>
+          <td>${element.scripture}</td>
+          <td>${element.preacher}</td>
+      `
+            sermonOutputBodyTbody.appendChild(sermonTr)
+            deleteSermon(sermonTr)
+        })
+    }
+}
+
+let previousSermonData = {
+    date: '',
+    title: '',
+    content: '',
+    scripture: '',
+    preacher: '',
+    takeaway: ''
+}
+
+// transformDateForSermon
+const transformDateForSermon = (day) => {
+    const date = new Date(day);
+    const formattedDate = date.toISOString().substring(0, 10);
+    return formattedDate
+}
+
+// 설교노트 Output 화면에서 설교 클릭시 input창에 설교노트 내용 보여주기
+const showSermonDetail = async (clickedSermonId) => {
+    const response = await fetch('http://127.0.0.1:3300/api/sermon/getSermonDetail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            _id: clickedSermonId
+        })
+    })
+    const result = await response.json()
+    const sermonDate = document.querySelector('#sermon-datepicker')
+    const sermonTitle = document.querySelector('#sermon-title')
+    const sermonScripture = document.querySelector('#sermon-scripture')
+    const sermonPreacher = document.querySelector('#sermon-preacher')
+    const sermonContent = document.querySelector('#sermon-content')
+    const sermonTakeaway = document.querySelector('#sermon-takeaway')
+    console.log('result.result.date :', result.result.date)
+    if (
+        sermonDate.value == '' &&
+        sermonTitle.value == '' &&
+        sermonScripture.value == '' && 
+        sermonPreacher.value == '' && 
+        sermonContent.value == '' && 
+        sermonTakeaway.value == ''
+    ) {
+        sermonDate.value = transformDateForSermon(result.result.date)
+        sermonTitle.value = result.result.title
+        sermonScripture.value = result.result.scripture
+        sermonPreacher.value = result.result.preacher
+        sermonContent.value = result.result.content
+        sermonTakeaway.value = result.result.takeaway
+    }
+    else if (
+        sermonDate.value == transformDateForSermon(result.result.date) &&
+        sermonTitle.value == result.result.title &&
+        sermonScripture.value == result.result.scripture &&
+        sermonPreacher.value == result.result.preacher &&
+        sermonContent.value == result.result.content &&
+        sermonTakeaway.value == result.result.takeaway
+        ) 
+        {
+        previousSermonData.date = transformDateForSermon(result.result.date)
+        previousSermonData.title = result.result.title
+        previousSermonData.content = result.result.detail
+        previousSermonData.scripture = result.result.scripture
+        previousSermonData.preacher = result.result.preacher
+        previousSermonData.takeaway = result.result.takeaway
+    }
+    else if (
+        sermonDate.value == previousSermonData.date &&
+        sermonTitle.value == previousSermonData.title &&
+        sermonScripture.value == previousSermonData.scripture &&
+        sermonPreacher.value == previousSermonData.preacher &&
+        sermonContent.value == previousSermonData.content &&
+        sermonTakeaway.value == previousSermonData.takeaway
+    ) {
+        sermonDate.value = transformDateForSermon(result.result.date)
+        sermonTitle.value = result.result.title
+        sermonScripture.value = result.result.scripture
+        sermonPreacher.value = result.result.preacher
+        sermonContent.value = result.result.content
+        sermonTakeaway.value = result.result.takeaway
+        previousSermonData.date = transformDateForSermon(result.result.date)
+        previousSermonData.title = result.result.title
+        previousSermonData.content = result.result.detail
+        previousSermonData.scripture = result.result.scripture
+        previousSermonData.preacher = result.result.preacher
+        previousSermonData.takeaway = result.result.takeaway
+    }
+    else if (
+        sermonDate.value !== transformDateForSermon(result.result.date) ||
+        sermonTitle.value !== result.result.title ||
+        sermonScripture.value !== result.result.scripture ||
+        sermonPreacher.value !== result.result.preacher ||
+        sermonContent.value !== result.result.content ||
+        sermonTakeaway.value !== result.result.takeaway
+    ) {
+        console.log('이전 데이터 :', previousSermonData.title, '인풋창 값 :', sermonTitle.value, '서버에서 가져온 값 :', result.result.title)
+        const userResponse = confirm('작성중인 내용이 있습니다. 정말 취소하시겠습니까?')
+        if (userResponse) {
+            sermonDate.value = transformDateForSermon(result.result.date)
+            sermonTitle.value = result.result.title
+            sermonScripture.value = result.result.scripture
+            sermonPreacher.value = result.result.preacher
+            sermonContent.value = result.result.content
+            sermonTakeaway.value = result.result.takeaway
+            previousSermonData.date = transformDateForSermon(result.result.date)
+            previousSermonData.title = result.result.title
+            previousSermonData.content = result.result.detail
+            previousSermonData.scripture = result.result.scripture
+            previousSermonData.preacher = result.result.preacher
+            previousSermonData.takeaway = result.result.takeaway
+        }
+    }
+    return result
+}
+
+// 설교노트 OUtput 화면에서 일기 클릭시, 저장버튼 수정버튼으로 변경
+const changeSermonSaveBtnToEdit = (clicked) => {
+    if (document.querySelector('.sermon-editBtn')) return
+    const sermonSaveBtn = document.querySelector('.sermon-saveBtn')
+    sermonSaveBtn.innerText = '수정'
+    sermonSaveBtn.className = 'sermon-editBtn'
+}
+
+// 설교노트 OUtput 화면에서 일기 클릭시, 새설교 버튼 생성
+const addNewSermonBtn = () => {
+    const buttonGroup = document.querySelector('.sermon-btns')
+    const newSermon = document.createElement('button')
+    newSermon.innerText = '새설교'
+    newSermon.className = 'newSermon'
+    if (buttonGroup.children.length == 2) buttonGroup.insertAdjacentElement('afterbegin', newSermon)
+}
+
+// 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경
+const changeSermonEditBtnToSave = () => {
+    const newSermonBtn = document.querySelector('.newSermon')
+    const sermonDate = document.querySelector('#sermon-datepicker')
+    const sermonTitle = document.querySelector('#sermon-title')
+    const sermonScripture = document.querySelector('#sermon-scripture')
+    const sermonPreacher = document.querySelector('#sermon-preacher')
+    const sermonContent = document.querySelector('#sermon-content')
+    const sermonTakeaway = document.querySelector('#sermon-takeaway')
+    const newSermonEditBtn = document.querySelector('.sermon-editBtn')
+
+    if (document.querySelector('.sermon-saveBtn')) return
+    else{
+        newSermonBtn.addEventListener('click', function (e) {
+            e.preventDefault()
+            sermonDate.value = ''
+            sermonTitle.value = ''
+            sermonScripture.value = ''
+            sermonPreacher.value = ''
+            sermonContent.value = ''
+            sermonTakeaway.value = ''
+            newSermonEditBtn.innerText = '저장'
+            newSermonEditBtn.className = 'sermon-saveBtn'
+        })
+    }
+}
+
+// 수정버튼 클릭시 기도일기 수정하기
+const editSermon = async (clickedSermonId) => {
+    const sermonDate = document.querySelector('#sermon-datepicker')
+    const sermonTitle = document.querySelector('#sermon-title')
+    const sermonScripture = document.querySelector('#sermon-scripture')
+    const sermonPreacher = document.querySelector('#sermon-preacher')
+    const sermonContent = document.querySelector('#sermon-content')
+    const sermonTakeaway = document.querySelector('#sermon-takeaway')
+    console.log('sermonDate.value :', sermonDate.value)
+    const response = await fetch('http://127.0.0.1:3300/api/sermon/editSermon', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            _id: clickedSermonId,
+            date: sermonDate.value,
+            title: sermonTitle.value,
+            scripture: sermonScripture.value,
+            preacher: sermonPreacher.value,
+            content: sermonContent.value,
+            takeaway: sermonTakeaway.value,
+            lastModifiedAt: new Date()
+        })
+    })
+    const result = await response.json()
+   
+    // console.log('설교노트 수정결과 :', result)
+    sermonDate.value = transformDateForSermon(result.result.date)
+    sermonTitle.value = result.result.title
+    sermonScripture.value = result.result.scripture
+    sermonPreacher.value = result.result.preacher
+    sermonContent.value = result.result.content
+    sermonTakeaway.value = result.result.takeaway
+
+
+    // 수정버튼 누르면 output 화면에 수정된 내용 보여주기
+    const sermonList = document.querySelectorAll('.sermon-list')
+    sermonList.forEach(element => {
+        if (element.className.split(' ')[1] == clickedSermonId) {
+            element.querySelector('td:nth-child(1)').innerText = transformDate(result.result.date)
+            element.querySelector('td:nth-child(2)').innerText = result.result.title
+            element.querySelector('td:nth-child(3)').innerText = result.result.scripture
+            element.querySelector('td:nth-child(4)').innerText = result.result.preacher
+        }
+    })
+    alert('수정되었습니다.')
+}
+
+// 
+const deleteSermon = (sermonList) => {
+    sermonList.addEventListener('contextmenu', function (e) {
+        // 마우스 우클릭 시 클릭된 곳 색깔 입히기
+        const rightClickeActive = e.target.parentNode.classList.add('active')
+        const sermonLists = document.querySelectorAll('.sermon-list')
+        // 기존에 active 클래스가 있으면 삭제하고 새로운 active 클래스 추가하기
+        sermonLists.forEach((element => {
+            if (element.classList.contains('active')) {
+                element.classList.remove('active')
+                e.currentTarget.classList.add('active')
+            }
+        }))
+        // 마우스 우클릭시 기존에 열려있던 input 수정창 사라지게 하기
+
+        const rightClickList = e.target.parentNode.className.split(' ')[1]
+        e.preventDefault()
+        const rightClickMenu = document.querySelector('.right-click-menu')
+        rightClickMenu.innerHTML = `
+        <div class='right-click-menu-delete'>삭제</div>
+        `
+        document.body.appendChild(rightClickMenu)
+
+        rightClickMenu.style.top = `${e.clientY + scrollY}px`
+        rightClickMenu.style.left = `${e.clientX + screenX}px`
+        rightClickMenu.style.display = 'flex'
+
+        const rightClickMenuDelete = document.querySelector('.right-click-menu-delete')
+        rightClickMenuDelete.style.cursor = 'pointer'
+        // 삭제하기
+        const rightClickNearestTd = e.target
+        rightClickMenuDelete.addEventListener('click', async function (e) {
+            if(confirm('정말 삭제하시겠습니까?') === false) return
+            else{
+                await fetch('http://127.0.0.1:3300/api/sermon/deleteSermon',
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        _id: rightClickList
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('data :', data)
+                    if (data.code == 200) {
+                        rightClickNearestTd.parentNode.remove()
+                    }
+                })
+            }
+        })
+    })
+}
+
+
+// < 스프링 배경 > //
 // 스프링 배경만들기
 const createSpringBackground = () => {
     const springBackground = document.createElement('div')
@@ -1252,66 +1455,336 @@ const createBookmark = () => {
 }
 createBookmark()
 
+// 기도일기 클릭이벤트
+async function prayDirayClickEvent(e){
+    // 기도일기
+    const prayDiaryTitle = document.querySelector('#prayDiary-title')
+    const prayDiaryContent = document.querySelector('#prayDiary-content')
+    const prayDiarySaveBtn = document.querySelector('.saveBtn')
+    const prayDiaryCancelBtn = document.querySelector('.cancelBtn')
 
-// 북마크 클릭시
-document.body.addEventListener('click', function (e) {
-    console.log('e.target.className :', e.target)
-    if (e.target.className == 'prayBucketTitle') {   
+    // 기도일기 저장버튼 클릭시
+if (prayDiarySaveBtn && e.target.className == 'saveBtn') {
+    if (prayDiaryTitle.value !== '' && prayDiaryContent.value !== '') {
+        e.stopPropagation()
+        savePrayDiary()
+        prayDiaryTitle.value = ''
+        prayDiaryContent.value = ''
+    }
+    else {
+        alert('제목과 내용을 입력해주세요')
+    }
+}
+
+// 기도일기 취소버튼 클릭시 
+if (prayDiaryCancelBtn && e.target.className == 'cancelBtn') {
+    cancelPrayDiary()
+}
+// 기도일기 output 화면에서 일기 클릭시 input창에 기도일기 내용 보여주기
+if (e.target.parentNode.classList.contains('prayDiary-List')) {
+    clickedPrayDiaryId = e.target.parentNode.className.split(' ')[1]
+    const diaryData = await showPrayDiaryDetail(clickedPrayDiaryId)
+    changeSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
+    addNewDiaryBtn() // 새일기 버튼 생성
+    changeEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경 
+    // checkInputValueAndShowWarningModal(diaryData) // 기도일기 다른 일기 클릭하면 경고창 띄우기
+}
+
+if (e.target.className == 'editBtn') {
+    e.stopPropagation()
+    await editPrayDiary(clickedPrayDiaryId)
+}
+}
+
+// 설교노트 클릭이벤트
+async function sermonClickEvent(e) {
+    // 설교노트
+const sermonDate = document.querySelector('#sermon-datepicker')
+const sermonTitle = document.querySelector('#sermon-title')
+const sermonScripture = document.querySelector('#sermon-scripture')
+const sermonPreacher = document.querySelector('#sermon-preacher')
+const sermonContent = document.querySelector('#sermon-content')
+const sermonTakeaway = document.querySelector('#sermon-takeaway')
+const sermonSaveBtn = document.querySelector('.sermon-saveBtn')
+const sermonCancelBtn = document.querySelector('.sermon-cancelBtn')
+
+// 설교노트 저장버튼 클릭시
+if (sermonSaveBtn && e.target.className == 'sermon-saveBtn') {
+    e.stopPropagation()
+    e.preventDefault()
+    if (sermonDate.value !== ''
+        && sermonTitle.value !== ''
+        && sermonScripture.value !== ''
+        && sermonPreacher.value !== ''
+        && sermonContent.value !== ''
+        && sermonTakeaway.value !== ''
+    ) {
+        saveSermon()
+        sermonDate.value = ''
+        sermonTitle.value = ''
+        sermonScripture.value = ''
+        sermonPreacher.value = ''
+        sermonContent.value = ''
+        sermonTakeaway.value = ''
+    }
+    else {
+        alert('모든 빈칸을 입력해주세요')
+    }
+}
+
+// 설교노트 취소버튼 클릭시 
+if (sermonCancelBtn && e.target.className == 'sermon-cancelBtn') {
+    e.preventDefault()
+    cancelSermon()
+}
+// 설교노트 output 화면에서 설교 클릭시 input창에 기도일기 내용 보여주기
+if (e.target.parentNode.classList.contains('sermon-list')) {
+    clickedSermonId = e.target.parentNode.className.split(' ')[1]
+    const sermonData = await showSermonDetail(clickedSermonId)
+    changeSermonSaveBtnToEdit() // 저장버튼 수정버튼으로 변경
+    addNewSermonBtn() // 새일기 버튼 생성
+    changeSermonEditBtnToSave() // 새일기 버튼을 누르면 수정버튼을 저장버튼으로 변경 
+    // checkInputValueAndShowWarningModal(diaryData) // 기도일기 다른 일기 클릭하면 경고창 띄우기
+}
+
+if (e.target.className == 'sermon-editBtn') {
+    e.stopPropagation()
+    e.preventDefault()
+    await editSermon(clickedSermonId)
+}
+}
+
+// 포스트잇 클릭이벤트
+async function postItClickEvent(e) {
+    // 포스트 잇 1 
+ if (e.target.className == 'scripture-1' || e.target.className == 'scripture-1-text') {
+    e.stopPropagation()
+    const postNum = 1
+    const serverData = await getPickPosts(postNum)
+    console.log('serverData :', serverData)
+    const scripture1 = document.querySelector('.scripture-1')
+    const scripture1Paragraph = document.querySelector('.scripture-1-text')
+    // console.log('scripture1Paragraph.innerText :', scripture1Paragraph.innerText)
+    scripture1.innerHTML =
+        `
+    <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
+    <div class='scripture-1-btns'>
+        <button class='scripture-1-saveBtn'>저장</button>
+        <button class='scripture-1-cancelBtn'>취소</button>
+    </div>
+    `
+    const pickText = document.querySelector('#pickText1')
+    const scripture1SaveBtn = document.querySelector('.scripture-1-saveBtn')
+    const scripture1CancelBtn = document.querySelector('.scripture-1-cancelBtn')
+
+    pickText.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            // 화면 변경
+            scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
+            // 서버에 저장
+            if (pickText.value == '') alert('내용을 입력해주세요')
+            else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+            else if (serverData.result.length > 0 && pickText.value !== '') {
+                updateScripture(postNum, pickText)
+            }
+        }
+    })
+
+    // 저장버튼 누르면 서버에 저장
+    scripture1SaveBtn.addEventListener('click', async function (e) {
+
+        const scripture1Paragraph = document.querySelector('.scripture-1-text')
+        // 화면 변경
+        scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
+        // 서버에 저장
+        if (pickText.value == '') alert('내용을 입력해주세요')
+        else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+        else if (serverData.result.length > 0 && pickText.value !== '') {
+            updateScripture(postNum, pickText)
+        }
+    })
+    scripture1CancelBtn.addEventListener('click', function (e) {
+        scripture1.innerHTML = `<p class='scripture-1-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>` // ${pickText.value} 서버에서 가져온 데이터로 변경
+    })
+}
+// 포스트 잇 2
+if (e.target.className == 'scripture-2' || e.target.className == 'scripture-2-text') {
+    e.stopPropagation()
+
+    const postNum = 2
+    const serverData = await getPickPosts(postNum)
+    console.log('serverData :', serverData)
+    const scripture2 = document.querySelector('.scripture-2')
+    const scripture2Paragraph = document.querySelector('.scripture-2-text')
+    scripture2.innerHTML =
+        `
+    <textarea id='pickText2' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
+    <div class='scripture-2-btns'>
+        <button class='scripture-2-saveBtn'>저장</button>
+        <button class='scripture-2-cancelBtn'>취소</button>
+    </div>
+    `
+    const pickText = document.querySelector('#pickText2')
+    const scripture2SaveBtn = document.querySelector('.scripture-2-saveBtn')
+    const scripture2CancelBtn = document.querySelector('.scripture-2-cancelBtn')
+    pickText.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            // 화면 변경
+            scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
+            // 서버에 저장
+            if (pickText.value == '') alert('내용을 입력해주세요')
+            else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+            else if (serverData.result.length > 0 && pickText.value !== '') {
+                updateScripture(postNum, pickText)
+            }
+        }
+    })
+    scripture2SaveBtn.addEventListener('click', function (e) {
+        console.log(serverData.result.length == 0)
+        // 화면 변경
+        scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
+        // 서버에 저장
+        if (pickText.value == '') alert('내용을 입력해주세요')
+        else if (serverData.result.length == 0 && pickText.value !== '') saveScripture(postNum, pickText)
+        else if (serverData.result.length > 0 && pickText.value !== '') {
+            updateScripture(postNum, pickText)
+        }
+    })
+    scripture2CancelBtn.addEventListener('click', function (e) {
+        scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
+    })
+}
+}
+
+// 클릭이벤트 전역변수
+let diaryClikEvent = false
+let sermonClikEvent = false
+let postItClikEvent = false
+
+
+
+// 기도일기 클릭이벤트 실행
+const activePrayDirayClickEvent = (e) => {
+    document.body.addEventListener('click', prayDirayClickEvent)
+    diaryClikEvent = true
+}
+
+// 기도일기 클릭이벤트 제거
+const deactivePrayDirayClickEvent = (e) => {
+    document.body.removeEventListener('click', prayDirayClickEvent)
+    diaryClikEvent = false
+}
+
+// 설교노트 클릭이벤트 실행
+const activeSermonClickEvent = (e) => {
+    document.body.addEventListener('click', sermonClickEvent)
+    sermonClikEvent = true
+}
+
+// 설교노트 클릭이벤트 제거
+const deactiveSermonClickEvent = (e) => {
+    document.body.removeEventListener('click', sermonClickEvent)
+    sermonClikEvent = false
+}
+
+// 포스트잇 클릭이벤트 실행
+const activePostItClickEvent = (e) => {
+    document.body.addEventListener('click', postItClickEvent)
+    postItClikEvent = true
+}
+
+// 포스트잇 클릭이벤트 제거
+const deactivePostItClickEvent = (e) => {
+    document.body.removeEventListener('click', postItClickEvent)
+    postItClikEvent = false
+}
+
+
+
+// 북마크, 모바일 클릭이벤트 
+document.body.addEventListener('click', async function (e) {
+    // 북마크 클릭시
+    if (e.target.className == 'prayBucketTitle') {
         const prayWrapper = document.querySelector('.pray-wrapper')
         const prayBucketList = document.querySelector('.prayBucketList')
-        if(!prayBucketList) {
+        if (!prayBucketList) {
             prayWrapper.innerHTML = ''
             prayBucketIndex = 1
-            createPrayBucketlist()  
+            createPrayBucketlist()
             getPrayBucketlist()
-            .then(data => {
-                showPrayBucketlist(data)
-            })
-        } 
+                .then(data => {
+                    showPrayBucketlist(data)
+                })
+        }
         console.log('버킷리스트')
+        deactivePostItClickEvent(e)
+        deactiveSermonClickEvent(e)
+        deactivePrayDirayClickEvent(e)
     }
     else if (e.target.className == 'prayOfThanksTitle') {
         const prayWrapper = document.querySelector('.pray-wrapper')
         const prayerOfThanks = document.querySelector('.Prayer-of-thanks')
-        if(!prayerOfThanks) {
+        if (!prayerOfThanks) {
             prayWrapper.innerHTML = ''
             graceIndex = 1
-            createPrayBucketlist()  
+            createPrayBucketlist()
             getGrace()
-            .then(data => {
-                showGraceList(data)
-            })
-        } 
+                .then(data => {
+                    showGraceList(data)
+                })
+        }
         console.log('감사기도')
-        
+        deactivePostItClickEvent(e)
+        deactiveSermonClickEvent(e)
+        deactivePrayDirayClickEvent(e)
     }
     else if (e.target.className == 'prayDiaryTitle') {
         const prayWrapper = document.querySelector('.pray-wrapper')
         const prayDiary = document.querySelector('.prayDiary')
-        if(!prayDiary) {
+        if (!prayDiary) {
             prayWrapper.innerHTML = ''
             createPrayDiary()
             getPrayDiary()
-            .then(data => {
-                showPrayDiary(data)
-            })
-        } 
+                .then(data => {
+                    showPrayDiary(data)
+                })  
+        }
         console.log('기도일기')
+            activePrayDirayClickEvent(e)
+            deactivePostItClickEvent(e)
+            deactiveSermonClickEvent(e)  
     }
     else if (e.target.className == 'postIt') {
         const prayWrapper = document.querySelector('.pray-wrapper')
         const postIt = document.querySelector('.scripture-board')
-        if(!postIt) {
+        if (!postIt) {
             const firstPostIt = 1
             const secondPostIt = 2
             prayWrapper.innerHTML = ''
             createPostIt()
             getPostItData()
-            .then(data => {
-                const [post1, post2] = data
-                showPickPosts(post1,post2)
-            })
-        } 
+                .then(data => {
+                    const [post1, post2] = data
+                    showPickPosts(post1, post2)
+                })
+            getSermon()
+                .then(data => {
+                    showSermon(data)
+                })
+        }
         console.log('포스트잇')
+        activePostItClickEvent(e)
+        activeSermonClickEvent(e)  
+        deactivePrayDirayClickEvent(e)
+    }
+
+    // 모바일 버거버튼 클릭시
+    if (e.target.className == 'material-symbols-outlined') {
+        const navButtons = document.querySelector('.nav-btns')
+        const mobileBackground = document.querySelector('.mobile-background')
+        navButtons.classList.toggle('show')
+        mobileBackground.classList.toggle('show')
     }
 })
+
+
