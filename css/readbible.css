@@ -1,13 +1,14 @@
   @import url(../css/reset.css);
   @import url(../css/header.css);
   /* @import url(../css/footer.css); */
-  
-  
+  body{
+    overflow-x: hidden;
+  }
+
   
   /* 메인파트 */
   main{
       width: 100%;
-      height: 100%;
   }
   main .wrapper{
       max-width: 80%;
@@ -18,9 +19,7 @@
   main .wrapper .scripture{
     width: 100%;
     height: 100%;
-    /* border: 1px solid #333; */
     margin: 2rem 0;
-    overflow-y: scroll;
   }  
 
   main .wrapper .scripture::-webkit-scrollbar {
@@ -111,7 +110,7 @@
     text-align: right;
     position: relative;
     left: 81%;
-    top: 8%;
+    top: 70px;
   }
 
   /* 성경목차 */
