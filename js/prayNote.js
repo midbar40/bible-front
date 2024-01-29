@@ -94,9 +94,10 @@ function addBucketRightClickMenu(e) {
     if (editDetail) editDetail.parentNode.innerHTML = rightClickNearestTdInnerText
 
     const rightClickList = e.target.parentNode.className.split(' ')[1]
-    const rightClickNearestTd = e.target
+    const rightClickNearestTd = e.target.parentNode.children[1]
+    console.log('e.target :', e.target.parentNode.children[1])
     const rightClickNearestTdIndex = e.target.parentNode.children[0].innerText
-    rightClickNearestTdInnerText = e.target.innerText
+    rightClickNearestTdInnerText = e.target.parentNode.children[1].innerText
     console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
     e.preventDefault()
     const rightClickMenu = document.querySelector('.right-click-menu')
@@ -457,10 +458,10 @@ function addGraceRightClickMenu(e) {
 
     const rightClickList = e.target.parentNode.className.split(' ')[1]
     console.log('rightClickList :', rightClickList)
-    const rightClickNearestTd = e.target
+    const rightClickNearestTd = e.target.parentNode.children[1]
     const rightClickNearestTdIndex = e.target.parentNode.children[0].innerText
 
-    rightClickNearestTdInnerText = e.target.innerText
+    rightClickNearestTdInnerText = e.target.parentNode.children[1].innerText
     console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
     console.log('rightClickNearestTdInnerText :', rightClickNearestTdInnerText)
     e.preventDefault()
