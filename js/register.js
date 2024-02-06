@@ -1,7 +1,17 @@
-const userName = document.querySelector('.name input')
-const userEmail = document.querySelector('.email input')
-const userPw = document.querySelector('.userPw input')
-const registerButton = document.querySelector('.register-btn')
+// 전역변수를 클로저로 감싸고 즉시실행함수로 만들어서 전역변수를 사용하지 않는다.
+// 즉시실행함수 문법 (function(){return function(){return {}}})()
+const getFormElements = (function () {
+    return function(){
+        return{
+            name: document.querySelector('.name input'),
+            email: document.querySelector('.email input'),
+            mobile: document.querySelector('.mobile input'),
+            userPw: document.querySelector('.userPw input'),
+            userPwCheck: document.querySelector('.userPwCheck input'),
+        }
+    }
+})();
+
 
 // 헤더 모듈 가져오기
 function checkIsLogined() {
@@ -15,9 +25,24 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 
 // 성경 서버데이터 가져오기
 async function getUserData() {
+    const formElements = getFormElements()
+    const userName = formElements.name
+    const userEmail = formElements.email
+    const userMobile = formElements.mobile
+    const userPw = formElements.userPw
+    const userPwCheck = formElements.userPwCheck
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
     if (userName.value === '') {
         alert('이름을 입력해주세요')
+        return
+    }
+    else if(userMobile.value === '') {
+        alert('휴대폰 번호를 입력해주세요')
+        return
+    }
+    else if (userMobile.value.length < 10 || userMobile.value.length > 11) {
+        alert('휴대폰 번호를 올바르게 입력해주세요')
         return
     }
     else if (userName.value.length < 2 || userName.value.length > 20) {
@@ -39,6 +64,14 @@ async function getUserData() {
         alert('비밀번호는 6자리 이상 12이하 미만으로 설정해주세요')
         return
     }
+    else if (userPwCheck.value === '') {
+        alert('비밀번호 확인란을 입력해주세요')
+        return
+    }
+    else if (userPw.value !== userPwCheck.value) {
+        alert('비밀번호가 일치하지 않습니다.')
+        return
+    }
     else {
         try {
             const data = await fetch('http://127.0.0.1:3300/api/users/register',
@@ -49,8 +82,9 @@ async function getUserData() {
                     },
                     body: JSON.stringify({
                         name: userName.value,
+                        mobile: userMobile.value,
                         email: userEmail.value,
-                        password: userPw.value
+                        password: userPw.value,
                     })
                 })
             const userData = await data.json()
@@ -69,7 +103,6 @@ async function getUserData() {
     }
 }
 
-registerButton.addEventListener('click', getUserData)
 
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function (e) {
@@ -78,5 +111,8 @@ document.body.addEventListener('click', function (e) {
         const mobileBackground = document.querySelector('.mobile-background')
         navButtons.classList.toggle('show')
         mobileBackground.classList.toggle('show')
+    }
+    if(e.target.className == 'register-btn'){
+        getUserData()
     }
 })

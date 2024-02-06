@@ -267,7 +267,7 @@ async function addPrayBucketlist(event) {
     const prayBucketlistList = document.createElement('tr')
 
     // 몽고DB에 저장하는 코드 작성
-    const saveServer = async (number, detail) => {
+    const saveServer = async (detail) => {
         try {
             const response = await fetch('http://127.0.0.1:3300/api/prayBucketlist/saveBucket', {
                 method: 'POST',
@@ -275,7 +275,6 @@ async function addPrayBucketlist(event) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    number: number,
                     detail: detail,
                     email: localStorage.getItem('유저이름'),
                     finishedAt: ''
@@ -291,7 +290,7 @@ async function addPrayBucketlist(event) {
             console.log('기도버킷리스트 등록오류 :', err)
         }
     }
-    await saveServer(prayBucketIndex, prayBucketlist) // 서버에 저장하는 함수
+    await saveServer(prayBucketlist) // 서버에 저장하는 함수
 
     prayBucketlistList.className = `prayBucketlist-List ${prayBucketDbId}`
     prayBucketlistList.innerHTML =
@@ -566,7 +565,7 @@ async function addGraceList(event) {
     const graceListList = document.createElement('tr')
 
     // 몽고DB에 저장하는 코드 작성
-    const saveServer = async (number, detail) => {
+    const saveServer = async (detail) => {
         try {
             const response = await fetch('http://127.0.0.1:3300/api/grace/saveGrace', {
                 method: 'POST',
@@ -574,7 +573,6 @@ async function addGraceList(event) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    number: number,
                     detail: detail,
                     email: localStorage.getItem('유저이름'),
                 })
@@ -588,7 +586,7 @@ async function addGraceList(event) {
             console.log('감사기도 등록오류 :', err)
         }
     }
-    await saveServer(graceIndex, graceList) // 서버에 저장하는 함수
+    await saveServer(graceList) // 서버에 저장하는 함수
 
     graceListList.className = `Prayer-of-thanksList ${graceDbId}`
     graceListList.innerHTML =
@@ -1500,7 +1498,7 @@ const createBookmark = () => {
     document.body.appendChild(bookmark3)
 
     const bookmark4 = document.createElement('div')
-    bookmark4.innerHTML = `<h4 class='postIt'>포스트잇</h4>`
+    bookmark4.innerHTML = `<h4 class='postIt'>설교노트</h4>`
     bookmark4.className = 'bookmark4'
     document.body.appendChild(bookmark4)
 }

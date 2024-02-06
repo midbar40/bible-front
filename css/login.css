@@ -19,7 +19,7 @@ main {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 3rem;
+  gap: 2rem;
 }
 
 .login-section h2 {
@@ -36,7 +36,7 @@ main {
 }
 
 .login-pw {
-  margin-top: -2rem;
+  margin-top: -1rem;
 }
 
 .login-pw input {
@@ -63,7 +63,7 @@ main {
 }
 .login-section .register-find a {
   font-size: 0.8rem;
-  /* background-color: red; */
+  margin-left: 1rem;
 }
 .login-section .register-find a:hover {
   border-bottom: 1px solid rgb(135, 135, 135);
