@@ -29,7 +29,7 @@
     border-bottom: 1px solid rgb(135, 135, 135);
     opacity: 0.5;
   }
-  .mobile-number{
+  .mobile-number, .authNumber-section{
     display: flex;
     gap: 5px;
   }
@@ -37,6 +37,7 @@
     width: 60px;
     height: 30px;
   }
+  
   .findId-btn button{
     width: 245px;
     height: 40px;
