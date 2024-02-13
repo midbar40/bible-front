@@ -14,8 +14,11 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
   <link rel="stylesheet" href="../css/login.css" />
+  <link rel="stylesheet" href="../css/findUserId.css" />
+
   <script type="module" src="../js/header.js" defer></script>
   <script type="module" src="../js/login.js" defer></script>
+  <script type="module" src="../js/findUserId.js" defer></script>
 </head>
 
 <body>
@@ -27,11 +30,11 @@
     <form class="login-section">
       <h2>Sola-Scriptura</h2>
       <div class="login-id">
-        <h4>ID</h4>
+        <h4>아이디(Email)</h4>
         <input type="text" id="userid" name="userpw" placeholder="아이디" required />
       </div>
       <div class="login-pw">
-        <h4>PW</h4>
+        <h4>비밀번호</h4>
         <input type="password" id="userpw" name="userpw" placeholder="비밀번호" required />
       </div>
       <div class="submit">
@@ -39,7 +42,7 @@
       </div>
       <div class="register-find">
         <a href="./register.html">회원가입</a>
-        <a href="#">아이디찾기</a>
+        <a href="#" class="findUserId">아이디찾기</a>
         <a href="#">비밀번호찾기</a>
       </div>
     </form>

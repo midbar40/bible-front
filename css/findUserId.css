@@ -1,16 +1,17 @@
 
-.findUserIdField{
-    border: 1px solid black;
+.findUserIdField h4{
+    font-size: 1rem;
 }
 .findUserIdField form{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 10rem;
-    height: 600px;
-    width: 600px;
-    gap: 1rem;
-    background-color: antiquewhite;
+    align-items: center;
+    height: 400px;
+    width: 450px;
+    gap: 1.2rem;
+    box-shadow: 2px 5px 5px 2px;
+    border-radius: 2rem;
 }
 .findUserIdField form input{
     height: 30px;
@@ -19,22 +20,32 @@
     outline: none;
     border: 1px solid rgb(135, 135, 135);
 }
+.findUserIdField form h2 {
+    font-family: "Russo One", sans-serif;
+    font-size: 2rem;
+  }
+
 .findUserIdField .bottom-btns {
     display: flex;
     gap: 1rem;
     font-size: 0.8rem;
-    margin-left: 1rem;
 }
   .findUserIdField .bottom-btns a:hover {
     border-bottom: 1px solid rgb(135, 135, 135);
     opacity: 0.5;
   }
+  .mobile-section{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 75px;
+  }
   .mobile-number, .authNumber-section{
     display: flex;
     gap: 5px;
   }
-  .mobile button{
-    width: 60px;
+  .mobile-section button{
+    width: 70px;
     height: 30px;
   }
   

@@ -48,7 +48,7 @@ main {
   border: none;
   color: #fff;
   background-color: rgb(23, 70, 158);
-  border-radius: 3rem;
+  border-radius: 6px;
   cursor: pointer;
 }
 .submit button:hover {

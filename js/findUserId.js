@@ -1,4 +1,5 @@
 
+
 // 아이디 찾기 화면 뿌려주기
 const createFindUserIdDom = () => {
     const findUserId = document.querySelector('.findUserId')
@@ -9,11 +10,12 @@ const createFindUserIdDom = () => {
         findUserIdField.className = 'findUserIdField'
         findUserIdField.innerHTML = `
                 <form class="findUserId-section">
+                    <h2>Sola-Scriptura</h2>
                     <div class="name">
                         <h4>이름</h4>
                         <input type="text" class="userName" placeholder="이름을 입력하세요" required />
                     </div>
-                    <div class="mobile">
+                    <div class="mobile-section">
                         <h4>휴대폰번호</h4>
                        <div class="mobile-number"> 
                         <input type="mobile" class="userMobile" placeholder="휴대폰번호를 입력해주세요" required />
@@ -89,16 +91,20 @@ const receiveOtp = async(userNameValue, userMobileValue) => {
         alert(otpNumber.message)
     } 
     if(otpNumber.code === 200) {
-        const mobileDiv = document.querySelector('.mobile')
+        const mobileDiv = document.querySelector('.mobile-section')
         const authNumberSection = document.createElement('div')
+        const authNumberResend = document.createElement('div')
         authNumberSection.className = 'authNumber-section'
         authNumberSection.innerHTML = `
             <input type="mobile" class='otpNum' placeholder="인증번호를 입력해주세요" required />
             <button type="submit" class='authNumber-confirm'>확인</button> <span class='timer-display'></span>
-            <div><a href="#" class="authNumber-reSend">인증번호가 오지 않았나요?</a></div>
+        `
+        authNumberResend.className = 'resend-section'
+        authNumberResend.innerHTML = `
+        <a href="#" class="authNumber-reSend">인증번호가 오지 않았나요?</a>
         `
         mobileDiv.appendChild(authNumberSection)
-       
+        mobileDiv.appendChild(authNumberResend)
                 
         // // 인증번호 타이머
         // let remainingTime = 5 * 60; // 초 단위로 설정 (5분 = 300초)
@@ -144,7 +150,7 @@ const receiveOtp = async(userNameValue, userMobileValue) => {
 //     }
 //     }
 
-
+let userId = null
 // 인증번호 서버로 전송
 const confirmOtp = async() => {
     const userName = document.querySelector('.userName')
@@ -171,7 +177,8 @@ const confirmOtp = async() => {
             confrimBtn.innerText = '인증완료'
             const findUserIdSubmit = document.querySelector('.findUserIdSubmit')
             findUserIdSubmit.disabled = false
-            return otpResult.result
+            userId = otpResult.result.email
+            console.log('userId175', userId, otpResult.result)
              // 타이머 시작
             // manageTimer('stop');
         } else if(otpResult.code === 400){
@@ -184,17 +191,25 @@ const confirmOtp = async() => {
 }
 
 function showUserId(userId){
+    console.log('userId188', userId)
     const main = document.querySelector('main')
     main.innerHTML = `
-    <div class="findUserIdField">
-        <h4>고객님의 아이디는 ${userId} 입니다.</h4>
+    <div class="container">
+        <div class="findUserIdField">
+            <h4>고객님의 아이디는 <span class="userId">${userId}</span> 입니다.</h4>
+        </div>
+        <div class="bottom-btns">
+            <a href="./login.html">로그인하기</a> 
+            <a href="#" class="findUserPw">비밀번호찾기</a>
+            <a href="./register.html">회원가입</a>
+        </div>  
     </div>
-    <div class="bottom-btns">
-        <a href="./login.html">로그인하기</a> 
-        <a href="#" class="findUserPw">비밀번호찾기</a>
-        <a href="./register.html">회원가입</a>
-    </div>  
     `
+    const container = document.querySelector('.container')
+    container.style.display = 'flex'
+    container.style.flexDirection = 'column'
+    const userIdSpan = document.querySelector('.userId')
+    userIdSpan.style.backGround = 'yellow'
 }
 
 
@@ -210,7 +225,6 @@ document.body.addEventListener('click', function (e) {
         confirmOtp()
     }else if(e.target.className == 'findUserIdSubmit'){
         e.preventDefault()
-        const userId = confirmOtp()
         showUserId(userId)
     }
 })
