@@ -2,9 +2,7 @@
 
 // 아이디 찾기 화면 뿌려주기
 const createFindUserIdDom = () => {
-    const findUserId = document.querySelector('.findUserId')
-    findUserId.addEventListener('click', () => {
-        const main = document.querySelector('main')
+    const main = document.querySelector('main')
         main.innerHTML = ''
         const findUserIdField = document.createElement('div')
         findUserIdField.className = 'findUserIdField'
@@ -33,13 +31,54 @@ const createFindUserIdDom = () => {
             </form>
             ` 
         main.appendChild(findUserIdField)
-    })
+    
 }
 
-(function(){
-    console.log('실행되니?')
-    createFindUserIdDom()
-})()
+let otpTimer; // 전역 변수로 선언하여 전체에서 접근 가능하도록 함
+
+// 인증번호 카운트다운
+function countDown(timerDisplay) {
+     // 인증번호 타이머
+     let remainingTime = 5 * 60; // 초 단위로 설정 (5분 = 300초)
+    
+     let timerInterval; // 타이머 ID를 저장할 변수
+
+     function updateTimer() {
+     const minutes = Math.floor(remainingTime / 60);
+     const seconds = remainingTime % 60;
+
+     const formattedMinutes = String(minutes).padStart(2, '0');
+     const formattedSeconds = String(seconds).padStart(2, '0');
+
+     timerDisplay.textContent = `${formattedMinutes}:${formattedSeconds}`;
+
+     if (remainingTime === 0) {
+         clearInterval(timerInterval);
+         console.log('타이머 종료');
+         timerDisplay.style.display = 'none'
+     } else {
+         remainingTime--;
+     }
+     }
+     
+     function manageTimer(action) {
+         if (action === 'start') {
+             // 타이머 시작
+             timerInterval = setInterval(updateTimer, 1000);
+         } else if (action === 'stop') {
+             // 타이머 종료
+             clearInterval(timerInterval);
+             console.log('타이머 수동 종료');
+         }
+         }
+     // 타이머 시작
+     manageTimer('start');
+
+     // 외부에서 타이머를 제어할 수 있도록 반환
+    return {
+        stop: () => manageTimer('stop')
+    };
+}
 
 
 // 인증번호 버튼 클릭시 인증번호 입력창 생성
@@ -64,91 +103,99 @@ const createAuthNumberDom = () => {
             alert('휴대폰번호를 올바르게 입력해주세요')
             return
         }
-        console.log('71번줄',userNameValue, userMobileValue)
-
         return {userNameValue, userMobileValue}
 }
 
 
 
 // 인증번호 클릭시 인증번호 유저핸드폰으로 전송
-const receiveOtp = async(userNameValue, userMobileValue) => {
+const receiveOtp = async (userNameValue, userMobileValue) => {
+    const mobileDiv = document.querySelector('.mobile-section');
+
+    // 이미 생성된 엘리먼트가 없으면 생성
+    let authNumberSection = mobileDiv.querySelector('.authNumber-section');
+    let authNumberResend = mobileDiv.querySelector('.resend-section');
+
+    if (!authNumberSection) {
+        authNumberSection = document.createElement('div');
+        authNumberSection.className = 'authNumber-section';
+        authNumberSection.innerHTML = `
+            <input type="mobile" class='otpNum' placeholder="인증번호를 입력해주세요" required />
+            <button type="submit" class='authNumber-confirm'>확인</button> 
+        `;
+    }
+
+    if (!authNumberResend) {
+        authNumberResend = document.createElement('div');
+        authNumberResend.className = 'resend-section';
+        authNumberResend.innerHTML = `
+            <a href="#" class="authNumber-reSend">인증번호가 오지 않았나요?</a><span class='timer-display'></span>
+        `;
+    }
+
     const receiveOtp = await fetch('http://127.0.0.1:3300/api/otp/generateOtp', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            name : userNameValue,
+            name: userNameValue,
             mobile: userMobileValue,
         })
-    })
-    const otpNumber = await receiveOtp.json()
-    // 5분 타이머
+    });
+    const otpNumber = await receiveOtp.json();
 
-    console.log(otpNumber)
-    if(otpNumber.code === 400){
-        alert(otpNumber.message)
+    console.log(otpNumber);
+    if (otpNumber.code === 400) {
+        alert(otpNumber.message);
     } 
-    if(otpNumber.code === 200) {
-        const mobileDiv = document.querySelector('.mobile-section')
-        const authNumberSection = document.createElement('div')
-        const authNumberResend = document.createElement('div')
-        authNumberSection.className = 'authNumber-section'
-        authNumberSection.innerHTML = `
-            <input type="mobile" class='otpNum' placeholder="인증번호를 입력해주세요" required />
-            <button type="submit" class='authNumber-confirm'>확인</button> <span class='timer-display'></span>
-        `
-        authNumberResend.className = 'resend-section'
-        authNumberResend.innerHTML = `
-        <a href="#" class="authNumber-reSend">인증번호가 오지 않았나요?</a>
-        `
-        mobileDiv.appendChild(authNumberSection)
-        mobileDiv.appendChild(authNumberResend)
-                
-        // // 인증번호 타이머
-        // let remainingTime = 5 * 60; // 초 단위로 설정 (5분 = 300초)
-        // const timerDisplay = document.getElementById('timer-display'); // 출력을 표시할 요소
-        // let timerInterval; // 타이머 ID를 저장할 변수
-
-        // function updateTimer() {
-        // const minutes = Math.floor(remainingTime / 60);
-        // const seconds = remainingTime % 60;
-
-        // const formattedMinutes = String(minutes).padStart(2, '0');
-        // const formattedSeconds = String(seconds).padStart(2, '0');
-
-        // timerDisplay.textContent = `${formattedMinutes}:${formattedSeconds}`;
-
-        // if (remainingTime === 0) {
-        //     clearInterval(timerInterval);
-        //     console.log('타이머 종료');
-        //     const mobileDiv = document.querySelector('.mobile-number')
-        //     mobileDiv.innerHTML = `
-        //         <input type="mobile" class='otpNum' placeholder="인증번호를 입력해주세요" required />
-        //         <button type="submit" class='authNumber-confirm'>확인</button> <button type="submit" class='resend-btn'>재전송</button>
-        //     `
-        // } else {
-        //     remainingTime--;
-        // }
-        // }
-
-        // // 타이머 시작
-        // manageTimer('start');
-
-    }
+    if (otpNumber.code === 200) {
+        if (!mobileDiv.contains(authNumberSection) || !mobileDiv.contains(authNumberResend)) {
+            mobileDiv.appendChild(authNumberSection);
+            mobileDiv.appendChild(authNumberResend);
+        }
+        // 새로운 타이머 시작
+        const timerDisplay = document.querySelector('.timer-display');
+        otpTimer = countDown(timerDisplay);
+        }
 }
 
-// function manageTimer(action) {
-//     if (action === 'start') {
-//         // 타이머 시작
-//         timerInterval = setInterval(updateTimer, 1000);
-//     } else if (action === 'stop') {
-//         // 타이머 종료
-//         clearInterval(timerInterval);
-//         console.log('타이머 수동 종료');
-//     }
-//     }
+const resendOtp = async () => {
+    const userName = document.querySelector('.userName')
+    const userMobile = document.querySelector('.userMobile')
+    const userNameValue = userName.value
+    const userMobileValue = userMobile.value
+
+    const receiveOtp = await fetch('http://127.0.0.1:3300/api/otp/resendOtp', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: userNameValue,
+            mobile: userMobileValue,
+        })
+    });
+
+    const otpNumber = await receiveOtp.json();
+
+    console.log(otpNumber);
+    if (otpNumber.code === 400) {
+        alert(otpNumber.message);
+    } 
+    if (otpNumber.code === 200) {
+        // 기존 타이머가 있으면 멈춤
+        if (otpTimer) {
+            otpTimer.stop();
+        } else {
+            const timerDisplay = document.querySelector('.timer-display');
+            // 타이머가 없으면 생성
+            timerDisplay.style.display = 'block';
+            otpTimer = countDown(timerDisplay);
+        }
+        }
+}
+
 
 let userId = null
 // 인증번호 서버로 전송
@@ -173,6 +220,8 @@ const confirmOtp = async() => {
         if(otpResult.code === 200){
             alert('인증번호가 확인되었습니다')
             const confrimBtn = document.querySelector('.authNumber-confirm')
+            const timerDisplay = document.querySelector('.timer-display')
+            timerDisplay.style.display = 'none'
             confrimBtn.disabled = true
             confrimBtn.innerText = '인증완료'
             const findUserIdSubmit = document.querySelector('.findUserIdSubmit')
@@ -214,17 +263,37 @@ function showUserId(userId){
 
 
 document.body.addEventListener('click', function (e) {
-    if (e.target.className == 'authNumber' || e.target.className == 'authNumber-reSend' || e.target.className == 'resend-btn') {
+    if (e.target.className == 'authNumber') {
         e.preventDefault()
         const {userNameValue, userMobileValue} = createAuthNumberDom()
         console.log(userNameValue, userMobileValue)
         const otpResult = receiveOtp(userNameValue, userMobileValue) // 여기에 인증번호가 오게 하는 함수를 호출해야 한다
-    }else if(e.target.className == 'authNumber-confirm'){
+    }else if(e.target.className == 'authNumber-reSend' || e.target.className == 'resend-btn'){
+        e.preventDefault()
+        resendOtp()
+    }
+    
+    else if(e.target.className == 'authNumber-confirm'){
         e.preventDefault()
         console.log('인증번호 확인버튼 클릭')
         confirmOtp()
     }else if(e.target.className == 'findUserIdSubmit'){
         e.preventDefault()
         showUserId(userId)
+    }else if(e.target.className == 'findUserId'){
+        e.preventDefault()
+        console.log('findUserId 버튼 클릭')
+        history.pushState(null, null, '?page=findUserId')
+        createFindUserIdDom()
     }
 })
+
+window.onload = function(){
+   
+const urlParams = new URLSearchParams(window.location.search); // URLSearchParams 객체를 생성, window.location.search는 현재 URL의 query string을 반환
+if (urlParams.get('page') === 'findUserId') { // URLSearchParams 객체의 get() 메소드를 사용하여 query string의 특정 파라미터 값을 가져옴, 'page'는 ?page=findUserId에서 page에 해당하는 값
+    createFindUserIdDom()
+} else {
+    console.log("URL에 page 파라미터가 없습니다.");
+}
+}
