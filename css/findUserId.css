@@ -64,5 +64,9 @@
         background-color: rgb(44, 104, 214);
     }
     .timer-display{
-      margin-left: 90px;
+      margin-left: 15px;
+    }
+    .authNumber-reSend:hover{
+      border-bottom: 1px solid rgb(135, 135, 135);
+      opacity: 0.5;
     }
