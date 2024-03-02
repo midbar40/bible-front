@@ -1,7 +1,8 @@
 
+import { createFindUserPwDom } from './findUserPw.js'
 
 // 아이디 찾기 화면 뿌려주기
-const createFindUserIdDom = () => {
+export const createFindUserIdDom = () => {
     const main = document.querySelector('main')
         main.innerHTML = ''
         const findUserIdField = document.createElement('div')
@@ -83,7 +84,8 @@ function countDown(timerDisplay) {
      manageTimer('start');
 
      // 외부에서 타이머를 제어할 수 있도록 반환
-    return {
+    return {  // return {} 중괄호는 객체 리터럴을 의미한다.
+        // 객체 리터럴을 사용하여, 객체를 만들어서(내용물은 함수이므로 메소드) 객체를 반환하는 것이다, key : value 형태로 반환
         stop: () => manageTimer('stop'),
         reset: () => manageTimer('reset')
     };
@@ -182,7 +184,6 @@ const receiveOtp = async (userNameValue, userMobileValue) => {
             timerDisplay.style.display = 'show';
             otpTimer = countDown(timerDisplay);
         }
-
         }
 }
 
@@ -274,15 +275,25 @@ document.body.addEventListener('click', function (e) {
         console.log('findUserId 버튼 클릭')
         history.pushState(null, null, '?page=findUserId')
         createFindUserIdDom()
+    }else if(e.target.className == 'findUserPw'){
+        e.preventDefault()
+        console.log('findUserPw 버튼 클릭')
+        history.pushState(null, null, '?page=findUserPw')
+        createFindUserPwDom()
     }
 })
 
+
+// 새로고침해도 아이디찾기, 비밀번호 찾기 화면 유지해주기
 window.onload = function(){
    
 const urlParams = new URLSearchParams(window.location.search); // URLSearchParams 객체를 생성, window.location.search는 현재 URL의 query string을 반환
 if (urlParams.get('page') === 'findUserId') { // URLSearchParams 객체의 get() 메소드를 사용하여 query string의 특정 파라미터 값을 가져옴, 'page'는 ?page=findUserId에서 page에 해당하는 값
     createFindUserIdDom()
-} else {
+} else if (urlParams.get('page') === 'findUserPw') {
+    createFindUserPwDom()
+}
+else {
     console.log("URL에 page 파라미터가 없습니다.");
 }
 }

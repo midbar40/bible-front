@@ -85,6 +85,7 @@ async function getUserData() {
                         mobile: userMobile.value,
                         email: userEmail.value,
                         password: userPw.value,
+                        passwordConfirm: userPwCheck.value
                     })
                 })
             const userData = await data.json()
