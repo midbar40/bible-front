@@ -1,5 +1,5 @@
 
-import { createFindUserPwDom } from './findUserPw.js'
+import { createFindUserPwDom} from './findUserPw.js' 
 
 // 아이디 찾기 화면 뿌려주기
 export const createFindUserIdDom = () => {

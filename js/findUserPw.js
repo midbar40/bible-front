@@ -15,7 +15,7 @@ export const createFindUserPwDom = () => {
                         <input type="text" class="userIdInput" placeholder="아이디를 입력하세요" required />
                     </div>
                     <div class="findPw-btn">
-                        <button type="submit" class='findUserPwSubmit' disabled>비밀번호 찾기</button>
+                        <button type="submit" class='findUserPwSubmit'>비밀번호 찾기</button>
                     </div>
                     <div class="bottom-btns">
                     <a href="./login.html" >로그인하기</a>
@@ -28,7 +28,7 @@ export const createFindUserPwDom = () => {
 }
 
 // 새로운 비밀번호를 가입시 핸드폰 번호로 문자전송한다.
-const sendNewPw = async () => {
+export const sendNewPw = async () => {
     const userIdInput = document.querySelector('.userIdInput')
     try {
         const data = await fetch('http://127.0.0.1:3300/api/users/findPw', {
@@ -41,7 +41,7 @@ const sendNewPw = async () => {
             })
         })
         const userData = await data.json()
-        console.log('userData :', userData)
+        console.log('userData 모바일:', userData)
         return userData
     } catch (error) {
         console.log('비밀번호 찾기 실패 :', error)
@@ -49,28 +49,30 @@ const sendNewPw = async () => {
 }
 
 // 새로운 비밀번호 전송을 알려주는 화면 DOM 만들기
-const createSendNewPwDom = (userPhoneNum) => {
-    const encryptedPhoneNum = userPhoneNum.slice(0, 3) + '****' + userPhoneNum.slice(7, 11)
+export const createSendNewPwDom = (userPhoneNum) => {
+    console.log('userPhoneNum:', userPhoneNum)
+    const encryptedPhoneNum = userPhoneNum.slice(0, 3) + '- **** -' + userPhoneNum.slice(7, 11)
     const main = document.querySelector('main')
     main.innerHTML = ''
     const sendNewPwField = document.createElement('div')
     sendNewPwField.className = 'sendNewPwField'
     sendNewPwField.innerHTML = `
-            <form class="sendNewPw-section">
+            <div class="sendNewPw-section">
                 <h2>Sola-Scriptura</h2>
                 <div class="userId">
-                    <h4>가입시 입력하신 전화번호${encryptedPhoneNum}로 새로운 비밀번호를 전송했습니다. 
-                    로그인 후 비밀번호를 변경해주세요.</h4>
+                    <h4>가입시 입력하신 전화번호 <br>${encryptedPhoneNum}로 새로운 비밀번호를 전송했습니다. 
+                    <br>로그인 후 비밀번호를 변경해주세요.</h4>
                 </div>
-                <div class="bottom-btns">
+                <div class="login-btns">
                 <a href="./login.html" >로그인하기</a>
               </div>
-            </form>
+            </div>
                 `
+    main.appendChild(sendNewPwField)
 }
 
 // 클릭이벤트 모음
-document.body.addEventListener('click', function (e) {
+document.body.addEventListener('click', async function (e) {
     if(e.target.className == 'findUserId'){
         e.preventDefault()
         console.log('findUserId 버튼 클릭')
@@ -84,12 +86,18 @@ document.body.addEventListener('click', function (e) {
     }else if(e.target.className == 'findUserPwSubmit'){ // 비밀번호 찾기 버튼 클릭시
         e.preventDefault()
         console.log('findUserPwSubmit 버튼 클릭')
-        // 가입시 입력한 핸드폰 번호로 새로운 비밀번호를 전송합니다.
-        // 여기에 비밀번호 생성 및 전송하는 코드를 작성합니다.
-        const { userData } = sendNewPw()
-        // 해당 안내문이 나오는 DOM을 생성합니다.
-        // 여기에 전화번호로 비밀번호를 보냈음을 안내하는 DOM을 생성하는 코드를 작성합니다.
-        createSendNewPwDom(userData)
+        const userIdInput = document.querySelector('.userIdInput')
+        if(userIdInput.value == ''){
+            alert('아이디를 입력해주세요')
+            return
+        } else {
+            // 가입시 입력한 핸드폰 번호로 새로운 비밀번호를 전송합니다.
+            // 여기에 비밀번호 생성 및 전송하는 코드를 작성합니다.
+            const userData = await sendNewPw() 
+            // 해당 안내문이 나오는 DOM을 생성합니다.
+            // 여기에 전화번호로 비밀번호를 보냈음을 안내하는 DOM을 생성하는 코드를 작성합니다.
+            createSendNewPwDom(userData.userData) // 인자값은 유저 핸드폰번호
+        } 
     }
 })
 

@@ -17,7 +17,6 @@ export function headerModule(isLoggedIn) {
           </div>
           <div class="login-btn">
             <a id='logout-link' href="#">로그아웃</a>
-            <a href="./register.html">회원가입</a>
           </div>
         </div>
         <span class="material-symbols-outlined"> menu </span>
