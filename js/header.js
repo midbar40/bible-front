@@ -16,6 +16,7 @@ export function headerModule(isLoggedIn) {
             <a href="./prayNote.html">기도노트</a>
           </div>
           <div class="login-btn">
+            <a id='mypage' href="./myPage.html">내 정보</a>
             <a id='logout-link' href="#">로그아웃</a>
           </div>
         </div>
@@ -79,7 +80,7 @@ export async function logout(e) {
                     localStorage.removeItem('로그인상태')
                     localStorage.removeItem('유저이름')
                     // window.location.href = 'http://127.0.0.1:5500/index.html'
-                    window.location.href = 'http://127.0.0.1:5500/bible-front/index.html'
+                    window.location.href = 'http://127.0.0.1:5500/index.html'
 
                 }
             })

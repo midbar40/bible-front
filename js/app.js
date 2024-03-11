@@ -75,5 +75,5 @@ document.body.addEventListener('click', function (e) {
         const mobileBackground = document.querySelector('.mobile-background')
         navButtons.classList.toggle('show')
         mobileBackground.classList.toggle('show')
-    }
+    } 
 })
