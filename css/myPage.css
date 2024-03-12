@@ -27,6 +27,7 @@
   margin-bottom: 20px;
 }
 .myPage-section h4{
+  width: 155px;
   font-size: 1.5rem;
   font-weight: 600;
   background-color: #fbe4e4;
@@ -50,8 +51,8 @@
   opacity: 0.8;
 }
 .myPage-btn-edit{
-  background-color: rgb(177, 178, 184);
-  color: #fff;
+  background-color: rgb(214, 213, 213);
+  color: #ffffff;
   border: none;
   border-radius: 4px;
 }
@@ -61,6 +62,12 @@
   border: none;
   border-radius: 4px;
   margin-left: 60px;
+}
+.myPage-btn-cancle{
+  background-color: #727272;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
 }
 
 

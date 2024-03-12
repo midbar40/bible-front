@@ -35,15 +35,16 @@
         </div>
         <div class="userPw">
           <h4>비밀번호 변경</h4>
-          <input type="password" placeholder="비밀번호를 입력하세요" required />
+          <input type="password" class="newPassword" placeholder="비밀번호를 입력하세요" required />
         </div>
         <div class="userPwCheck">
           <h4>비밀번호 확인</h4>
-          <input type="password" placeholder="비밀번호를 다시 입력하세요" required />
+          <input type="password"  class="newPassword-confirm" placeholder="비밀번호를 다시 입력하세요" required />
         </div>
        
         <div class="myPage-btns">
-            <button type="button" class="myPage-btn-edit">수정하기</button>
+            <button type="button" class="myPage-btn-edit" disabled>수정하기</button>
+            <button type="button" class="myPage-btn-cancle">취소</button>
             <button type="button" class="myPage-btn-withdraw">탈퇴하기</button>
         </div>
       </form>
