@@ -1473,7 +1473,7 @@ const createSpringBackground = () => {
     const springBackground = document.createElement('div')
     const springBackgroundImg = document.createElement('img')
     springBackground.className = 'spring-background'
-    springBackgroundImg.src = '/asssets/imgs/spring1.png'
+    springBackgroundImg.src = '../asssets/imgs/spring1.png'
     springBackgroundImg.className = 'spring-background-img'
     document.body.appendChild(springBackground)
     springBackground.appendChild(springBackgroundImg)
