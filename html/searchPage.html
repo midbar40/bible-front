@@ -16,6 +16,16 @@
   <link rel="stylesheet" href="../css/seachPage.css" />
   <script type="module" src="../js/header.js" defer></script>
   <script type="module" src="../js/searchPage.js" defer></script>
+  <script>
+    const redirectPage = () => {
+     const isLoggedIn = localStorage.getItem('로그인상태')
+     if(!isLoggedIn) {    
+       alert("로그인이 필요한 서비스입니다.");
+       location.href = "login.html";
+   }
+     else{location.href = "prayNote.html";}
+   };
+ </script>
 </head>
 
 <body>

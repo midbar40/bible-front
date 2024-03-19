@@ -21,6 +21,16 @@
   <script type="module" src="../js/register.js" defer></script>
   <script type="module" src="../js/findUserId.js" defer></script>
   <script type="module" src="../js/findUserPw.js" defer></script>
+  <script>
+    const redirectPage = () => {
+     const isLoggedIn = localStorage.getItem('로그인상태')
+     if(!isLoggedIn) {    
+       alert("로그인이 필요한 서비스입니다.");
+       location.href = "login.html";
+   }
+     else{location.href = "prayNote.html";}
+   };
+ </script>
 </head>
 
 <body>

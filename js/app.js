@@ -68,6 +68,57 @@ inputWindow.addEventListener('change', async (e) => {
     }
 })
 
+// 하단 컨텐츠 아이콘 4개 DOM 그리기
+const createContensIcons = () => {
+    const bibleReading = document.querySelector('.bible-reading')
+    const bibleParagraph = document.querySelector('.bible-paragraph')
+    const bibleGame = document.querySelector('.bible-game')
+    const prayNote = document.querySelector('.pray-note')
+
+    const bibleReadingDiv = document.createElement('div')
+    const bibleParagraphDiv = document.createElement('div')
+    const bibleGameDiv = document.createElement('div')
+    const prayNoteDiv = document.createElement('div')
+
+    bibleReadingDiv.className = 'bible-reading-div'
+    bibleParagraphDiv.className = 'bible-paragraph-div'
+    bibleGameDiv.className = 'bible-game-div'
+    prayNoteDiv.className = 'pray-note-div'
+
+    const bibleReadingH3 = document.createElement('h3')
+    const bibleParagraphH3 = document.createElement('h3')
+    const bibleGameH3 = document.createElement('h3')
+    const prayNoteH3 = document.createElement('h3')
+
+    bibleReadingH3.innerHTML = '성경읽기'
+    bibleParagraphH3.innerHTML = '성경구절'
+    bibleGameH3.innerHTML = '시편필사'
+    prayNoteH3.innerHTML = '기도노트'
+
+    const bibleReadingIcon = document.createElement('img')
+    const bibleParagraphIcon = document.createElement('img')
+    const bibleGameIcon = document.createElement('img')
+    const prayNoteIcon = document.createElement('img')
+
+    bibleReadingIcon.src = '../asssets/imgs/opendbible1.png'
+    bibleParagraphIcon.src = '../asssets/imgs/memorization2.png'
+    bibleGameIcon.src = '../asssets/imgs/typemachine.png'
+    prayNoteIcon.src = '../asssets/imgs/pray.png'
+
+
+    bibleReading.appendChild(bibleReadingDiv)
+    bibleParagraph.appendChild(bibleParagraphDiv)
+    bibleGame.appendChild(bibleGameDiv)
+    prayNote.appendChild(prayNoteDiv)
+
+    bibleReadingDiv.append(bibleReadingIcon,bibleReadingH3)
+    bibleParagraphDiv.append(bibleParagraphIcon, bibleParagraphH3)
+    bibleGameDiv.append(bibleGameIcon, bibleGameH3)
+    prayNoteDiv.append(prayNoteIcon, prayNoteH3)
+}
+
+createContensIcons()
+
 // 모바일 버거버튼 클릭시
 document.body.addEventListener('click', function (e) {
     if (e.target.className == 'material-symbols-outlined') {

@@ -1,4 +1,12 @@
 
+export const redirectPage = () => {
+    const isLoggedIn = localStorage.getItem('로그인상태')
+    if(!isLoggedIn) {    
+      alert("로그인이 필요한 서비스입니다.");
+      location.href = "./html/login.html";
+  }
+    else{location.href = "./html/prayNote.html";}
+  };
 
 export function indexHeaderModule(isLoggedIn) {
 
@@ -15,7 +23,7 @@ export function indexHeaderModule(isLoggedIn) {
           <a href="./html/readbible.html">성경읽기</a>
           <a href="./html/bibleParagraph.html">성경구절</a>
           <a href="./html/game.html">시편필사</a>
-          <a href="./html/prayNote.html">기도노트</a>
+          <a href="#" onclick="redirectPage()">기도노트</a>
           </div>
           <div class="login-btn">
             <a id='mypage' href="./html/myPage.html">내 정보</a>
@@ -39,8 +47,8 @@ export function indexHeaderModule(isLoggedIn) {
               <a href="./html/readbible.html">성경읽기</a>
               <a href="./html/bibleParagraph.html">성경구절</a>
               <a href="./html/game.html">시편필사</a>
-              <a href="./html/login.html">기도노트</a>
-            </div>
+              <a href="#" onclick="redirectPage()">기도노트</a>
+              </div>
             <div class="login-btn">
               <a href="./html/login.html">로그인</a>
               <a href="./html/register.html">회원가입</a>
@@ -55,11 +63,11 @@ export function indexHeaderModule(isLoggedIn) {
                 // window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })
         }
-        document.addEventListener('click', function (e) {
-            if (e.target.innerText === '기도노트') {
-                alert('로그인이 필요한 서비스입니다.')
-            }
-        })
+        // document.addEventListener('click', function (e) {
+        //     if (e.target.innerText === '기도노트') {
+        //         alert('로그인이 필요한 서비스입니다.')
+        //     }
+        // })
     }
     return header
 }

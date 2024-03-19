@@ -16,7 +16,7 @@
   <script type="module" src="./js/indexHeader.js" defer></script>
   <script type="module" src="./js/app.js" defer></script>
   <script>
-    const redirectPage = () => {
+     const redirectPage = () => {
       const isLoggedIn = localStorage.getItem('로그인상태')
       if(!isLoggedIn) {    
         alert("로그인이 필요한 서비스입니다.");
@@ -46,16 +46,12 @@
         <div class="random-paragraph"><br /></div>
         <div class="multi-contents">
           <div class="bible-reading" onclick="location.href='./html/readbible.html'">
-            <h3>성경읽기</h3>
           </div>
           <div class="bible-paragraph" onclick="location.href='./html/bibleParagraph.html'">
-            <h3>성경구절</h3>
           </div>
           <div class="bible-game" onclick="location.href='./html/game.html'">
-            <h3>시편필사</h3>
           </div>
           <div class="pray-note" onclick="redirectPage()">
-            <h3>기도노트</h3>
           </div>
         </div>
       </div>
