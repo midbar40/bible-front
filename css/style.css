@@ -149,7 +149,7 @@ main .wrapper .random-paragraph {
 main .wrapper .random-paragraph h3 {
   max-width: 80%;
   margin: 0 auto;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #fff;
   font-family: "Noto Serif KR", serif;
@@ -170,7 +170,7 @@ main .wrapper .random-paragraph::after {
 
 main .wrapper .random-paragraph p {
   margin-top: 1rem;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 400;
   font-family: "Noto Serif KR", serif;
 }
@@ -189,7 +189,7 @@ main .wrapper .multi-contents .bible-game,
 main .wrapper .multi-contents .pray-note {
   display: flex;
   justify-content: center;
-  width: 250px;
+  width: 330px;
   height: 400px;
   border: 1px solid #c4c4c4;
   background-size: cover;
