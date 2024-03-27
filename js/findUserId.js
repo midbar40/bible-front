@@ -150,7 +150,7 @@ const receiveOtp = async (userNameValue, userMobileValue) => {
         otpTimerSpan.className = 'timer-display';
     }
 
-    const receiveOtp = await fetch('http://127.0.0.1:3300/api/otp/generateOtp', {
+    const receiveOtp = await fetch('http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/otp/generateOtp', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -196,7 +196,7 @@ const confirmOtp = async() => {
     const userMobile = document.querySelector('.userMobile')
     const otpNumber = document.querySelector('.otpNum')
     try{
-        const sendOtpToServer = await fetch('http://127.0.0.1:3300/api/otp/checkOtp', {
+        const sendOtpToServer = await fetch('http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/otp/checkOtp', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

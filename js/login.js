@@ -30,7 +30,7 @@ async function getUserData() {
         return
     }
     try {
-        const data = await fetch('http://127.0.0.1:3300/api/users/login', {
+        const data = await fetch('http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/login', {
             method: 'POST',
             credentials: 'include', // 브라우저 쿠키탭에 토큰이 저장되기 위해서는 credentials: 'include' 옵션을 추가해줘야 한다.
             headers: {

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 // 성경 서버데이터 가져오기
 async function getBibleData() {
     try {
-        const data = await fetch('http://127.0.0.1:3300/api/bible/psalms?title=시편')
+        const data = await fetch('http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bible/psalms?title=시편')
         const bibleData = await data.json()
         console.log(bibleData)
         return bibleData

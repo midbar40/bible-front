@@ -74,7 +74,7 @@ async function getUserData() {
     }
     else {
         try {
-            const data = await fetch('http://127.0.0.1:3300/api/users/register',
+            const data = await fetch('http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/register',
                 {
                     method: 'POST',
                     headers: {
