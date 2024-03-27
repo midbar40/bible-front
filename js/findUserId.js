@@ -150,7 +150,7 @@ const receiveOtp = async (userNameValue, userMobileValue) => {
         otpTimerSpan.className = 'timer-display';
     }
 
-    const receiveOtp = await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/otp/generateOtp', {
+    const receiveOtp = await fetch('https://backend.closetogod.site/api/otp/generateOtp', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

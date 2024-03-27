@@ -14,7 +14,7 @@ const getUserData = async () => {
     try {
         const userEmail = localStorage.getItem('유저이름')
         console.log('마이페이지 userEmail :', userEmail)
-        const data = await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/myPage', {
+        const data = await fetch('https://backend.closetogod.site/api/users/myPage', {
             method: 'POST',
             credentials: 'include',
             headers: {

@@ -74,7 +74,7 @@ async function getUserData() {
     }
     else {
         try {
-            const data = await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/register',
+            const data = await fetch('https://backend.closetogod.site/api/users/register',
                 {
                     method: 'POST',
                     headers: {

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 // 서버데이터 가져오기
 async function getBibleData(searchWord) {
     try {
-        const data = await fetch(`https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bible/search?query=${searchWord}`)
+        const data = await fetch(`https://backend.closetogod.site/api/bible/search?query=${searchWord}`)
         const bibleData = await data.json()
         console.log(bibleData)
         page += 1;
@@ -29,7 +29,7 @@ let page = 1;
 
 async function fetchItems() {
     try {
-        const reponse = await fetch(`https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bible/search?query=${searchWord}&page=${page}`)
+        const reponse = await fetch(`https://backend.closetogod.site/api/bible/search?query=${searchWord}&page=${page}`)
         const bibleData = await reponse.json()
         page += 1;
         return bibleData.bibles

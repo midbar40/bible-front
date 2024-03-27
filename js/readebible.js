@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 //  서버 데이터 가져오는 함수수
 async function getBibleData(clickedBookId) {
     try {
-        const data = await fetch(`https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bible/read?query=${clickedBookId}`)
+        const data = await fetch(`https://backend.closetogod.site/api/bible/read?query=${clickedBookId}`)
         const bibleData = await data.json()
         serverData.push(bibleData)
         console.log(serverData)
