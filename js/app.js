@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 // 성경 서버데이터 랜덤 가져오기 -> 개선필요, 업로드가 너무 느림 -> 23.11.28 서버에서 랜덤으로 가져오도록 변경함 
 async function getBibleRandomData() {
     try {
-        const data = await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bible/random')
+        const data = await fetch('https://closetogod.site/api/bible/random')
         const bibleData = await data.json()
         return bibleData
     } catch (error) {
