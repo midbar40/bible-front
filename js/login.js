@@ -50,7 +50,7 @@ async function getUserData() {
         else if (userData.token) {
             localStorage.setItem('로그인상태', true)
             localStorage.setItem('유저이름', userData.user)
-            window.location.href = 'http://127.0.0.1:5500/index.html'
+            window.location.href = 'https://www.closetogod.site/index.html'
             // window.location.href = 'http://127.0.0.1:5500/bible-front/index.html'
             // window.location.href = 'https://midbar40.github.io/bible-front/index.html'
         }

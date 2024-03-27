@@ -119,7 +119,7 @@ const myPageLogout = async () => {
             if (!data.token) {
                 localStorage.removeItem('로그인상태')
                 localStorage.removeItem('유저이름')
-                window.location.href = 'http://127.0.0.1:5500/html/login.html'
+                window.location.href = 'https://www.closetogod.site/html/login.html'
             }
         })
 }
@@ -174,7 +174,7 @@ document.body.addEventListener('click', function (e) {
         }
     }
     else if(e.target.className == 'myPage-btn-cancle'){
-        window.location.href = 'http://127.0.0.1:5500/index.html'
+        window.location.href = 'https://www.closetogod.site/index.html'
     }
     else if (e.target.className == 'myPage-btn-withdraw') {
        // 회원탈퇴

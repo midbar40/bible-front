@@ -60,7 +60,7 @@ export function headerModule(isLoggedIn) {
         header.appendChild(nav)
         if (document.querySelector('.login-btn')) {
             document.querySelector('.login-btn').addEventListener('click', () => {
-                window.location.href = 'http://127.0.0.1:5500/bible-front/html/login.html'
+                window.location.href = 'https://www.closetogod.site/bible-front/html/login.html'
                 // window.location.href = 'https://midbar40.github.io/bible-front/html/login.html'
             })
         }
@@ -89,7 +89,7 @@ export async function logout(e) {
                     localStorage.removeItem('로그인상태')
                     localStorage.removeItem('유저이름')
                     // window.location.href = 'http://127.0.0.1:5500/index.html'
-                    window.location.href = 'http://127.0.0.1:5500/index.html'
+                    window.location.href = 'https://www.closetogod.site/index.html'
 
                 }
             })
