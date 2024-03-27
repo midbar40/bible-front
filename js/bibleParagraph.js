@@ -29,7 +29,7 @@ createSubject()
 // 서버데이터 가져오기
 async function getServerData(category) {
     try {
-        const response = await fetch(`http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bibleParagraphs/${category}`)
+        const response = await fetch(`https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/bibleParagraphs/${category}`)
         const data = await response.json()
         return data
     } catch (error) {

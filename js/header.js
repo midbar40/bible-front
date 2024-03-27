@@ -75,7 +75,7 @@ export function headerModule(isLoggedIn) {
 
 export async function logout(e) {
     if (e.target.innerText == '로그아웃') {
-        await fetch('http://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/logout', {
+        await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/logout', {
             method: 'POST',
             credentials: 'include',
             headers: {
