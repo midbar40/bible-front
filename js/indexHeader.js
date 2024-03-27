@@ -76,7 +76,7 @@ export async function logout(e) {
     if (e.target.innerText == '로그아웃') {
         console.log('로그아웃 실행되는거니?')
         // await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/logout', {
-        await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/users/logout', {
+        await fetch('https://backend.closetogod.site/api/users/logout', {
             method: 'POST',
             credentials: 'include',
             headers: {

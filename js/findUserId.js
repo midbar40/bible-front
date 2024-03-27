@@ -196,7 +196,7 @@ const confirmOtp = async() => {
     const userMobile = document.querySelector('.userMobile')
     const otpNumber = document.querySelector('.otpNum')
     try{
-        const sendOtpToServer = await fetch('https://solascriptura-env.eba-tk2vnisc.ap-southeast-2.elasticbeanstalk.com/api/otp/checkOtp', {
+        const sendOtpToServer = await fetch('https://backend.closetogod.site/api/otp/checkOtp', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
