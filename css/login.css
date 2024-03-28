@@ -75,7 +75,7 @@ main {
   }
   header .nav-btns {
     position: relative;
-    top: 12rem;
+    top: 17rem;
     align-items: center;
     flex-wrap: wrap;
     z-index: 50;

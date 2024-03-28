@@ -20,3 +20,12 @@ footer {
 .terms p {
   color: #c7c7c7;
 }
+
+@media (max-width: 420px){
+  .terms a{
+    font-size: 0.9rem;
+  }
+  .copyrights p{
+    font-size: 0.8rem;
+  }
+}

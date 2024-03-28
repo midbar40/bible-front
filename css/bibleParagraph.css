@@ -47,7 +47,7 @@ body {
 
   header .nav-btns {
     position: relative;
-    top: 12rem;
+    top: 17rem;
     align-items: center;
     flex-wrap: wrap;
     z-index: 50;
@@ -201,5 +201,44 @@ body {
     background-color: #fff;
   }
 
+  .sub{
+    width: 50px;
+  }
+  .sub h3{
+    font-size: .8rem;
+  }
+
+  main .wrapper .multi-contents .bible-reading, main .wrapper .multi-contents .bible-paragraph, main .wrapper .multi-contents .bible-game, main .wrapper .multi-contents .pray-note {
+    width: 250px;
+  }
+  .myPage-section {
+    padding: 5px 5px;
+  }
+  .myPage-section div{
+    gap: 5px;
+  }
+  .myPage-section h2 {
+  font-size: 1.5rem;
+  }
+  .myPage-section h4 {
+    width: 120px;
+    font-size: 1.1rem;
+}
+  .myPage-section span {
+    font-size: 1.1rem;
+  }
+ 
+  .myPage-btns{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .myPage-btns button {
+    width: 95%;
+    margin-top: 5px;
+  }
+  .myPage-btn-withdraw{
+    margin-left: 0px;
+  }
 
 }

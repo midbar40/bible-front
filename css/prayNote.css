@@ -722,7 +722,7 @@ main .pray-wrapper {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
-    top: 13rem;
+    top: 17rem;
     width: 100%;
     text-align: center;
     flex-wrap: wrap;
@@ -866,4 +866,90 @@ main .pray-wrapper {
   }
 
 
+  .prayBucketList-body{
+    font-size: 0.8rem;
+  }
+  .prayBucketList-input{
+    margin-left: 0;
+    height: 50px;
+
+  }
+  .prayBucketList-input form input{
+    width: 100%;
+    height: 50px;
+    font-size: 0.8rem;
+  }
+  .Prayer-of-thanks-body {
+    font-size: 0.8rem;
+  }
+  .Prayer-of-thanks-input{
+    width: 100%;
+    height: 50px;
+    margin-left: 0;
+    font-size: 0.8rem;
+  }
+
+  .bookmark1, .bookmark2, .bookmark3, .bookmark4{
+    width: 85px;
+    height: 50px;
+    font-size: 0.8rem;
+  }
+  .bookmark1{
+    top: 13%;
+    left: 5%;
+  }
+  .bookmark2{
+    top: 13%;
+    left: 29%;
+  }
+  .bookmark3{
+    top: 13%;
+    left: 53%;
+  }
+  .bookmark4{
+    top: 13%;
+    left: 77%;
+  }
+.prayDiary{
+  flex-direction: column;
+}
+.scripture-board{
+  flex-direction: column;
+  padding-bottom: 7rem;
+}
+.scripture{
+  width: 100%;
+  height: 30%;
+  font-size: 0.8rem;
+  border-radius: none;
+}
+.sermon{
+  width: 100%;
+  flex-direction: column;
+}
+.sermon-input{
+  width: 100%;
+  margin-left: 0;
+}
+.sermon-input span{
+  font-size: 0.8rem;
+}
+.sermon-input form input{
+  width: 90%;
+  height: 30px;
+  font-size: 0.8rem;
+}
+.sermon-input form textarea{
+  width: 100%;
+  height: 50%;
+  font-size: 0.8rem;
+}
+.sermon-output{
+  width: 100%;
+  margin-left: 0;
+  margin-top: 1rem;
+}
+.sermon-output-body{
+  font-size: 0.8rem;
+}
 }

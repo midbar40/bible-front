@@ -84,3 +84,10 @@
   .login-btns a:hover{
       text-decoration: underline;
   }
+
+  @media(max-width :420px){
+    .findUserPwField form {
+        width: 320px;
+        height: 320px;
+    }
+  }

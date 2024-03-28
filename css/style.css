@@ -347,7 +347,7 @@ main .wrapper .multi-contents .pray-note {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
-    top: 13rem;
+    top: 17rem;
     width: 100%;
     text-align: center;
     flex-wrap: wrap;
@@ -422,7 +422,7 @@ main .wrapper .multi-contents .pray-note {
   }
 
   main .wrapper .random-paragraph h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     overflow: auto;
   }
 
