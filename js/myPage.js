@@ -3,7 +3,6 @@
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', checkIsLogined)
 const getUserData = async () => {
     try {
         const userEmail = localStorage.getItem('유저이름')
-        console.log('마이페이지 userEmail :', userEmail)
         const data = await fetch('https://backend.closetogod.site/api/users/myPage', {
             method: 'POST',
             credentials: 'include',
@@ -25,7 +23,6 @@ const getUserData = async () => {
             })
         })
         const userData = await data.json()
-        console.log(userData)
         return userData
     }
     catch (error) {

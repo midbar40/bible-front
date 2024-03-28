@@ -2,7 +2,6 @@
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log('로그인상태 :', isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -39,7 +38,6 @@ async function getServerData(category) {
 
 // 화면에 서버데이터 렌더링하기
 async function renderData(category) {
-    console.log(category)
     const serverData = await getServerData(category)
     // 화면에 렌더링
     const contents = document.querySelector('.contents')

@@ -55,7 +55,6 @@ function countDown(timerDisplay) {
 
      if (remainingTime === 0) {
          clearInterval(timerInterval);
-         console.log('타이머 종료');
          timerDisplay.style.display = 'none'
      } else {
         // timerDisplay.style.display = 'show'
@@ -70,7 +69,6 @@ function countDown(timerDisplay) {
          } else if (action === 'stop') {
              // 타이머 종료
              clearInterval(timerInterval);
-             console.log('타이머 수동 종료');
          } else if (action === 'reset') {
              // 타이머 초기화
              if(timerInterval){
@@ -162,7 +160,6 @@ const receiveOtp = async (userNameValue, userMobileValue) => {
     });
     const otpNumber = await receiveOtp.json();
 
-    console.log(otpNumber);
     if (otpNumber.code === 400) {
         alert(otpNumber.message);
     } 
@@ -208,7 +205,6 @@ const confirmOtp = async() => {
             })
         })
         const otpResult = await sendOtpToServer.json()
-        console.log(otpResult)
         if(otpResult.code === 200){
             alert('인증번호가 확인되었습니다')
             const confrimBtn = document.querySelector('.authNumber-confirm')
@@ -221,7 +217,6 @@ const confirmOtp = async() => {
             const findUserIdSubmit = document.querySelector('.findUserIdSubmit')
             findUserIdSubmit.disabled = false
             userId = otpResult.result.email
-            console.log('userId175', userId, otpResult.result)
              // 타이머 시작
             // manageTimer('stop');
         } else if(otpResult.code === 400){
@@ -229,12 +224,10 @@ const confirmOtp = async() => {
         }
     }catch{
         alert ('인증번호가 일치하지 않습니다.')
-        console.log('인증번호가 일치하지 않습니다.')
     }
 }
 
 function showUserId(userId){
-    console.log('userId188', userId)
     const main = document.querySelector('main')
     main.innerHTML = `
     <div class="container">
@@ -260,24 +253,20 @@ document.body.addEventListener('click', function (e) {
     if (e.target.className == 'authNumber' || e.target.className == 'authNumber-reSend' || e.target.className == 'resend-btn') {
         e.preventDefault()
         const {userNameValue, userMobileValue} = createAuthNumberDom()
-        console.log(userNameValue, userMobileValue)
         const otpResult = receiveOtp(userNameValue, userMobileValue) // 여기에 인증번호가 오게 하는 함수를 호출해야 한다
     }
     else if(e.target.className == 'authNumber-confirm'){
         e.preventDefault()
-        console.log('인증번호 확인버튼 클릭')
         confirmOtp()
     }else if(e.target.className == 'findUserIdSubmit'){
         e.preventDefault()
         showUserId(userId)
     }else if(e.target.className == 'findUserId'){
         e.preventDefault()
-        console.log('findUserId 버튼 클릭')
         history.pushState(null, null, '?page=findUserId')
         createFindUserIdDom()
     }else if(e.target.className == 'findUserPw'){
         e.preventDefault()
-        console.log('findUserPw 버튼 클릭')
         history.pushState(null, null, '?page=findUserPw')
         createFindUserPwDom()
     }
@@ -292,8 +281,5 @@ if (urlParams.get('page') === 'findUserId') { // URLSearchParams 객체의 get()
     createFindUserIdDom()
 } else if (urlParams.get('page') === 'findUserPw') {
     createFindUserPwDom()
-}
-else {
-    console.log("URL에 page 파라미터가 없습니다.");
 }
 }

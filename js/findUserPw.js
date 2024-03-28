@@ -41,7 +41,6 @@ export const sendNewPw = async () => {
             })
         })
         const userData = await data.json()
-        console.log('userData 모바일:', userData)
         return userData
     } catch (error) {
         console.log('비밀번호 찾기 실패 :', error)
@@ -50,7 +49,6 @@ export const sendNewPw = async () => {
 
 // 새로운 비밀번호 전송을 알려주는 화면 DOM 만들기
 export const createSendNewPwDom = (userPhoneNum) => {
-    console.log('userPhoneNum:', userPhoneNum)
     const encryptedPhoneNum = userPhoneNum.slice(0, 3) + '- **** -' + userPhoneNum.slice(7, 11)
     const main = document.querySelector('main')
     main.innerHTML = ''
@@ -75,17 +73,14 @@ export const createSendNewPwDom = (userPhoneNum) => {
 document.body.addEventListener('click', async function (e) {
     if(e.target.className == 'findUserId'){
         e.preventDefault()
-        console.log('findUserId 버튼 클릭')
         history.pushState(null, null, '?page=findUserId')
         createFindUserIdDom()
     }else if(e.target.className == 'findUserPw'){
         e.preventDefault()
-        console.log('findUserPw 버튼 클릭')
         history.pushState(null, null, '?page=findUserPw')
         createFindUserPwDom()
     }else if(e.target.className == 'findUserPwSubmit'){ // 비밀번호 찾기 버튼 클릭시
         e.preventDefault()
-        console.log('findUserPwSubmit 버튼 클릭')
         const userIdInput = document.querySelector('.userIdInput')
         if(userIdInput.value == ''){
             alert('아이디를 입력해주세요')

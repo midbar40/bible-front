@@ -7,7 +7,6 @@ let rightClickNearestTdInnerText
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log('로그인상태 :', isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -95,10 +94,8 @@ function addBucketRightClickMenu(e) {
 
     const rightClickList = e.target.parentNode.className.split(' ')[1]
     const rightClickNearestTd = e.target.parentNode.children[1]
-    console.log('e.target :', e.target.parentNode.children[1])
     const rightClickNearestTdIndex = e.target.parentNode.children[0].innerText
     rightClickNearestTdInnerText = e.target.parentNode.children[1].innerText
-    console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
     e.preventDefault()
     const rightClickMenu = document.querySelector('.right-click-menu')
     rightClickMenu.innerHTML = `
@@ -131,10 +128,8 @@ function addBucketRightClickMenu(e) {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    console.log('data :', data)
                     if (data.code == 200) {
                         rightClickNearestTd.parentNode.remove()
-                        console.log('삭제된 숫자',rightClickNearestTdIndex)
                         prayBucketlistList.forEach((element => {
                             if (element.children[0].innerText > rightClickNearestTdIndex) {
                                 element.children[0].innerText -= 1
@@ -168,7 +163,6 @@ function addBucketRightClickMenu(e) {
                     })
                     .then(res => res.json())
                     .then(data => {
-                        console.log('글수정하기 :', data)
                         if (data.code == 200) {
                             rightClickNearestTd.innerText = editDetail.value;
                         }
@@ -227,7 +221,6 @@ document.body.addEventListener('click', hideRightClickMenu)
 async function showPrayBucketlist(prayBucketlistData) {
     createPrayBucketlist()
     submitPrayBucketlist()
-    console.log(' prayBucketlistData :', prayBucketlistData)
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
     prayBucketlistData.result?.forEach(element => {
         const prayBucketlistList = document.createElement('tr')
@@ -258,7 +251,6 @@ const submitPrayBucketlist = () => {
 
 // PrayBucketList 추가
 async function addPrayBucketlist(event) {
-    console.log('addPrayBucketlist ', prayBucketIndex)
     event.preventDefault()
     const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
     const prayBucketListTbody = document.querySelector('.prayBucketList-body tbody')
@@ -282,7 +274,6 @@ async function addPrayBucketlist(event) {
                 })
             })
             const result = await response.json()
-            console.log('기도버킷리스트 등록결과 :', result)
             prayBucketDbId = result.result._id // 몽고DB에 저장된 기도버킷리스트의 아이디를 전역변수에 저장
             return prayBucketDbId
         }
@@ -333,7 +324,6 @@ function handleCheckboxChange(e) {
                 })
             });
             const result = await response.json();
-            console.log('체크박스클릭 :', result);
         };
         updatedCheckedDate();
     } else if (e.target.className === 'complete-checkbox' && !e.target.checked) {
@@ -355,7 +345,6 @@ function handleCheckboxChange(e) {
                 })
             });
             const result = await response.json();
-            console.log('체크박스해제 :', result);
         };
         updatedUnCheckedDate();
     }
@@ -411,7 +400,6 @@ async function getGrace() {
             })
         })
         const result = await reponse.json()
-        console.log('감사기도 조회:', result)
         return result
     } catch (error) {
         console.log('감사기도 조회 실패:', error)
@@ -456,13 +444,10 @@ function addGraceRightClickMenu(e) {
     if (editDetail) editDetail.parentNode.innerHTML = rightClickNearestTdInnerText
 
     const rightClickList = e.target.parentNode.className.split(' ')[1]
-    console.log('rightClickList :', rightClickList)
     const rightClickNearestTd = e.target.parentNode.children[1]
     const rightClickNearestTdIndex = e.target.parentNode.children[0].innerText
 
     rightClickNearestTdInnerText = e.target.parentNode.children[1].innerText
-    console.log('e.target.parent :', e.target.parentNode.className.split(' ')[1])
-    console.log('rightClickNearestTdInnerText :', rightClickNearestTdInnerText)
     e.preventDefault()
     const rightClickMenu = document.querySelector('.right-click-menu')
     rightClickMenu.innerHTML = `
@@ -495,7 +480,6 @@ function addGraceRightClickMenu(e) {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    console.log('data :', data)
                     if (data.code == 200) {
                         rightClickNearestTd.parentNode.remove()
                         PrayerOfThanksList.forEach((element => {
@@ -531,7 +515,6 @@ function addGraceRightClickMenu(e) {
                     })
                     .then(res => res.json())
                     .then(data => {
-                        console.log('글수정하기 :', data)
                         if (data.code == 200) {
                             rightClickNearestTd.innerText = editDetail.value;
                         }
@@ -556,7 +539,6 @@ const submitGraceList = () => {
 
 // PrayerOfThanksList 추가
 async function addGraceList(event) {
-    console.log('addGraceList ', graceIndex)
     event.preventDefault()
     const currentTime = Date.now(); // 현재 시간을 밀리초로 얻기
     const graceListTbody = document.querySelector('.Prayer-of-thanks-body tbody')
@@ -578,7 +560,6 @@ async function addGraceList(event) {
                 })
             })
             const result = await response.json()
-            console.log('감사기도 등록결과 :', result)
             graceDbId = result.result._id // 몽고DB에 저장된 감사기도의 아이디를 전역변수에 저장
             return graceDbId
         }
@@ -662,7 +643,6 @@ const savePrayDiary = async () => {
         })
     })
     const result = await saveDiary.json()
-    console.log('기도일기 저장결과 :', result)
 
     const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
     const prayDiaryTr = document.createElement('tr')
@@ -704,13 +684,11 @@ const getPrayDiary = async () => {
         })
     })
     const result = await response.json()
-    console.log('기도일기 조회결과 :', result)
     return result
 }
 
 // 서버에서 가져온 기도일기 output 화면에 보여주기
 const showPrayDiary = async (prayDiaryList) => {
-    console.log('이게 뭘로나오니 prayDiaryList', prayDiaryList)
     const prayDiaryOutputBodyTbody = document.querySelector('.prayDiary-output-body tbody')
     if (prayDiaryList !== undefined) {
         prayDiaryList?.result?.forEach(element => {
@@ -746,7 +724,6 @@ const showPrayDiaryDetail = async (clickedPrayDiaryId) => {
     const result = await response.json()
     const prayDiaryTitle = document.querySelector('#prayDiary-title')
     const prayDiaryContent = document.querySelector('#prayDiary-content')
-    console.log('이전 데이터 :', previousData.title, '인풋창 값 :', prayDiaryTitle.value, '서버에서 가져온 값 :', result.result.title)
 
     if (prayDiaryTitle.value == '' && prayDiaryContent.value == '') {
         prayDiaryTitle.value = result.result.title
@@ -838,7 +815,6 @@ const editPrayDiary = async (clickedPrayDiaryId) => {
         })
     })
     const result = await response.json()
-    console.log('기도일기 수정결과 :', result)
     prayDiaryTitle.value = result.result.title
     prayDiaryContent.value = result.result.detail
     previousData.title = result.result.title
@@ -902,7 +878,6 @@ function ActiveDiaryRightClick(e) {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    console.log('data :', data)
                     if (data.code == 200) {
                         rightClickNearestTd.parentNode.remove()
                         prayDiaryTitle.value = ''
@@ -988,7 +963,6 @@ const getPickPosts = async (postNum) => {
             })
         })
         const result = await response.json()
-        console.log(`포스트잇${postNum} 가져오기 결과 :`, result)
         return result
     }
     catch (err) {
@@ -1033,7 +1007,6 @@ const saveScripture = async (postNum, pickText) => {
             })
         })
         const result = await response.json()
-        console.log(`post${postNum} 저장 결과:`, result)
     }
     catch (err) {
         console.log(`post${postNum} 저장 실패:`, err)
@@ -1054,7 +1027,6 @@ const updateScripture = async (postNum, pickText) => {
             })
         })
         const result = await response.json()
-        console.log(`post${postNum} 업데이트 결과:`, result)
     }
     catch (err) {
         console.log(`post${postNum} 업데이트 실패:`, err)
@@ -1081,7 +1053,6 @@ const saveSermon = async () => {
     const sermonPreacher = document.querySelector('#sermon-preacher')
     const sermonContent = document.querySelector('#sermon-content')
     const sermonTakeaway = document.querySelector('#sermon-takeaway')
-    console.log('sermonDate.value :', sermonDate.value)
     const saveSermon = await fetch('https://backend.closetogod.site/api/sermon/saveSermon', {
         method: 'POST',
         headers: {
@@ -1098,7 +1069,6 @@ const saveSermon = async () => {
         })
     })
     const result = await saveSermon.json()
-    console.log('설교노트 저장결과 :', result)
 
     const sermonOutputBodyTbody = document.querySelector('.sermon-output-body tbody')
     const sermonTr = document.createElement('tr')
@@ -1157,13 +1127,11 @@ const getSermon = async () => {
         })
     })
     const result = await response.json()
-    console.log('설교노트 조회결과 :', result)
     return result
 }
 
 // 서버에서 가져온 설교노트 output 화면에 보여주기
 const showSermon = async (sermonList) => {
-    console.log('sermonList', sermonList)
     const sermonOutputBodyTbody = document.querySelector('.sermon-output-body tbody')
     if (sermonList !== undefined) {
         sermonList?.result?.forEach(element => {
@@ -1216,9 +1184,7 @@ const showSermonDetail = async (clickedSermonId) => {
     const sermonPreacher = document.querySelector('#sermon-preacher')
     const sermonContent = document.querySelector('#sermon-content')
     const sermonTakeaway = document.querySelector('#sermon-takeaway')
-    console.log('이전데이터', previousSermonData)
-    console.log('인풋데이터', sermonDate.value, sermonTitle.value, sermonScripture.value, sermonPreacher.value, sermonContent.value, sermonTakeaway.value)
-    console.log('서버데이터', result.result)
+
     if ( // input창에 아무것도 없을 때 서버에서 가져온 값(클릭된 글의 Data)을 보여준다
         sermonDate.value == '' &&
         sermonTitle.value == '' &&
@@ -1355,7 +1321,6 @@ const editSermon = async (clickedSermonId) => {
     const sermonPreacher = document.querySelector('#sermon-preacher')
     const sermonContent = document.querySelector('#sermon-content')
     const sermonTakeaway = document.querySelector('#sermon-takeaway')
-    console.log('sermonDate.value :', sermonDate.value)
     const response = await fetch('https://backend.closetogod.site/api/sermon/editSermon', {
         method: 'PUT',
         headers: {
@@ -1374,7 +1339,6 @@ const editSermon = async (clickedSermonId) => {
     })
     const result = await response.json()
 
-    // console.log('설교노트 수정결과 :', result)
     sermonDate.value = transformDateForSermon(result.result.date)
     sermonTitle.value = result.result.title
     sermonScripture.value = result.result.scripture
@@ -1448,7 +1412,6 @@ function activeSermonRightClick(e) {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    console.log('data :', data)
                     if (data.code == 200) {
                         rightClickNearestTd.parentNode.remove()
                         sermonDate.value = ''
@@ -1610,10 +1573,8 @@ async function postItClickEvent(e) {
         e.stopPropagation()
         const postNum = 1
         const serverData = await getPickPosts(postNum)
-        console.log('serverData :', serverData)
         const scripture1 = document.querySelector('.scripture-1')
         const scripture1Paragraph = document.querySelector('.scripture-1-text')
-        // console.log('scripture1Paragraph.innerText :', scripture1Paragraph.innerText)
         scripture1.innerHTML =
             `
     <textarea id='pickText1' placeholder ='기억하고 싶은 문구를 작성하세요, 최대 65자까지 작성가능합니다' maxlength ='65'>${serverData?.result[0]?.text || ''}</textarea>
@@ -1662,7 +1623,6 @@ async function postItClickEvent(e) {
 
         const postNum = 2
         const serverData = await getPickPosts(postNum)
-        console.log('serverData :', serverData)
         const scripture2 = document.querySelector('.scripture-2')
         const scripture2Paragraph = document.querySelector('.scripture-2-text')
         scripture2.innerHTML =
@@ -1689,7 +1649,6 @@ async function postItClickEvent(e) {
             }
         })
         scripture2SaveBtn.addEventListener('click', function (e) {
-            console.log(serverData.result.length == 0)
             // 화면 변경
             scripture2.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
             // 서버에 저장
@@ -1710,7 +1669,6 @@ async function postItClickEvent(e) {
 
         const postNum = 3
         const serverData = await getPickPosts(postNum)
-        console.log('serverData :', serverData)
         const scripture3 = document.querySelector('.scripture-3')
         const scripture3Paragraph = document.querySelector('.scripture-3-text')
         scripture3.innerHTML =
@@ -1737,7 +1695,6 @@ async function postItClickEvent(e) {
             }
         })
         scripture3SaveBtn.addEventListener('click', function (e) {
-            console.log(serverData.result.length == 0)
             // 화면 변경
             scripture3.innerHTML = `<p class='scripture-2-text'>${pickText.value || serverData?.result[0]?.text || ''}</p>`
             // 서버에 저장

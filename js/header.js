@@ -84,7 +84,6 @@ export async function logout(e) {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 if (!data.token) {
                     localStorage.removeItem('로그인상태')
                     localStorage.removeItem('유저이름')

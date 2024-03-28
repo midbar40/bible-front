@@ -6,7 +6,6 @@ let index = 1
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -17,7 +16,6 @@ async function getBibleData() {
     try {
         const data = await fetch('https://backend.closetogod.site/api/bible/psalms?title=시편')
         const bibleData = await data.json()
-        console.log(bibleData)
         return bibleData
     } catch (error) {
         console.log(error)
@@ -120,7 +118,6 @@ async function getBibleText() {
     
     addLoading()
     const bibleData = await getBibleData()
-    console.log(bibleData)
     const loading = document.querySelector('.loading')
     loading.remove()
 
@@ -147,9 +144,7 @@ async function getBibleText() {
         const inputSpanText = e.target.value
         inputDiv.innerText = inputSpanText
         let typedText = inputSpanText.split('')
-        console.log(typedText[textSpan.length - 1])
 
-        // console.log( textSpan[charIndex].innerText, typedText[charIndex])
         if (typedText.length) { // 글자 타이핑할때 span 숨기기
             textSpan[charIndex]?.classList.add('hide')
         }
@@ -163,7 +158,6 @@ async function getBibleText() {
 
             if (typedText[textSpan.length - 1]) { //마지막 글자가 뭐든 입력됐을때
                 nextButton.click()
-                console.log('마지막글자')
             }
         }
         else if (typedText[charIndex] == null) {  // 글자를 지울 때
@@ -176,7 +170,6 @@ async function getBibleText() {
             charIndex++
             if (typedText[textSpan.length - 1]) { //마지막 글자가 뭐든 입력됐을때
                 nextButton.click()
-                console.log('마지막글자')
             }
         }
     })
@@ -245,7 +238,6 @@ async function getBibleText() {
 
     select.addEventListener('change', async (e) => {
         index = e.target.value
-        // console.log(e.target.childNodes)
         main.replaceChildren()
         await getBibleText() // 코드를 업데이트했는데 반영이 안되는것 같다
     })

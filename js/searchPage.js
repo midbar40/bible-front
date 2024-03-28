@@ -5,7 +5,6 @@ const searchWord = localStorage.getItem('inputWord')
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -16,7 +15,6 @@ async function getBibleData(searchWord) {
     try {
         const data = await fetch(`https://backend.closetogod.site/api/bible/search?query=${searchWord}`)
         const bibleData = await data.json()
-        console.log(bibleData)
         page += 1;
         return bibleData
     } catch (error) {
@@ -119,7 +117,6 @@ async function showSearchBible() {
         return regex.test(bible.content);
     });
     })
-    console.log('updateResults',updateResults)
     // 검색결과 유무에 따른 문구 표시
     if (updateResults.length > 0) displayContent(updateResults, searchWord)
     else {

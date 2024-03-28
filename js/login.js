@@ -7,7 +7,6 @@ const loginButton = document.querySelector('.submit button')
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -43,7 +42,6 @@ async function getUserData() {
 
         })
         const userData = await data.json()
-        console.log(userData)
         if (!userData.token) {
             alert(userData.message)
         }

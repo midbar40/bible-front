@@ -17,7 +17,6 @@ let pageNum = 1
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -29,7 +28,6 @@ async function getBibleData(clickedBookId) {
         const data = await fetch(`https://backend.closetogod.site/api/bible/read?query=${clickedBookId}`)
         const bibleData = await data.json()
         serverData.push(bibleData)
-        console.log(serverData)
         return bibleData
     } catch (error) {
         console.log(error)
@@ -43,7 +41,6 @@ async function showClikedBook(e) {
 
     // 성경책 이름 가져오기 (for문 안에 넣으면 안된다), deleteTitle() 함수보다 밑에 넣으면 호이스팅 문제로 작동하지 않는다.
     function createTitle(firstPage) {
-        console.log(firstPage)
         const bookTitle = document.createElement('h3')
         bookTitle.className = 'book-title'
         bookTitle.innerHTML = `${e.target.innerText}&nbsp${firstPage}장`
@@ -98,7 +95,6 @@ async function showClikedBook(e) {
                 createdPageNum(i)
                 createfirstPage(1, i)
             }
-            //   console.log(chapter) 디버깅용 for문 밖에서 조회해야 한다
 
             // 페이지 이동버튼 - 작업중 미완료
             const prevButton = document.createElement('button')
@@ -150,7 +146,6 @@ async function showClikedBook(e) {
 
             deleteTitle()
             createTitle(firstPage)
-            //  console.log(firstPage)
             for (let i = 0; i < serverData[0].bible.length; i++) {
                 scriptureList.style.display = 'none'
                 createfirstPage(firstPage, i)
@@ -161,7 +156,6 @@ async function showClikedBook(e) {
 
     // 하단 페이지버튼 마운트 생성
     async function createdPageNation(bookId, pages) { // 버튼을 for문 밖에서 생성해야 한다, bookId 이름은 아무거나 상관없고 이 값은 복사된 e.target.id 이다
-        //    console.log(bookId, pages) // 디버깅용
         pages.forEach((btn) => {
             const pageButton = document.createElement('button')
             pageButton.classList.add('button')
@@ -177,7 +171,6 @@ async function showClikedBook(e) {
                 const active = buttonGroup.querySelector('.active')
 
                 pageNum = e.target.innerText
-                console.log(pageNum)
                 if (active) {
                     active.classList.remove('active')
                     displayBible.innerHTML = ''
@@ -195,7 +188,6 @@ async function showClikedBook(e) {
                         displayVerse(i)
                     }
                 }
-                console.log(pageNum)
                 return pageNum         // 이건 의미가 있나?              
             })
         })
@@ -213,7 +205,6 @@ function displayVerse(parameter) {
     const bibleContents = document.createElement('div')
     bibleContents.innerHTML = `${serverData[0].bible[parameter].verse}&nbsp${serverData[0].bible[parameter].content}`
     bibleContents.className = 'bible-contents'
-    console.log('바이블컨텐츠', bibleContents)
     displayBible.appendChild(bibleContents)
 }
 
@@ -225,7 +216,6 @@ function displayVerse(parameter) {
 window.onpopstate = function (event) {
     event.stopPropagation()
     serverData = [] // 뒤로가기 했을때 데이터 중복되는 것 방지
-    // console.log(event)
     if (!(event && window.location.href.includes('#'))) {
         scriptureList.style.display = 'flex' // 뒤로가기 했을때 목차 다시나오기
         const bibleContents = document.querySelectorAll('.bible-contents') // 뒤로가기 했을때 성경본문 삭제

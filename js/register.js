@@ -17,7 +17,6 @@ const getFormElements = (function () {
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', headerModule(isLoggedIn))
     }
 }
@@ -89,7 +88,6 @@ async function getUserData() {
                     })
                 })
             const userData = await data.json()
-            console.log('userData :', userData)
             if (userData.code === 200) {
                 alert('회원가입이 완료되었습니다, 로그인 페이지로 이동합니다.')
                 window.location.href = '/html/login.html'

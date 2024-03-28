@@ -12,7 +12,6 @@ export function indexHeaderModule(isLoggedIn) {
 
     const header = document.createElement('header');
     const nav = document.createElement('nav');
-    console.log('headermodule7줄 :', isLoggedIn)
     if (isLoggedIn) {
 
         nav.innerHTML =
@@ -74,7 +73,6 @@ export function indexHeaderModule(isLoggedIn) {
 
 export async function logout(e) {
     if (e.target.innerText == '로그아웃') {
-        console.log('로그아웃 실행되는거니?')
         // await fetch('https://port-0-bible-server-32updzt2alphmfpdy.sel5.cloudtype.app/api/users/logout', {
         await fetch('https://backend.closetogod.site/api/users/logout', {
             method: 'POST',
@@ -85,7 +83,6 @@ export async function logout(e) {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 if (!data.token) {
                     localStorage.removeItem('로그인상태')
                     localStorage.removeItem('유저이름')

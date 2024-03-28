@@ -8,7 +8,6 @@ const ramdomPargraph = document.querySelector('.random-paragraph')
 function checkIsLogined() {
     {
         const isLoggedIn = localStorage.getItem('로그인상태')
-        console.log(isLoggedIn)
         document.body.insertAdjacentElement('afterbegin', indexHeaderModule(isLoggedIn))
     }
 }
