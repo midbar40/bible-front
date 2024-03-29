@@ -248,6 +248,13 @@
         z-index: 0;
         display: none;
     }
+    main .wrapper .scripture .scripture-list{
+      padding: 0;
+    }
+    main .wrapper .scripture .scripture-list ul li a:hover{
+      background-color: rgb(245, 199, 138);
+    }
+
     main .wrapper .book-title{
       font-size: 1.1rem;
      }
