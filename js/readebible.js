@@ -99,8 +99,17 @@ async function showClikedBook(e) {
             // 페이지 이동버튼 - 작업중 미완료
             const prevButton = document.createElement('button')
             const nextButton = document.createElement('button')
-            prevButton.innerHTML = `&#129120;`
-            nextButton.innerHTML = `&#129122;`
+            prevButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M14 7l-5 5 5 5V7z"/>
+                <path d="M0 0h24v24H0z" fill="none"/>
+                </svg>`
+            nextButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M10 17l5-5-5-5v10z"/>
+                <path fill="none" d="M0 24V0h24v24H0z"/>
+                </svg>
+            `
             prevButton.classList.add('prev-button')
             nextButton.classList.add('next-button')
             buttons.insertAdjacentElement('beforebegin', prevButton)
