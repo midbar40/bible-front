@@ -72,13 +72,14 @@
     }
     @media(max-width: 420px){
       .findUserIdField form {
-        width: 350px;
-        height: 350px;
+        width: 320px;
+        height: 320px;
       }
       .findUserIdField form input{
         font-size: 0.8rem;
       }
-      .name, .mobile-section{
+      .findUserId-section .name,
+      .findUserId-section .mobile-section{
         margin-left: -45px;
       }
 
