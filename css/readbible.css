@@ -271,10 +271,12 @@
     main .wrapper .buttons button{
       font-size: 1rem;
     }
+    main .wrapper .book-title{
+      margin-top: 1.5rem;
+     }
     .prev-button{
       width: 25px;
       height: 25px;
-      background-color: #fff;
       color: #333;
       font-size: 1rem;
       margin: 0;
@@ -282,14 +284,9 @@
     .next-button{
       width: 25px;
       height: 25px;
-      background-color: #fff;
       color: #333;
       font-size: 1rem;
       margin: 0;
-    }
-    .prev-button:hover,
-    .next-button:hover{
-      background-color: #fff;
     }
     .scripture-list{
       font-size: 0.8rem;
