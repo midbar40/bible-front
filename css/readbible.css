@@ -260,7 +260,6 @@
       text-align: right;
       position: relative;
       left: 58%;
-      top: 8%;
     }
 
     main .wrapper .buttons{
@@ -273,12 +272,16 @@
       font-size: 1rem;
     }
     .prev-button{
+      width: 25px;
+      height: 25px;
       background-color: #fff;
       color: #333;
       font-size: 1rem;
       margin: 0;
     }
     .next-button{
+      width: 25px;
+      height: 25px;
       background-color: #fff;
       color: #333;
       font-size: 1rem;
