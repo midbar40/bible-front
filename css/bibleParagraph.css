@@ -46,15 +46,6 @@ body {
   }
 
   header .nav-btns {
-    position: relative;
-    top: 17rem;
-    align-items: center;
-    flex-wrap: wrap;
-    z-index: 50;
-    display: none;
-  }
-
-  header .nav-btns {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
