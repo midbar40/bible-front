@@ -134,6 +134,9 @@ header .login-btn{
 .loading-Phrases{
   font-size: 1.2rem;
 }
+.contents{
+  max-width: 90%;
+}
 .contents h4{
   font-size: 1rem;
 }
