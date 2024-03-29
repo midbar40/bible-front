@@ -198,4 +198,10 @@ main {
   .next-button:hover {
     background-color: #fff;
   }
+  
+  /* .register-section을 동적으로 그릴 때 css가 안먹히는거 같다 */
+  main form{
+    width: 320px;
+    height: 580px;
+  }
 }

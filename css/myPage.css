@@ -146,6 +146,35 @@
       z-index: 0;
       display: none;
     }
+    .myPage-section {
+      padding: 5px 5px;
+    }
+    .myPage-section div{
+      gap: 5px;
+    }
+    .myPage-section h2 {
+    font-size: 1.5rem;
+    }
+    .myPage-section h4 {
+      width: 120px;
+      font-size: 1.1rem;
+  }
+    .myPage-section span {
+      font-size: 1.1rem;
+    }
+   
+    .myPage-btns{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .myPage-btns button {
+      width: 95%;
+      margin-top: 5px;
+    }
+    .myPage-btn-withdraw{
+      margin-left: 0px;
+    }
   
   
   }

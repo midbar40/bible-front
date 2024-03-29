@@ -437,6 +437,12 @@ main .wrapper .multi-contents .pray-note {
     align-items: center;
   }
 
+  main .wrapper .multi-contents .bible-reading, 
+  main .wrapper .multi-contents .bible-paragraph, 
+  main .wrapper .multi-contents .bible-game, 
+  main .wrapper .multi-contents .pray-note {
+    width: 250px;
+  }
 
   main .wrapper .multi-contents .bible-game h3,
   main .wrapper .multi-contents .pray-note h3,
