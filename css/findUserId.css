@@ -70,3 +70,16 @@
       border-bottom: 1px solid rgb(135, 135, 135);
       opacity: 0.5;
     }
+    @media(max-width: 420px){
+      .findUserIdField form {
+        width: 350px;
+        height: 350px;
+      }
+      .findUserIdField form input{
+        font-size: 0.8rem;
+      }
+      .name, .mobile-section{
+        margin-left: -45px;
+      }
+
+    }

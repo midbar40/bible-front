@@ -876,7 +876,7 @@ main .pray-wrapper {
   }
   .prayBucketList-input form input{
     width: 100%;
-    height: 50px;
+    height: 40px;
     font-size: 0.8rem;
   }
   .Prayer-of-thanks-body {
@@ -884,12 +884,13 @@ main .pray-wrapper {
   }
   .Prayer-of-thanks-input{
     width: 100%;
-    height: 30px;
+    height: 50px;
     margin-left: 0;
     font-size: 0.8rem;
   }
   .Prayer-of-thanks-input form input{
     font-size: 0.8rem;
+    height: 40px;
   }
   .bookmark1, .bookmark2, .bookmark3, .bookmark4{
     width: 85px;
@@ -927,7 +928,7 @@ main .pray-wrapper {
   margin-top: 0;
 }
 .prayDiary-output{
-  font-style: 0.8rem;
+  font-size: 0.8rem;
 }
 .scripture-board{
   width: 92%;
@@ -936,6 +937,7 @@ main .pray-wrapper {
   padding-left: 0;
 }
 .scripture{
+  position: relative;
   width: 100%;
   height: 30%;
   gap: 10px;
@@ -945,7 +947,7 @@ main .pray-wrapper {
 .scripture-3{
   width: 100%;
   font-size: 0.8rem;
-  border-radius: none;
+  border-radius: 0;
 }
 .sermon{
   width: 100%;
